@@ -88,6 +88,14 @@ export declare class CommandError extends Error {
 declare const _$: {
     (command: string, echoStdout?: boolean, echoCommand?: boolean): string;
     /**
+     * Runs a command and echo its stdout as it executes.  Stdout from the command is not captured.
+     * @param command The command to run.
+     * @param echoStdout If true will echo stdout of the command as it runs and not capture its output
+     * @param echoCommand If true will echo the command before running it
+     * @returns void
+     */
+    echo(command: string, echoCommand?: boolean): void;
+    /**
      * Runs a command and will not throw if the command returns a non-zero exit code.  Instead the stderr (or stdout if stderr is empty) will be returned.
      * @param command
      * @param pipe
@@ -115,14 +123,6 @@ declare const _$: {
     retry(cmd: string, maxTries?: number, waitMillisecondsBeforeRetry?: number, echoFailures?: boolean, pipe?: boolean, echoCommand?: boolean): string;
     shell: boolean;
     maxBuffer: number;
-    /**
-     * Runs a command and echo its stdout as it executes.  Stdout from the command is not captured.
-     * @param command The command to run.
-     * @param echoStdout If true will echo stdout of the command as it runs and not capture its output
-     * @param echoCommand If true will echo the command before running it
-     * @returns void
-     */
-    echo(command: string, echoCommand?: boolean): void;
 };
 export interface IHttpRequestOptions {
     protocol: string;

@@ -21,8 +21,8 @@
   "type": "module",
   "exports": {
     ".": {
-      "require": "./dist/cjs/index.js",
-      "import": "./dist/mjs/index.mjs"
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
     }
   },
   "bin": "./bin/jsh.mjs",
@@ -35,7 +35,7 @@
     "typescript": "^4.6.4"
   },
   "scripts": {
-    "build": "rm -rf dist/ && tsc -p src/tsconfig.mjs.json && tsc -p src/tsconfig.cjs.json && mv ./dist/mjs/index.js ./dist/mjs/index.mjs",
+    "build": "rm -rf dist/ && tsc -p src/tsconfig.mjs.json && mv ./dist/index.js ./dist/index.mjs && tsc -p src/tsconfig.cjs.json && mv ./dist/index.js ./dist/index.cjs",
     "test": "jest --clearCache && jest --silent",
     "prepublishOnly": "npm run build && bin/local-run.mjs ./scripts/source-version-prefix.mjs"
   }

@@ -1,10 +1,13 @@
-import { spawnSync } from "child_process";
-import * as nodePath from "node:path";
-import * as http from "http";
-import * as https from "https";
-import { URL } from "node:url";
-import * as fs from "fs";
-import * as path from "path";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.HttpRequestError = exports.CommandError = void 0;
+const child_process_1 = require("child_process");
+const nodePath = require("node:path");
+const http = require("http");
+const https = require("https");
+const node_url_1 = require("node:url");
+const fs = require("fs");
+const path = require("path");
 const _filename = () => {
     if (global.jsh_scriptName) {
         return global.jsh_scriptName;
@@ -154,7 +157,7 @@ const _sleep = (ms) => {
 };
 global.sleep = _sleep;
 // Command execution
-export class CommandError extends Error {
+class CommandError extends Error {
     command;
     stdout;
     stderr;
@@ -170,6 +173,7 @@ export class CommandError extends Error {
         return `${this.message}\n${this.stderr || this.stdout}`;
     }
 }
+exports.CommandError = CommandError;
 /**
  * Runs a command and returns the stdout
  * @param command The command to run.
@@ -181,7 +185,7 @@ const _$ = (command, echoStdout = false, echoCommand = true) => {
     if (echoCommand) {
         echo(command);
     }
-    let result = spawnSync(command, [], {
+    let result = (0, child_process_1.spawnSync)(command, [], {
         stdio: [0, echoStdout ? "inherit" : "pipe", echoStdout ? "inherit" : "pipe"],
         shell: $.shell ?? true,
         windowsHide: true,
@@ -198,6 +202,16 @@ const _$ = (command, echoStdout = false, echoCommand = true) => {
         throw new CommandError(command, stdout, stderr, status);
     }
     return stdout;
+};
+/**
+ * Runs a command and echo its stdout as it executes.  Stdout from the command is not captured.
+ * @param command The command to run.
+ * @param echoStdout If true will echo stdout of the command as it runs and not capture its output
+ * @param echoCommand If true will echo the command before running it
+ * @returns void
+ */
+_$.echo = (command, echoCommand = true) => {
+    _$(command, true, echoCommand);
 };
 /**
  * Runs a command and will not throw if the command returns a non-zero exit code.  Instead the stderr (or stdout if stderr is empty) will be returned.
@@ -246,18 +260,8 @@ _$.retry = (cmd, maxTries = 5, waitMillisecondsBeforeRetry = 5000, echoFailures 
 _$.shell = true;
 _$.maxBuffer = 1024 * 1024 * 256 /* 256MB */;
 global.$ = _$;
-/**
- * Runs a command and echo its stdout as it executes.  Stdout from the command is not captured.
- * @param command The command to run.
- * @param echoStdout If true will echo stdout of the command as it runs and not capture its output
- * @param echoCommand If true will echo the command before running it
- * @returns void
- */
-_$.echo = (command, echoCommand = true) => {
-    $(command, true, echoCommand);
-};
 global.eval = _$.echo;
-export class HttpRequestError extends Error {
+class HttpRequestError extends Error {
     request;
     response;
     constructor(message, request, response = null) {
@@ -275,6 +279,7 @@ export class HttpRequestError extends Error {
         return this.response?.statusMessage;
     }
 }
+exports.HttpRequestError = HttpRequestError;
 /**
  * Makes an asynchronous HTTP request and returns the response.   Will reject with an error if the response status code is not 2xx.
  * @param method
@@ -284,7 +289,7 @@ export class HttpRequestError extends Error {
  * @returns IHttpResponse<T>
  */
 const _http = (method, url, requestBody = null, headers = {}) => {
-    const parsedUrl = new URL(url);
+    const parsedUrl = new node_url_1.URL(url);
     const isHTTPS = parsedUrl.protocol.startsWith("https");
     const requestOptions = {
         protocol: parsedUrl.protocol,

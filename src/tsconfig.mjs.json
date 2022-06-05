@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../dist/mjs"
+    "outDir": "../dist"
   },
   "files": ["./index.ts"]
 }
