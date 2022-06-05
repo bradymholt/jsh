@@ -6,12 +6,6 @@ it("$0 should return the file name of the current script", () => {
   expect(result.stdout.toString()).toEqual("echo-$0.ts\n");
 });
 
-it("$1 through $10 should be declared but undefined", () => {
-  for (let i = 1; i <= 10; i++) {
-    expect(global[`$${i}`]).toBeUndefined();
-  }
-});
-
 it("$11 should be undeclared", () => {
   for (let i = 1; i <= 10; i++) {
     expect(global.$11).toBeUndefined();
