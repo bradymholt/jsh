@@ -1,6 +1,6 @@
 # jsh
 
-![Build Status](https://github.com/bradymholt/jsh/workflows/build/badge.svg) [![NPM Package](https://img.shields.io/npm/v/jsh.svg)](https://www.npmjs.com/package/jsh)
+[![Build](https://github.com/bradymholt/jsh/actions/workflows/build.yml/badge.svg)](https://github.com/bradymholt/jsh/actions/workflows/build.yml) [![NPM Package](https://img.shields.io/npm/v/jsh.svg)](https://www.npmjs.com/package/jsh)
 
 Helpers for Bash like shell scripting in JavaScript
 
