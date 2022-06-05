@@ -3,7 +3,7 @@
 import * as path from "path";
 global.jsh_shebang = true;
 
-const scriptPath = path.join(process.argv[2]);
+let scriptPath = path.join(process.argv[2]);
 
 if (!process.argv[2].startsWith("/")) {
   // Relative path so join with current working directory
