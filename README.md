@@ -33,7 +33,7 @@ chmod +x ./script.js && ./script.js
 ## Helpers
 
 **General Scripting**
-|||
+|     | Description |
 | --- | --- |
 | echo("Hello") | Print text to console with trailing newline |
 | echo.yellow("Hello") | Print yellow colored text to console with trailing newline |
@@ -47,7 +47,7 @@ chmod +x ./script.js && ./script.js
 | sleep(2000) | Sleep for specified number of milliseconds |
 
 **Arguments and Environment**
-|||
+|     | Description |
 | --- | --- |
 | args\[0\], args\[1\] | Access arguments that have been passed in from args array |
 | args.source_file | Access arguments prefixed with "--".<br/>If argument is in format `--source_file=input.txt` the value of `args.source_file` will be `"input.txt"`.<br/>If argument is in format `--source_file` the value of `args.source_file` will be `true`. |
@@ -59,7 +59,7 @@ chmod +x ./script.js && ./script.js
 | env.assert("USERNAME") | Returns environment variable value and throws an error if the variable is undefined |
 
 **Command Execution**
-|||
+|     | Description |
 | --- | --- |
 | result=$("cmd.sh") | Execute a command and return the stdout |
 | $.echo("cmd.sh") | Execute a command and stream stdout to console without returning a value |
@@ -68,7 +68,7 @@ chmod +x ./script.js && ./script.js
 | $.retry("cmd.sh", 5) | Execute a command and if it throws and error, retry a number of times until it succeeds |
 
 **File System**
-|||
+|     | Description |
 | --- | --- |
 | cd("/usr/bin") | Change the current working directory |
 | config=readFile("cnf.txt") | Read text from file |
@@ -84,7 +84,7 @@ chmod +x ./script.js && ./script.js
 
 Note: The HTTP helpers are asynchronous.
 
-|                                                           |                                                                                                     |
+|     | Description |
 | --------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | await http.get("https://www.myapi.com")                   | Make a HTTP GET request and return the response body                                                |
 | await http.post("https://www.myapi.com", { data: "1" })   | Make a HTTP POST request and return the response body                                               |
