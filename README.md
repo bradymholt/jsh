@@ -265,7 +265,7 @@ Rather than installing jsh globally, you can simply download it to a local folde
 First, download jsh:
 
 ```
-wget -O jsh.js https://raw.githubusercontent.com/bradymholt/jsh/main/dist/index.cjs
+wget -O jsh.js https://github.com/bradymholt/jsh/releases/latest/download/index.cjs
 ```
 
 Then, in your script:
