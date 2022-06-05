@@ -10,7 +10,7 @@ Helpers for Bash like shell scripting in JavaScript
 
 jsh, pronounced "j shell", is a small JavaScript library (with no dependencies!) that provides helper aliases and functions that are similar to Bash syntax, allowing you to write shell scripts in JavaScript that are simple and familiar.
 
-jsh **requires Node >=16**.
+**jsh requires Node >=16**
 
 ## Quick Start
 
@@ -32,53 +32,56 @@ chmod +x ./script.js && ./script.js
 
 ## Helpers
 
+You can refer to the [definition file](https://github.com/bradymholt/jsh/blob/main/dist/index.d.ts) for a full list of the helpers and JSDoc documentation for arguments and usage.  Below is a summarized list of the available helpers.
+
+
 **General Scripting**
 |     | Description |
 | --- | --- |
-| echo("Hello") | Print text to console with trailing newline |
-| echo.yellow("Hello") | Print yellow colored text to console with trailing newline |
-| echo.green("Hello") | Print green colored text to console with trailing newline |
-| echo.red("Hello") | Print red colored text to console with trailing newline |
-| printf("one\\ntwo") | Print text to console with no trailing newline |
-| exit(1) | Halt the script and return an exit code |
-| error("An error", 1) | Echo an error and halt the script with an exit code |
-| usage(\`Usage: myscript.js \[--verbose\]\`) | Define a usage message. If --help or -h arguments are provided will print and exit immediately. |
-| usage.printAndExit() | Print the usage message and then exits with an error exit code |
-| sleep(2000) | Sleep for specified number of milliseconds |
+| `echo("Hello")` | Print text to console with trailing newline |
+| `echo.yellow("Hello")` | Print yellow colored text to console with trailing newline |
+| `echo.green("Hello")` | Print green colored text to console with trailing newline |
+| `echo.red("Hello")` | Print red colored text to console with trailing newline |
+| `printf("one\ntwo")` | Print text to console with no trailing newline |
+| `exit(1)` | Halt the script and return an exit code |
+| `error("An error", 1)` | Echo an error and halt the script with an exit code |
+| `usage("Usage: myscript.js [--verbose]")` | Define a usage message |
+| `usage.printAndExit()` | Print the usage message and then exit with an error exit code |
+| `sleep(2000)` | Sleep for specified number of milliseconds |
 
 **Arguments and Environment**
 |     | Description |
 | --- | --- |
-| args\[0\], args\[1\] | Access arguments that have been passed in from args array |
-| args.source_file | Access arguments prefixed with "--".<br/>If argument is in format `--source_file=input.txt` the value of `args.source_file` will be `"input.txt"`.<br/>If argument is in format `--source_file` the value of `args.source_file` will be `true`. |
-| args.assertCount(2) | Returns args as array or throws an error and exits if less than number of arguments specified were supplied |
-| $1, $2, $3 | Access arguments that have been passed |
-| $0 | Get the name of the current script file |
-| $HOME | Access an environment variable |
-| env.HOME | Access an environment variable from the `env` object |
-| env.assert("USERNAME") | Returns environment variable value and throws an error if the variable is undefined |
+| `args[0], args[1], ...` | Access arguments that have been passed in from args array |
+| `$1, $2, $3, ...` | Access arguments that have been passed by numeric order |
+| `args.source_file` | Access arguments prefixed with "--".<br/>If argument is in format `--source_file=input.txt` the value of `args.source_file` will be `"input.txt"`.<br/>If argument is in format `--source_file` the value of `args.source_file` will be `true`. |
+| `args.assertCount(2)` | Return args as array or throw an error and exit if less than number of arguments specified were supplied |
+| `$0` | Return the name of the current script file |
+| `$HOME` | Access an environment variable |
+| `env.HOME` | Access an environment variable from the `env` object |
+| `env.assert("USERNAME")` | Return environment variable value or throw an error if the variable is undefined |
 
 **Command Execution**
 |     | Description |
 | --- | --- |
-| result=$("cmd.sh") | Execute a command and return the stdout |
-| $.echo("cmd.sh") | Execute a command and stream stdout to console without returning a value |
-| $.noThrow("cmd.sh") | Execute a command and do not throw an error if its exit code is not 0 |
-| $.quiet("cmd.sh") | Execute a command and do not echo the command before running it |
-| $.retry("cmd.sh", 5) | Execute a command and if it throws and error, retry a number of times until it succeeds |
+| `result=$("cmd.sh")` | Execute a command and return the stdout |
+| `$.echo("cmd.sh")` | Execute a command and stream stdout to console without returning a value |
+| `$.noThrow("cmd.sh")` | Execute a command and do not throw an error if its exit code is not 0 |
+| `$.quiet("cmd.sh")` | Execute a command and do not echo the command before running it |
+| `$.retry("cmd.sh", 5)` | Execute a command and if it throws and error, retry a number of times until it succeeds |
 
 **File System**
 |     | Description |
 | --- | --- |
-| cd("/usr/bin") | Change the current working directory |
-| config=readFile("cnf.txt") | Read text from file |
-| writeFile("cnf.txt", "World") | Write text to file |
-| dirExists("./myDir") | Check if directory exists |
-| mkDir("./newDirName") | Create a directory |
-| rmDir("./newDirName") | Delete a directory |
-| exists("./aFile.txt") | Check if a file exists |
-| rm("./myFile") | Delete a file |
-| dirname("./path/file.txt") | Return the directory name for a path |
+| `cd("/usr/bin")` | Change the current working directory |
+| `config=readFile("cnf.txt")` | Read text from file |
+| `writeFile("cnf.txt", "World")` | Write text to file |
+| `dirExists("./myDir")` | Check if directory exists |
+| `mkDir("./newDirName")` | Create a directory |
+| `rmDir("./newDirName")` | Delete a directory |
+| `exists("./aFile.txt")` | Check if a file exists |
+| `rm("./myFile")` | Delete a file |
+| `dirname("./path/file.txt")` | Return the directory name for a path |
 
 **HTTP Requests**
 
@@ -86,15 +89,13 @@ Note: The HTTP helpers are asynchronous.
 
 |     | Description |
 | --------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| await http.get("https://www.myapi.com")                   | Make a HTTP GET request and return the response body                                                |
-| await http.post("https://www.myapi.com", { data: "1" })   | Make a HTTP POST request and return the response body                                               |
-| await http.put("https://www.myapi.com", { data: "1" })    | Make a HTTP PUT request and return the response body                                                |
-| await http.delete("https://www.myapi.com", { data: "1" }) | Make a HTTP DELETE request and return the response body                                             |
-| await http("GET", "https://www.myapi.com")                | Make a HTTP request and return the response: (`{ data, headers, statusCode, statusMessage }`)       |
-| await http.noThrow("GET", "https://www.myapi.com")        | Make a HTTP request and do not throw if status code is not 20X                                      |
-| await http.retry("GET", "https://www.myapi.com")          | Make a HTTP request and if response status code is not 20X, retry a number of times until it is 20X |
-
-You can refer to the [definition file](https://github.com/bradymholt/jsh/blob/main/dist/index.d.ts) for a full list of the helpers and JSDoc documentation for arguments and usage.
+| `await http.get("https://www.myapi.com")`                   | Make a HTTP GET request and return the response body                                                |
+| `await http.post("https://www.myapi.com", { data: "1" }) `  | Make a HTTP POST request and return the response body                                               |
+| `await http.put("https://www.myapi.com", { data: "1" })`    | Make a HTTP PUT request and return the response body                                                |
+| `await http.delete("https://www.myapi.com", { data: "1" })` | Make a HTTP DELETE request and return the response body                                             |
+| `await http("GET", "https://www.myapi.com")`                | Make a HTTP request and return the response: (`{ data, headers, statusCode, statusMessage }`)       |
+| `await http.noThrow("GET", "https://www.myapi.com")`        | Make a HTTP request and do not throw an error if status code is not 20X                                      |
+| `await http.retry("GET", "https://www.myapi.com")`          | Make a HTTP request and if response status code is not 20X, retry a number of times until it is |
 
 ## Command Execution
 
@@ -121,7 +122,7 @@ Example:
 // Will print `npm install` output immediately as it happens
 // $.echo() will not return anything (void)
 
-$.echo(`npm install`)
+$.echo(`npm install`) // or eval(`npm install`)
 
 > added 379 packages, and audited 380 packages in 1s
 > 29 packages are looking for funding
@@ -161,7 +162,7 @@ echo(content);
 
 ## HTTP Requests
 
-The http helper can be used to make asynchronous HTTP requests. It returns a promise and resolves with an `IHttpResponse` object that includes: `{data, headers, statusCode, statusMessage, requestOptions }`.
+The http helper can be used to make asynchronous HTTP requests. It returns a promise and resolves with an `IHttpResponse` object that contains these properties: `{data, headers, statusCode, statusMessage, requestOptions }`.
 
 Example:
 
@@ -174,19 +175,19 @@ echo(response.statusCode) // 200
 echo(response.statusMessage) // "OK"
 ```
 
-There are also helpers for each of the 4 primary HTTP methods: `http.get`, `http.post`, `http.put`, `http.delete`. These helpers do not require having to pass in the method type and will also return the response body. If the response is of JSON format, it will be parsed before being returned.
+There are also helpers for each of the 4 primary HTTP methods: `http.get`, `http.post`, `http.put`, `http.delete`. These helpers do not require having to pass in the method type and will also return the response _body_. If the response is of JSON format, it will be parsed before being returned.
 
 Example:
 
 ```
-const response = await http("GET", "https://www.myapi.com);
+const response = await http.get("https://www.myapi.com);
 
 echo(response) // { data: "Testing" }
 ```
 
 ### Error Handling
 
-If a status code outside the range 20X is returned, a `HttpRequestError` error will be thrown. The error contains these properties: `{ message, data, statusCode, statusMessage, request, response }`.
+If a status code outside the range 20X is returned in the HTTP response, a `HttpRequestError` error will be thrown. The error contains these properties: `{ message, data, statusCode, statusMessage, request, response }`.
 
 Example:
 
@@ -208,7 +209,7 @@ You can call `http.noThrow()` to prevent an error from being thrown. Instead, th
 Example:
 
 ```
-const response = await http("GET", "https://www.myapi.com);
+const response = await http.noThrow("GET", "https://www.myapi.com);
 
 echo(response.data) // "A server error occurred.  Please try again later."
 echo(response.headers) // { "Content-Type": "text/plain" }
@@ -217,6 +218,8 @@ echo(response.statusMessage) // "Internal Server Error"
 ```
 
 ## Installation
+
+Note: **jsh requires Node >=16**
 
 ### npx
 
@@ -232,7 +235,7 @@ echo("Hello jsh")
 
 #### Linux
 
-Since Linux does not support multiple arguments in the shebang, you need to call npx at its absolute path. Usually npx is installed in `/usr/local/bin/` but you can run `which npx` to find out.
+Since most Linux distributions do not support multiple arguments in the shebang, you need to call npx at its absolute path. Usually npx is installed in `/usr/local/bin/` but you can run `which npx` to locate it.
 
 ```
 #!/usr/local/bin/npx jsh
@@ -240,7 +243,7 @@ Since Linux does not support multiple arguments in the shebang, you need to call
 echo("Hello jsh")
 ```
 
-npx will look for a globally installed (`npm install -g jsh`) or locally installed version of jsh inside of `node_modules`, specified in a package.json. If found, it will use the installed version of jsh. Otherwise, it will download the latest version from npm each time it is run. Therefore, it is recommended to install jsh globally or locally when using npx so that it will be available not have to be downloaded each time.
+npx will look for a globally installed (`npm install -g jsh`) or locally installed (package.json / `node_modules` ) version of jsh, and use it if found.  Otherwise, it will download the latest version from npm. Therefore, it is recommended to install jsh globally or locally when using npx so that it will be available and not have to be downloaded each time.
 
 ### npm global install
 
@@ -258,7 +261,7 @@ Once it is installed globally, you can write your script with a jsh [shebang](<h
 echo(`Hello jsh`)
 ```
 
-### require / import
+### require
 
 Rather than installing jsh globally, you can simply download it to a local folder and reference it directly from your script using a `require` or `import` statement. This is a good option for scripts running on a remote system where you may not have the ability to use npx or be able to install npm packages globally. Node.js will still need to be available, though.
 
@@ -293,6 +296,10 @@ require('uuid/v4')
 
 echo(uuidv4()) // -> '110ec58a-a0f2-4ac4-8393-c866d813b8d1'
 ```
+
+## ES Modules
+
+jsh is distributed as both a CommonJS and an ES Module library.  When you `require` or `import` jsh, Node should be able to determine which library to load based upon your file extension (.js, .cjs, .mjs) and/or "type" setting in your package.json file.
 
 ## TypeScript Support
 
