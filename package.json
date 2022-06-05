@@ -16,8 +16,8 @@
     "bash",
     "script"
   ],
-  "main": "dist/cjs/index.js",
-  "module": "dist/mjs/index.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
   "type": "module",
   "exports": {
     ".": {
@@ -25,6 +25,7 @@
       "import": "./dist/index.mjs"
     }
   },
+  "types": "dist/index.d.ts",
   "bin": "./bin/jsh.mjs",
   "devDependencies": {
     "@types/jest": "^27.5.1",
@@ -37,6 +38,6 @@
   "scripts": {
     "build": "rm -rf dist/ && tsc -p src/tsconfig.mjs.json && mv ./dist/index.js ./dist/index.mjs && tsc -p src/tsconfig.cjs.json && mv ./dist/index.js ./dist/index.cjs",
     "test": "jest --clearCache && jest --silent",
-    "prepublishOnly": "npm run build && bin/local-run.mjs ./scripts/source-version-prefix.mjs"
+    "prepublishOnly": "npm run build && bin/jsh-local.mjs ./scripts/source-version-prefix.mjs"
   }
 }

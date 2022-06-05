@@ -1,5 +1,5 @@
-#!bin/shebang-local.mjs
-import "../dist/mjs/index.mjs";
+#!bin/jsh-local.mjs
+import "../dist/index.mjs";
 
 usage(`\
 Usage: ${$0}
