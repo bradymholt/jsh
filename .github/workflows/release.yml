@@ -12,4 +12,6 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           files: |
-            dist/*
+            dist/index.cjs
+            dist/index.mjs
+            dist/index.d.ts
