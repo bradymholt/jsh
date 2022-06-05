@@ -37,6 +37,6 @@
   "scripts": {
     "build": "rm -rf dist/ && tsc -p src/tsconfig.mjs.json && tsc -p src/tsconfig.cjs.json && mv ./dist/mjs/index.js ./dist/mjs/index.mjs",
     "test": "jest --clearCache && jest --silent",
-    "prepublishOnly": "npm run build &&  bin/local-run.mjs ./scripts/source-version-prefix.mjs"
+    "prepublishOnly": "npm run build && bin/local-run.mjs ./scripts/source-version-prefix.mjs"
   }
 }
