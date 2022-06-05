@@ -25,7 +25,7 @@
       "import": "./dist/mjs/index.mjs"
     }
   },
-  "bin": "./bin/run.mjs",
+  "bin": "./bin/jsh.mjs",
   "devDependencies": {
     "@types/jest": "^27.5.1",
     "@types/node": "^17.0.35",
