@@ -1,0 +1,42 @@
+{
+  "name": "jsh",
+  "version": "0.2.0",
+  "description": "Helpers for Bash like shell scripting in JavaScript",
+  "author": "Brady Holt",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bradymholt/jsh.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bradymholt/jsh/issues"
+  },
+  "homepage": "https://github.com/bradymholt/jsh#README",
+  "keywords": [
+    "bash",
+    "script"
+  ],
+  "main": "dist/cjs/index.js",
+  "module": "dist/mjs/index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/mjs/index.mjs"
+    }
+  },
+  "bin": "./bin/run.mjs",
+  "devDependencies": {
+    "@types/jest": "^27.5.1",
+    "@types/node": "^17.0.35",
+    "jest": "^28.1.0",
+    "node-fakeweb": "^1.1.0",
+    "ts-jest": "^28.0.3",
+    "typescript": "^4.6.4"
+  },
+  "scripts": {
+    "build": "rm -rf dist/ && tsc -p src/tsconfig.mjs.json && tsc -p src/tsconfig.cjs.json && mv ./dist/mjs/index.js ./dist/mjs/index.mjs",
+    "test": "jest --clearCache && jest --silent",
+    "prepublishOnly": "npm run build &&  bin/local-run.mjs ./scripts/source-version-prefix.mjs"
+  }
+}
