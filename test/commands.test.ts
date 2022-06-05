@@ -33,13 +33,13 @@ it("should return CommandError with expected values", () => {
 
   expect(commandError.message).toEqual("Error running command: `unknown_command`");
   expect(commandError.command).toEqual("unknown_command");
-  expect(commandError.stderr).toMatch("unknown_command: command not found");
+  expect(commandError.stderr).toContain("unknown_command: command not found");
   expect(commandError.stdout).toEqual("");
   expect(commandError.status).toEqual(127);
 });
 
 it("$.noThrow should not throw with non zero exit code", () => {
-  expect($.noThrow("unknown_command")).toMatch("unknown_command: command not found");
+  expect($.noThrow("unknown_command")).toContain("unknown_command: command not found");
 });
 
 it("$.retry should retry when first call results in error", () => {
