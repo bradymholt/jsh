@@ -143,7 +143,7 @@ for (let p of Object.getOwnPropertyNames(process.env)) {
  * @param content
  * @param optionalArgs
  */
-const _echo = (content: string, ...optionalArgs: any[]) => {
+let _echo = (content: string, ...optionalArgs: any[]) => {
   console.log(content, ...optionalArgs);
 };
 /**
