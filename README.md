@@ -94,7 +94,7 @@ Note: The HTTP helpers are asynchronous.
 | await http.noThrow("GET", "https://www.myapi.com")        | Make a HTTP request and do not throw if status code is not 20X                                      |
 | await http.retry("GET", "https://www.myapi.com")          | Make a HTTP request and if response status code is not 20X, retry a number of times until it is 20X |
 
-You can refer to the [definition file](https://github.com/bradymholt/jsh/blob/main/dist/cjs/index.d.ts) for a full list of the helpers and JSDoc documentation for arguments and usage.
+You can refer to the [definition file](https://github.com/bradymholt/jsh/blob/main/dist/index.d.ts) for a full list of the helpers and JSDoc documentation for arguments and usage.
 
 ## Command Execution
 
@@ -265,7 +265,7 @@ Rather than installing jsh globally, you can simply download it to a local folde
 First, download jsh:
 
 ```
-wget -O jsh.js https://raw.githubusercontent.com/bradymholt/jsh/main/dist/cjs/index.js
+wget -O jsh.js https://raw.githubusercontent.com/bradymholt/jsh/main/dist/index.cjs
 ```
 
 Then, in your script:
