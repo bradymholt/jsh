@@ -1,6 +1,6 @@
 {
   "name": "jsh",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "description": "Helpers for Bash like shell scripting in JavaScript",
   "author": "Brady Holt",
   "license": "MIT",
