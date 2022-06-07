@@ -28,8 +28,8 @@
   "types": "dist/index.d.ts",
   "bin": "./bin/jsh.mjs",
   "files": [
-    "./bin/",
-    "./dist/"
+    "/bin/**/*",
+    "/dist/**/*"
   ],
   "devDependencies": {
     "@types/jest": "^27.5.1",
