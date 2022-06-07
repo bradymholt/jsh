@@ -28,7 +28,7 @@
   "types": "dist/index.d.ts",
   "bin": "./bin/jsh.mjs",
   "files": [
-    "/bin/**/*",
+    "/bin/jsh.mjs",
     "/dist/**/*"
   ],
   "devDependencies": {
