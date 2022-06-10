@@ -6,18 +6,23 @@ import { URL } from "node:url";
 import * as fs from "fs";
 import * as path from "path";
 
-const _filename = () => {
-  if (global.jsh_scriptName) {
-    return global.jsh_scriptName;
+export function setEntryScriptPath(scriptPath: string) {
+  let scriptAbsolutePath = null;
+  if (!scriptPath.startsWith("/")) {
+    // scriptPath is a relative path so join with cwd to get absolute path
+    scriptAbsolutePath = path.join(process.cwd(), scriptPath);
   } else {
-    return nodePath.resolve(process.argv[1]);
+    scriptAbsolutePath = scriptPath;
   }
-};
-global.__filename = _filename();
-global.$0 = path.basename(__filename); // Set $0 to the name of the current script
-global.__dirname = nodePath.dirname(_filename());
-global.dirname = path.dirname;
 
+  global.__filename = scriptAbsolutePath;
+  global.$0 = path.basename(scriptAbsolutePath); // Set $0 to the name of the current script
+  global.__dirname = nodePath.dirname(scriptAbsolutePath);
+}
+// By default, we will expect the entry script to be specified in second argument (`node myscript.js`).
+setEntryScriptPath(nodePath.resolve(process.argv[1]));
+
+global.dirname = path.dirname;
 global.exit = process.exit;
 /**
  * Echos error message and then exists with the specified exit code (defaults to 1)
@@ -52,40 +57,7 @@ _usage.printAndExit = _printUsageAndExit;
 global.usage = _usage;
 
 // Arguments
-const argsParsed = process.argv.slice(global.jsh_shebang ? 3 : 2);
-let _argsAny: any = argsParsed;
-_argsAny.assertCount = (argCount: number, errorMessage?: string, exitCode = 1): string[] => {
-  if (_argsAny.length < argCount) {
-    const argErrorMessage =
-      errorMessage ??
-      `${argCount} argument${argCount == 1 ? "" : "s"} ${argCount == 1 ? "was" : "were"} expected but ${
-        _argsAny.length == 0 ? "none" : _argsAny.length
-      } ${_argsAny.length == 1 ? "was" : "were"} provided`;
-
-    usage.printAndExit(argErrorMessage, exitCode);
-    // We'll never get here
-    return [];
-  } else {
-    return argsParsed;
-  }
-};
-// Parse arguments and add properties to args object
-for (let i = 0; i < _argsAny.length; i++) {
-  const currentArgValue = _argsAny[i];
-  if (currentArgValue.startsWith("--") && currentArgValue.length > 2) {
-    const match = currentArgValue.match(/\-\-(?<name>\w+)=?(?<value>\w*)/);
-    if (match?.groups?.name) {
-      if (match?.groups?.value) {
-        // `--argument_name=value` format - will be accessible as args.argument_name == "value"
-        _argsAny[match.groups.name] = match.groups.value;
-      } else {
-        // `--argument_name` format - will be accessible as args.argument_name == true
-        _argsAny[match.groups.name] = true;
-      }
-    }
-  }
-}
-const _args: Array<string> & {
+type Arguments = Array<string> & {
   /**
    * Returns args as array (that can be destructured) and throws an error and exits if less than number of arguments specified were supplied
    * @param argCount
@@ -96,18 +68,55 @@ const _args: Array<string> & {
   assertCount(argCount: number, errorMessage?: string, exitCode?: boolean): string[];
 } & {
   [argName: string]: string | boolean;
-} = _argsAny;
-global.args = _args;
+};
+export function setupArguments(passedInArguments: Array<string>) {
+  let _argsAny: any = passedInArguments;
+  _argsAny.assertCount = (argCount: number, errorMessage?: string, exitCode = 1): string[] => {
+    if (_argsAny.length < argCount) {
+      const argErrorMessage =
+        errorMessage ??
+        `${argCount} argument${argCount == 1 ? "" : "s"} ${argCount == 1 ? "was" : "were"} expected but ${
+          _argsAny.length == 0 ? "none" : _argsAny.length
+        } ${_argsAny.length == 1 ? "was" : "were"} provided`;
 
-// Alias arguments as $1, $2, etc.
-for (let i = 1; i <= Math.max(10, args.length); i++) {
-  // $1 through $10, at a minimum, will be declared and have argument value or be set to undefined if not specified
-  if (args.length >= i) {
-    (<any>global)[`$${i}`] = args[i - 1];
-  } else {
-    (<any>global)[`$${i}`] = undefined;
+      usage.printAndExit(argErrorMessage, exitCode);
+      // We'll never get here
+      return [];
+    } else {
+      return passedInArguments.slice(0, argCount);
+    }
+  };
+  // Parse arguments and add properties to args object
+  for (let i = 0; i < _argsAny.length; i++) {
+    const currentArgValue = _argsAny[i];
+    if (currentArgValue.startsWith("--") && currentArgValue.length > 2) {
+      const match = currentArgValue.match(/\-\-(?<name>\w+)=?(?<value>\w*)/);
+      if (match?.groups?.name) {
+        if (match?.groups?.value) {
+          // `--argument_name=value` format - will be accessible as args.argument_name == "value"
+          _argsAny[match.groups.name] = match.groups.value;
+        } else {
+          // `--argument_name` format - will be accessible as args.argument_name == true
+          _argsAny[match.groups.name] = true;
+        }
+      }
+    }
+  }
+
+  global.args = _argsAny;
+
+  // Alias arguments as $1, $2, etc.
+  for (let i = 1; i <= Math.max(10, args.length); i++) {
+    // $1 through $10, at a minimum, will be declared and have argument value or be set to undefined if not specified
+    if (args.length >= i) {
+      (<any>global)[`$${i}`] = args[i - 1];
+    } else {
+      (<any>global)[`$${i}`] = undefined;
+    }
   }
 }
+// By default, we will expect the passed arguments to begin with process.argv[2] (`node myscript.js arg1 arg2`)
+setupArguments(process.argv.slice(2));
 
 // Environment variables
 let _envAny: any = Object.getOwnPropertyNames(process.env).map((e) => process.env[e]);
@@ -627,8 +636,6 @@ const _retry = <T>(tryFunction: () => T, maxTries = 5, waitMillisecondsBeforeRet
 };
 
 declare global {
-  var jsh_scriptName: string;
-  var jsh_shebang: boolean;
   var __filename: string;
   var __dirname: string;
   var dirname: typeof path.dirname;
@@ -648,7 +655,7 @@ declare global {
   var readFile: typeof _readFile;
   var writeFile: typeof _writeFile;
   var env: typeof _env;
-  var args: typeof _args;
+  var args: Arguments;
   var $0: string;
   var $1: string;
   var $2: string;

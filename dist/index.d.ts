@@ -1,5 +1,6 @@
 /// <reference types="node" />
 import * as path from "path";
+export declare function setEntryScriptPath(scriptPath: string): void;
 /**
  * Echos error message and then exists with the specified exit code (defaults to 1)
  * @param errorMessage
@@ -15,7 +16,7 @@ declare const _usage: {
      */
     printAndExit: (additionalMessage?: string | undefined, exitCode?: number) => void;
 };
-declare const _args: Array<string> & {
+declare type Arguments = Array<string> & {
     /**
      * Returns args as array (that can be destructured) and throws an error and exits if less than number of arguments specified were supplied
      * @param argCount
@@ -27,6 +28,7 @@ declare const _args: Array<string> & {
 } & {
     [argName: string]: string | boolean;
 };
+export declare function setupArguments(passedInArguments: Array<string>): void;
 declare const _env: {
     [envVar: string]: string;
 } & {
@@ -247,8 +249,6 @@ declare const _readFile: (path: string, encoding?: BufferEncoding) => string;
  */
 declare const _writeFile: (path: string, contents: string, encoding?: BufferEncoding) => void;
 declare global {
-    var jsh_scriptName: string;
-    var jsh_shebang: boolean;
     var __filename: string;
     var __dirname: string;
     var dirname: typeof path.dirname;
@@ -268,7 +268,7 @@ declare global {
     var readFile: typeof _readFile;
     var writeFile: typeof _writeFile;
     var env: typeof _env;
-    var args: typeof _args;
+    var args: Arguments;
     var $0: string;
     var $1: string;
     var $2: string;

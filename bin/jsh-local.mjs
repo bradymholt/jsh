@@ -1,10 +1,9 @@
 #!/usr/bin/env node
-
-import * as path from "path";
-global.jsh_shebang = true;
+import * as jsh from "../dist/index.mjs";
 
 const scriptPath = `${process.cwd()}/${process.argv[2]}`;
-global.jsh_scriptName = path.basename(scriptPath);
 
-import "../dist/index.mjs";
+jsh.setEntryScriptPath(scriptPath);
+jsh.setupArguments(process.argv.slice(3));
+
 await import(scriptPath);

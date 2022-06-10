@@ -1,16 +1,19 @@
 #!/usr/bin/env node
-
+import * as jsh from "jsh";
 import * as path from "path";
-global.jsh_shebang = true;
+usage(`\
+Usage: jsh <script> [args]\
+`);
 
-let scriptPath = path.join(process.argv[2]);
+args.assertCount(1);
 
-if (!process.argv[2].startsWith("/")) {
+let scriptPath = process.argv[2];
+if (!scriptPath.startsWith("/")) {
   // Relative path so join with current working directory
-  scriptPath = path.join(process.cwd(), process.argv[2]);
+  scriptPath = path.join(process.cwd(), scriptPath);
 }
 
-global.jsh_scriptName = path.basename(scriptPath);
+jsh.setEntryScriptPath(scriptPath);
+jsh.setupArguments(process.argv.slice(3));
 
-import "jsh";
 await import(scriptPath);

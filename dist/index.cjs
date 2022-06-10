@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpRequestError = exports.CommandError = void 0;
+exports.HttpRequestError = exports.CommandError = exports.setupArguments = exports.setEntryScriptPath = void 0;
 const child_process_1 = require("child_process");
 const nodePath = require("node:path");
 const http = require("http");
@@ -8,17 +8,22 @@ const https = require("https");
 const node_url_1 = require("node:url");
 const fs = require("fs");
 const path = require("path");
-const _filename = () => {
-    if (global.jsh_scriptName) {
-        return global.jsh_scriptName;
+function setEntryScriptPath(scriptPath) {
+    let scriptAbsolutePath = null;
+    if (!scriptPath.startsWith("/")) {
+        // scriptPath is a relative path so join with cwd to get absolute path
+        scriptAbsolutePath = path.join(process.cwd(), scriptPath);
     }
     else {
-        return nodePath.resolve(process.argv[1]);
+        scriptAbsolutePath = scriptPath;
     }
-};
-global.__filename = _filename();
-global.$0 = path.basename(__filename); // Set $0 to the name of the current script
-global.__dirname = nodePath.dirname(_filename());
+    global.__filename = scriptAbsolutePath;
+    global.$0 = path.basename(scriptAbsolutePath); // Set $0 to the name of the current script
+    global.__dirname = nodePath.dirname(scriptAbsolutePath);
+}
+exports.setEntryScriptPath = setEntryScriptPath;
+// By default, we will expect the entry script to be specified in second argument (`node myscript.js`).
+setEntryScriptPath(nodePath.resolve(process.argv[1]));
 global.dirname = path.dirname;
 global.exit = process.exit;
 /**
@@ -49,50 +54,52 @@ const _usage = (message, printAndExitIfHelpArgumentSpecified = true) => {
  */
 _usage.printAndExit = _printUsageAndExit;
 global.usage = _usage;
-// Arguments
-const argsParsed = process.argv.slice(global.jsh_shebang ? 3 : 2);
-let _argsAny = argsParsed;
-_argsAny.assertCount = (argCount, errorMessage, exitCode = 1) => {
-    if (_argsAny.length < argCount) {
-        const argErrorMessage = errorMessage ??
-            `${argCount} argument${argCount == 1 ? "" : "s"} ${argCount == 1 ? "was" : "were"} expected but ${_argsAny.length == 0 ? "none" : _argsAny.length} ${_argsAny.length == 1 ? "was" : "were"} provided`;
-        usage.printAndExit(argErrorMessage, exitCode);
-        // We'll never get here
-        return [];
-    }
-    else {
-        return argsParsed;
-    }
-};
-// Parse arguments and add properties to args object
-for (let i = 0; i < _argsAny.length; i++) {
-    const currentArgValue = _argsAny[i];
-    if (currentArgValue.startsWith("--") && currentArgValue.length > 2) {
-        const match = currentArgValue.match(/\-\-(?<name>\w+)=?(?<value>\w*)/);
-        if (match?.groups?.name) {
-            if (match?.groups?.value) {
-                // `--argument_name=value` format - will be accessible as args.argument_name == "value"
-                _argsAny[match.groups.name] = match.groups.value;
-            }
-            else {
-                // `--argument_name` format - will be accessible as args.argument_name == true
-                _argsAny[match.groups.name] = true;
+function setupArguments(passedInArguments) {
+    let _argsAny = passedInArguments;
+    _argsAny.assertCount = (argCount, errorMessage, exitCode = 1) => {
+        if (_argsAny.length < argCount) {
+            const argErrorMessage = errorMessage ??
+                `${argCount} argument${argCount == 1 ? "" : "s"} ${argCount == 1 ? "was" : "were"} expected but ${_argsAny.length == 0 ? "none" : _argsAny.length} ${_argsAny.length == 1 ? "was" : "were"} provided`;
+            usage.printAndExit(argErrorMessage, exitCode);
+            // We'll never get here
+            return [];
+        }
+        else {
+            return passedInArguments.slice(0, argCount);
+        }
+    };
+    // Parse arguments and add properties to args object
+    for (let i = 0; i < _argsAny.length; i++) {
+        const currentArgValue = _argsAny[i];
+        if (currentArgValue.startsWith("--") && currentArgValue.length > 2) {
+            const match = currentArgValue.match(/\-\-(?<name>\w+)=?(?<value>\w*)/);
+            if (match?.groups?.name) {
+                if (match?.groups?.value) {
+                    // `--argument_name=value` format - will be accessible as args.argument_name == "value"
+                    _argsAny[match.groups.name] = match.groups.value;
+                }
+                else {
+                    // `--argument_name` format - will be accessible as args.argument_name == true
+                    _argsAny[match.groups.name] = true;
+                }
             }
         }
     }
-}
-const _args = _argsAny;
-global.args = _args;
-// Alias arguments as $1, $2, etc.
-for (let i = 1; i <= Math.max(10, args.length); i++) {
-    // $1 through $10, at a minimum, will be declared and have argument value or be set to undefined if not specified
-    if (args.length >= i) {
-        global[`$${i}`] = args[i - 1];
+    global.args = _argsAny;
+    // Alias arguments as $1, $2, etc.
+    for (let i = 1; i <= Math.max(10, args.length); i++) {
+        // $1 through $10, at a minimum, will be declared and have argument value or be set to undefined if not specified
+        if (args.length >= i) {
+            global[`$${i}`] = args[i - 1];
+        }
+        else {
+            global[`$${i}`] = undefined;
+        }
     }
-    else {
-        global[`$${i}`] = undefined;
-    }
 }
+exports.setupArguments = setupArguments;
+// By default, we will expect the passed arguments to begin with process.argv[2] (`node myscript.js arg1 arg2`)
+setupArguments(process.argv.slice(2));
 // Environment variables
 let _envAny = Object.getOwnPropertyNames(process.env).map((e) => process.env[e]);
 _envAny.assert = (envVar, throwIfEmpty = false, exitCode = 1) => {
