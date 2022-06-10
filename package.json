@@ -16,6 +16,9 @@
     "bash",
     "script"
   ],
+  "engines": {
+    "node": ">=16"
+  },
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "type": "module",
