@@ -5,7 +5,7 @@
 Helpers for Bash like shell scripting in JavaScript
 
 <p align="center">
-<img alt="jsh" height="125" src="https://user-images.githubusercontent.com/759811/172034209-c1eb94a8-8b99-44ba-9782-2a5ce6ec4e25.png">
+<img alt="jsh" src="https://user-images.githubusercontent.com/759811/173114308-11919402-b3d2-4bd7-9f35-fb34906941b2.png">
 </p>
 
 jsh, pronounced "j shell", is a small JavaScript library (with no dependencies!) that provides helper aliases and functions that are similar to Bash syntax, allowing you to write shell scripts in JavaScript that are simple and familiar.
