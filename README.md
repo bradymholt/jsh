@@ -10,7 +10,7 @@ Helpers for Bash like shell scripting in JavaScript
 
 jsh, pronounced "j shell", is a small JavaScript library (with no dependencies!) that provides helper aliases and functions that are similar to Bash syntax, allowing you to write shell scripts in JavaScript that are simple and familiar.
 
-**jsh requires Node >=16**
+**Requirement**: Node.js >=16
 
 ## Quick Start
 
@@ -46,8 +46,8 @@ You can refer to the [definition file](https://github.com/bradymholt/jsh/blob/ma
 | `exit(1)` | Halt the script and return an exit code |
 | `error("An error", 1)` | Echo an error and halt the script with an exit code |
 | `usage("Usage: myscript.js [--verbose]")` | Define a usage message |
-| `usage.printAndExit()` | Print the usage message and then exit with an error exit code |
-| `sleep(2000)` | Sleep for specified number of milliseconds |
+| `usage.printAndExit()` | Print the usage message and then exit with an error exit code.  If `usage()` was not previously called to define a usage message, a default one will be used. |
+| `sleep(2000)` | Sleep (synchronously) for specified number of milliseconds. |
 
 **Arguments and Environment**
 |     | Description |
@@ -55,8 +55,8 @@ You can refer to the [definition file](https://github.com/bradymholt/jsh/blob/ma
 | `args[0], args[1], ...` | Access arguments that have been passed in from args array |
 | `$1, $2, $3, ...` | Access arguments that have been passed by numeric order |
 | `args.source_file` | Access arguments prefixed with "--".<br/>If argument is in format `--source_file=input.txt` the value of `args.source_file` will be `"input.txt"`.<br/>If argument is in format `--source_file` the value of `args.source_file` will be `true`. |
-| `args.assertCount(2)` | Return args as array or throw an error and exit if less than number of arguments specified were supplied |
-| `$0` | Return the name of the current script file |
+| `args.assertCount(2)` | Return arg values as array or call `usage.printAndExit()` if less than number of arguments specified were supplied |
+| `$0` | Return the name of the current script file (ex: `my_script.js`) |
 | `$HOME` | Access an environment variable |
 | `env.HOME` | Access an environment variable from the `env` object |
 | `const [HOME, USER] = env.assert(["HOME", "USER"])` | Return environment variable values as an array or call `usage.printAndExit()` if any are undefined.  You can also pass a single environment variable name in as a string and it will return the string value (ex: `const HOME = env.assert("HOME")`) |
@@ -68,7 +68,7 @@ You can refer to the [definition file](https://github.com/bradymholt/jsh/blob/ma
 | `$.echo("cmd.sh")` | Execute a command and stream stdout to console without returning a value.  Also aliased as `exec()`. |
 | `$.noThrow("cmd.sh")` | Execute a command and do not throw an error if its exit code is not 0 |
 | `$.quiet("cmd.sh")` | Execute a command and do not echo the command before running it |
-| `$.retry("cmd.sh", 5)` | Execute a command and if it throws and error, retry a number of times until it succeeds |
+| `$.retry("cmd.sh", 5)` | Execute a command and if it throws and error, retry up to a number of times until it succeeds |
 
 **File System**
 |     | Description |
@@ -89,13 +89,13 @@ Note: The HTTP helpers are asynchronous.
 
 |     | Description |
 | --------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `await http.get("https://www.myapi.com")`                   | Make a HTTP GET request and return the response body                                                |
-| `await http.post("https://www.myapi.com", { data: "1" }) `  | Make a HTTP POST request and return the response body                                               |
-| `await http.put("https://www.myapi.com", { data: "1" })`    | Make a HTTP PUT request and return the response body                                                |
-| `await http.delete("https://www.myapi.com", { data: "1" })` | Make a HTTP DELETE request and return the response body                                             |
+| `await http.get("https://www.myapi.com")`                   | Make a HTTP GET request and return the response body data                                                |
+| `await http.post("https://www.myapi.com", { data: "1" }) `  | Make a HTTP POST request and return the response body data                                               |
+| `await http.put("https://www.myapi.com", { data: "1" })`    | Make a HTTP PUT request and return the response body data                                                |
+| `await http.delete("https://www.myapi.com", { data: "1" })` | Make a HTTP DELETE request and return the response body data                                            |
 | `await http("GET", "https://www.myapi.com")`                | Make a HTTP request and return the response: (`{ data, headers, statusCode, statusMessage }`)       |
 | `await http.noThrow("GET", "https://www.myapi.com")`        | Make a HTTP request and do not throw an error if status code is not 20X                                      |
-| `await http.retry("GET", "https://www.myapi.com")`          | Make a HTTP request and if response status code is not 20X, retry a number of times until it is |
+| `await http.retry("GET", "https://www.myapi.com")`          | Make a HTTP request and if response status code is not 20X, retry up to a number of times until it is |
 
 ## Usage
 
@@ -150,7 +150,7 @@ Example:
 // Will print `npm install` output immediately as it happens
 // $.echo() will not return anything (void)
 
-$.echo(`npm install`) // or eval(`npm install`)
+$.echo(`npm install`) // or exec(`npm install`)
 
 > added 379 packages, and audited 380 packages in 1s
 > 29 packages are looking for funding
@@ -190,7 +190,7 @@ echo(content);
 
 ## HTTP Requests
 
-The http helper can be used to make asynchronous HTTP requests. It returns a promise and resolves with an `IHttpResponse` object that contains these properties: `{data, headers, statusCode, statusMessage, requestOptions }`.
+The http helper can be used to make asynchronous HTTP requests. It returns a promise and resolves with an `IHttpResponse` object that contains these properties: `{ data, headers, statusCode, statusMessage, requestOptions }`.
 
 Example:
 
