@@ -310,7 +310,7 @@ _$.retry = (
 _$.shell = true;
 _$.maxBuffer = 1024 * 1024 * 256 /* 256MB */;
 global.$ = _$;
-global.eval = _$.echo;
+global.exec = _$.echo;
 
 // HTTP
 export interface IHttpRequestOptions {
@@ -595,6 +595,7 @@ const _readFile = (path: string, encoding: BufferEncoding = "utf-8") => {
   return fs.readFileSync(path, { encoding });
 };
 global.readFile = _readFile;
+global.cat = _readFile;
 
 /**
  * Writes contents to a file, replacing the file if it exists.
@@ -645,6 +646,7 @@ declare global {
   var sleep: typeof _sleep;
   var echo: typeof _echo;
   var $: typeof _$;
+  var exec: typeof _$.echo;
   var http: typeof _http;
   var cd: typeof process.chdir;
   var exists: typeof _exists;
@@ -653,6 +655,7 @@ declare global {
   var rm: typeof _rm;
   var rmDir: typeof _rm;
   var readFile: typeof _readFile;
+  var cat: typeof _readFile;
   var writeFile: typeof _writeFile;
   var env: typeof _env;
   var args: Arguments;

@@ -65,7 +65,7 @@ You can refer to the [definition file](https://github.com/bradymholt/jsh/blob/ma
 |     | Description |
 | --- | --- |
 | `result=$("cmd.sh")` | Execute a command and return the stdout |
-| `$.echo("cmd.sh")` | Execute a command and stream stdout to console without returning a value |
+| `$.echo("cmd.sh")` | Execute a command and stream stdout to console without returning a value.  Also aliased as `exec()`. |
 | `$.noThrow("cmd.sh")` | Execute a command and do not throw an error if its exit code is not 0 |
 | `$.quiet("cmd.sh")` | Execute a command and do not echo the command before running it |
 | `$.retry("cmd.sh", 5)` | Execute a command and if it throws and error, retry a number of times until it succeeds |
@@ -74,7 +74,7 @@ You can refer to the [definition file](https://github.com/bradymholt/jsh/blob/ma
 |     | Description |
 | --- | --- |
 | `cd("/usr/bin")` | Change the current working directory |
-| `config=readFile("cnf.txt")` | Read text from file |
+| `config=readFile("cnf.txt")` | Read text from file.  Also aliased as `cat()`. |
 | `writeFile("cnf.txt", "World")` | Write text to file |
 | `dirExists("./myDir")` | Check if directory exists |
 | `mkDir("./newDirName")` | Create a directory |
@@ -114,7 +114,7 @@ let result=$(`git status --porcelain`);
 
 ### $.echo()
 
-**$.echo()** (also aliased as `eval()`) should be used when running commands where the output (stdout) does not need to be captured, but only printed to the console. This helper is intended for long running commands or those where output does not need to be captured.
+**$.echo()** (also aliased as `exec()`) should be used when running commands where the output (stdout) does not need to be captured, but only printed to the console. This helper is intended for long running commands or those where output does not need to be captured.
 
 Example:
 

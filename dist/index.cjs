@@ -267,7 +267,7 @@ _$.retry = (cmd, maxTries = 5, waitMillisecondsBeforeRetry = 5000, echoFailures 
 _$.shell = true;
 _$.maxBuffer = 1024 * 1024 * 256 /* 256MB */;
 global.$ = _$;
-global.eval = _$.echo;
+global.exec = _$.echo;
 class HttpRequestError extends Error {
     request;
     response;
@@ -492,6 +492,7 @@ const _readFile = (path, encoding = "utf-8") => {
     return fs.readFileSync(path, { encoding });
 };
 global.readFile = _readFile;
+global.cat = _readFile;
 /**
  * Writes contents to a file, replacing the file if it exists.
  * @param path

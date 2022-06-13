@@ -258,6 +258,7 @@ declare global {
     var sleep: typeof _sleep;
     var echo: typeof _echo;
     var $: typeof _$;
+    var exec: typeof _$.echo;
     var http: typeof _http;
     var cd: typeof process.chdir;
     var exists: typeof _exists;
@@ -266,6 +267,7 @@ declare global {
     var rm: typeof _rm;
     var rmDir: typeof _rm;
     var readFile: typeof _readFile;
+    var cat: typeof _readFile;
     var writeFile: typeof _writeFile;
     var env: typeof _env;
     var args: Arguments;
