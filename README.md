@@ -55,7 +55,7 @@ You can refer to the [definition file](https://github.com/bradymholt/jsh/blob/ma
 | `args[0], args[1], ...` | Access arguments that have been passed in from args array |
 | `$1, $2, $3, ...` | Access arguments that have been passed by numeric order |
 | `args.source_file` | Access arguments prefixed with "--".<br/>If argument is in format `--source_file=input.txt` the value of `args.source_file` will be `"input.txt"`.<br/>If argument is in format `--source_file` the value of `args.source_file` will be `true`. |
-| `args.assertCount(2)` | Return arg values as array or call `usage.printAndExit()` if less than number of arguments specified were supplied |
+| `const [source_file, target_file] = args.assertCount(2)` | Return arg values as array or call `usage.printAndExit()` if less than number of arguments specified were supplied |
 | `$0` | Return the name of the current script file (ex: `my_script.js`) |
 | `$HOME` | Access an environment variable |
 | `env.HOME` | Access an environment variable from the `env` object |
