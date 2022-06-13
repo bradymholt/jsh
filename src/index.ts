@@ -120,14 +120,44 @@ setupArguments(process.argv.slice(2));
 
 // Environment variables
 let _envAny: any = Object.getOwnPropertyNames(process.env).map((e) => process.env[e]);
-_envAny.assert = (envVar: string, throwIfEmpty = false, exitCode = 1) => {
-  const val = process.env[envVar];
-  if (val === undefined || (throwIfEmpty && val.length === 0)) {
-    usage.printAndExit(`Environment variable ${envVar} is not set`, exitCode);
-  } else {
-    return val;
+function envVarAssert(envVars: string, throwIfEmpty: boolean, exitCode: number): string;
+function envVarAssert(envVars: string[], throwIfEmpty: boolean, exitCode: number): string[];
+function envVarAssert(
+  envVars: string | string[],
+  throwIfEmpty: boolean = false,
+  exitCode: number = 1
+): string | string[] {
+  let envVarsIsArray = true;
+  if (!Array.isArray(envVars)) {
+    envVarsIsArray = false;
+    envVars = [envVars];
   }
-};
+  const envVarValues: Array<string> = [];
+
+  let missingVars: string[] = [];
+  for (let envVar of envVars) {
+    const val = process.env[envVar];
+    if (val === undefined || (throwIfEmpty && val.length === 0)) {
+      missingVars.push(envVar);
+      continue;
+    }
+
+    envVarValues.push(val);
+  }
+
+  if (missingVars.length > 0) {
+    usage.printAndExit(
+      `Environment variable${missingVars.length > 1 ? "s" : ""} must be set: ${missingVars.join(", ")}`,
+      exitCode
+    );
+  } else if (!envVarsIsArray) {
+    return envVarValues[0]
+  }
+
+  return envVarValues;
+}
+
+_envAny.assert = envVarAssert;
 const _env: {
   [envVar: string]: string;
 } & {
@@ -139,6 +169,7 @@ const _env: {
    * @returns
    */
   assert(envVarName: string, exitCode?: number, throwIfEmpty?: boolean): string;
+  assert(envVarName: string[], exitCode?: number, throwIfEmpty?: boolean): string[];
 } = _envAny;
 global.env = _env;
 // Environmental variables prefixed with $

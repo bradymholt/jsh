@@ -59,7 +59,7 @@ You can refer to the [definition file](https://github.com/bradymholt/jsh/blob/ma
 | `$0` | Return the name of the current script file |
 | `$HOME` | Access an environment variable |
 | `env.HOME` | Access an environment variable from the `env` object |
-| `env.assert("USERNAME")` | Return environment variable value or throw an error if the variable is undefined |
+| `const [HOME, USER] = env.assert(["HOME", "USER"])` | Return environment variable values as an array or call `usage.printAndExit()` if any are undefined.  You can also pass a single environment variable name in as a string and it will return the string value (ex: `const HOME = env.assert("HOME")`) |
 
 **Command Execution**
 |     | Description |

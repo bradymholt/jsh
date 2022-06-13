@@ -97,15 +97,31 @@ export function setupArguments(passedInArguments) {
 setupArguments(process.argv.slice(2));
 // Environment variables
 let _envAny = Object.getOwnPropertyNames(process.env).map((e) => process.env[e]);
-_envAny.assert = (envVar, throwIfEmpty = false, exitCode = 1) => {
-    const val = process.env[envVar];
-    if (val === undefined || (throwIfEmpty && val.length === 0)) {
-        usage.printAndExit(`Environment variable ${envVar} is not set`, exitCode);
+function envVarAssert(envVars, throwIfEmpty = false, exitCode = 1) {
+    let envVarsIsArray = true;
+    if (!Array.isArray(envVars)) {
+        envVarsIsArray = false;
+        envVars = [envVars];
     }
-    else {
-        return val;
+    const envVarValues = [];
+    let missingVars = [];
+    for (let envVar of envVars) {
+        const val = process.env[envVar];
+        if (val === undefined || (throwIfEmpty && val.length === 0)) {
+            missingVars.push(envVar);
+            continue;
+        }
+        envVarValues.push(val);
     }
-};
+    if (missingVars.length > 0) {
+        usage.printAndExit(`Environment variable${missingVars.length > 1 ? "s" : ""} must be set: ${missingVars.join(", ")}`, exitCode);
+    }
+    else if (!envVarsIsArray) {
+        return envVarValues[0];
+    }
+    return envVarValues;
+}
+_envAny.assert = envVarAssert;
 const _env = _envAny;
 global.env = _env;
 // Environmental variables prefixed with $
