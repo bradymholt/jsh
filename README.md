@@ -116,6 +116,8 @@ Formats a JSON file
 
 You can also use `$0` to reference the name of the current script rather than having to hardcode it.  The above example could be changed to (`${$0} source_file target_file [--verbose]` ...).
 
+### usage.printAndExit()
+
 You can call `usage.printAndExit()` at any time to print the usage instructions and then immediately exit with an error code.  If you call usage.printAndExit() _before_ calling usage(), a simple default message will be echoed but if you call usage.printAndExit() _after_ calling usage(), your custom usage instructions will be echoed.
 
 There are a few ways that usage.printAndExit() will be called implicitly.
