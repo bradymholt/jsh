@@ -97,6 +97,32 @@ Note: The HTTP helpers are asynchronous.
 | `await http.noThrow("GET", "https://www.myapi.com")`        | Make a HTTP request and do not throw an error if status code is not 20X                                      |
 | `await http.retry("GET", "https://www.myapi.com")`          | Make a HTTP request and if response status code is not 20X, retry a number of times until it is |
 
+## Usage
+
+To define usage instructions for your script, you can call `usage()` and pass in a usage string that describes the script and documents any required or optional arguments.  
+
+Example:
+```
+usage(`\
+Usage:
+  json_formatter.js source_file target_file [--verbose]
+
+Example:
+  json_formatter.js ./my_in_file.json ./my_out_file.json --verbose
+
+Formats a JSON file
+`);
+```
+
+You can also use `$0` to reference the name of the current script rather than having to hardcode it.  The above example could be changed to (`${$0} source_file target_file [--verbose]` ...).
+
+You can call `usage.printAndExit()` at any time to print the usage instructions and then immediately exit with an error code.  If you call usage.printAndExit() _before_ calling usage(), a simple default message will be echoed but if you call usage.printAndExit() _after_ calling usage(), your custom usage instructions will be echoed.
+
+There are a few ways that usage.printAndExit() will be called implicitly.
+1. If `--help` or `-h` is passed in as an argument
+1. If `args.assertCount()` is called and the required number of arguments were not passed in.  For example, if args.assertCount(3) is called and only 2 arguments were passed in.
+1. If `env.assert()` is called and the environment variable(s) are not defined.
+
 ## Command Execution
 
 ### $()
