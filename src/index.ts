@@ -383,6 +383,8 @@ export class HttpRequestError<T> extends Error {
   }
 }
 
+type HTTPMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
 /**
  * Makes an asynchronous HTTP request and returns the response.   Will reject with an error if the response status code is not 2xx.
  * @param method
@@ -392,7 +394,7 @@ export class HttpRequestError<T> extends Error {
  * @returns IHttpResponse<T>
  */
 const _http = <T>(
-  method: "GET" | "POST" | "PUT" | "DELETE",
+  method: HTTPMethod,
   url: string,
   requestBody: any = null,
   headers: any = {}
@@ -483,7 +485,7 @@ global.http = _http;
  * @returns
  */
 _http.noThrow = async <T>(
-  method: "GET" | "POST" | "PUT" | "DELETE",
+  method: HTTPMethod,
   url: string,
   requestBody: any = null,
   headers: any = {}
@@ -511,7 +513,7 @@ _http.noThrow = async <T>(
  * @returns
  */
 _http.retry = async <T>(
-  method: "GET" | "POST" | "PUT" | "DELETE",
+  method: HTTPMethod,
   url: string,
   requestBody: any = null,
   headers: any = {},
@@ -555,6 +557,16 @@ _http.post = async <T>(url: string, data: any, headers: any = {}) => {
  */
 _http.put = async <T>(url: string, data: any, headers: any = {}) => {
   const response = await _http<T>("PUT", url, data, headers);
+  return response.data;
+};
+/**
+ * Makes a PATCH HTTP request and returns the response data.  Will throw an error if the response status code is not 2xx.
+ * @param url
+ * @param headers
+ * @returns
+ */
+ _http.patch = async <T>(url: string, data: any, headers: any = {}) => {
+  const response = await _http<T>("PATCH", url, data, headers);
   return response.data;
 };
 /**

@@ -88,14 +88,15 @@ You can refer to the [definition file](https://github.com/bradymholt/jsh/blob/ma
 Note: The HTTP helpers are asynchronous.
 
 |     | Description |
-| --------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | `await http.get("https://www.myapi.com")`                   | Make a HTTP GET request and return the response body data                                                |
 | `await http.post("https://www.myapi.com", { data: "1" }) `  | Make a HTTP POST request and return the response body data                                               |
 | `await http.put("https://www.myapi.com", { data: "1" })`    | Make a HTTP PUT request and return the response body data                                                |
-| `await http.delete("https://www.myapi.com", { data: "1" })` | Make a HTTP DELETE request and return the response body data                                            |
-| `await http("GET", "https://www.myapi.com")`                | Make a HTTP request and return the response: (`{ data, headers, statusCode, statusMessage }`)       |
-| `await http.noThrow("GET", "https://www.myapi.com")`        | Make a HTTP request and do not throw an error if status code is not 20X                                      |
-| `await http.retry("GET", "https://www.myapi.com")`          | Make a HTTP request and if response status code is not 20X, retry up to a number of times until it is |
+| `await http.patch("https://www.myapi.com", { data: "1" })`  | Make a HTTP PATCH request and return the response body data                                              |
+| `await http.delete("https://www.myapi.com", { data: "1" })` | Make a HTTP DELETE request and return the response body data                                             |
+| `await http("GET", "https://www.myapi.com")`                | Make a HTTP request and return the response: (`{ data, headers, statusCode, statusMessage }`)            |
+| `await http.noThrow("GET", "https://www.myapi.com")`        | Make a HTTP request and do not throw an error if status code is not 20X                                  |
+| `await http.retry("GET", "https://www.myapi.com")`          | Make a HTTP request and if response status code is not 20X, retry up to a number of times until it is    |
 
 ## Usage
 
