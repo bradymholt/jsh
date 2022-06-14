@@ -344,6 +344,7 @@ global.$ = _$;
 global.exec = _$.echo;
 
 // HTTP
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 export interface IHttpRequestOptions {
   protocol: string;
   hostname: string;
@@ -383,8 +384,6 @@ export class HttpRequestError<T> extends Error {
   }
 }
 
-export type HTTPMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-
 /**
  * Makes an asynchronous HTTP request and returns the response.   Will reject with an error if the response status code is not 2xx.
  * @param method
@@ -394,7 +393,7 @@ export type HTTPMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
  * @returns IHttpResponse<T>
  */
 const _http = <T>(
-  method: HTTPMethod,
+  method: HttpMethod,
   url: string,
   requestBody: any = null,
   headers: any = {}
@@ -485,7 +484,7 @@ global.http = _http;
  * @returns
  */
 _http.noThrow = async <T>(
-  method: HTTPMethod,
+  method: HttpMethod,
   url: string,
   requestBody: any = null,
   headers: any = {}
@@ -513,7 +512,7 @@ _http.noThrow = async <T>(
  * @returns
  */
 _http.retry = async <T>(
-  method: HTTPMethod,
+  method: HttpMethod,
   url: string,
   requestBody: any = null,
   headers: any = {},

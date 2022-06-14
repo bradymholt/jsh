@@ -127,6 +127,7 @@ declare const _$: {
     shell: boolean;
     maxBuffer: number;
 };
+export declare type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 export interface IHttpRequestOptions {
     protocol: string;
     hostname: string;
@@ -160,7 +161,7 @@ export declare class HttpRequestError<T> extends Error {
  * @returns IHttpResponse<T>
  */
 declare const _http: {
-    <T>(method: "GET" | "POST" | "PUT" | "DELETE", url: string, requestBody?: any, headers?: any): Promise<IHttpResponse<T>>;
+    <T>(method: HttpMethod, url: string, requestBody?: any, headers?: any): Promise<IHttpResponse<T>>;
     timeout: number;
     /**
      * Makes a synchronous HTTP request and returns the response.   Will not throw an error if the response status code is not 2xx.
@@ -170,7 +171,7 @@ declare const _http: {
      * @param headers
      * @returns
      */
-    noThrow<T_1>(method: "GET" | "POST" | "PUT" | "DELETE", url: string, requestBody?: any, headers?: any): Promise<IHttpResponse<T_1>>;
+    noThrow<T_1>(method: HttpMethod, url: string, requestBody?: any, headers?: any): Promise<IHttpResponse<T_1>>;
     /**
      * Makes a HTTP request and returns the response.   Will retry up to maxTries if an error is thrown because the status code is not 2xx.
      * @param method
@@ -182,7 +183,7 @@ declare const _http: {
      * @param echoFailures
      * @returns
      */
-    retry<T_2>(method: "GET" | "POST" | "PUT" | "DELETE", url: string, requestBody?: any, headers?: any, maxTries?: number, waitMillisecondsBeforeRetry?: number, echoFailures?: boolean): Promise<IHttpResponse<T_2>>;
+    retry<T_2>(method: HttpMethod, url: string, requestBody?: any, headers?: any, maxTries?: number, waitMillisecondsBeforeRetry?: number, echoFailures?: boolean): Promise<IHttpResponse<T_2>>;
     /**
      * Makes a GET HTTP request and returns the response data.  Will throw an error if the response status code is not 2xx.
      * @param url
@@ -205,12 +206,19 @@ declare const _http: {
      */
     put<T_5>(url: string, data: any, headers?: any): Promise<T_5>;
     /**
+     * Makes a PATCH HTTP request and returns the response data.  Will throw an error if the response status code is not 2xx.
+     * @param url
+     * @param headers
+     * @returns
+     */
+    patch<T_6>(url: string, data: any, headers?: any): Promise<T_6>;
+    /**
      * Makes a DELETE HTTP request and returns the response data.  Will throw an error if the response status code is not 2xx.
      * @param url
      * @param headers
      * @returns
      */
-    delete<T_6>(url: string, data: any, headers?: any): Promise<T_6>;
+    delete<T_7>(url: string, data: any, headers?: any): Promise<T_7>;
 };
 /**
  * Returns `true` if the path exists, `false` otherwise.

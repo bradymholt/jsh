@@ -331,7 +331,7 @@ const _http = (method, url, requestBody = null, headers = {}) => {
     let requestBodyData = requestBody ?? "";
     if (typeof requestBody == "object") {
         // Add JSON headers if needed
-        headers["Content-Type"] = headers["Content-Type"] || "application/json";
+        headers["Content-Type"] = headers["Content-Type"] || "application/json; charset=utf-8";
         headers["Accept"] = headers["Accept"] || "application/json";
         requestBodyData = JSON.stringify(requestBody);
     }
@@ -436,6 +436,16 @@ _http.post = async (url, data, headers = {}) => {
  */
 _http.put = async (url, data, headers = {}) => {
     const response = await _http("PUT", url, data, headers);
+    return response.data;
+};
+/**
+ * Makes a PATCH HTTP request and returns the response data.  Will throw an error if the response status code is not 2xx.
+ * @param url
+ * @param headers
+ * @returns
+ */
+_http.patch = async (url, data, headers = {}) => {
+    const response = await _http("PATCH", url, data, headers);
     return response.data;
 };
 /**
