@@ -427,7 +427,7 @@ const _http = <T>(
   let requestBodyData = requestBody ?? "";
   if (typeof requestBody == "object") {
     // Add JSON headers if needed
-    headers["Content-Type"] = headers["Content-Type"] || "application/json";
+    headers["Content-Type"] = headers["Content-Type"] || "application/json; charset=utf-8";
     headers["Accept"] = headers["Accept"] || "application/json";
 
     requestBodyData = JSON.stringify(requestBody);
