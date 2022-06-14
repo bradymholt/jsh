@@ -383,7 +383,7 @@ export class HttpRequestError<T> extends Error {
   }
 }
 
-type HTTPMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+export type HTTPMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 /**
  * Makes an asynchronous HTTP request and returns the response.   Will reject with an error if the response status code is not 2xx.
