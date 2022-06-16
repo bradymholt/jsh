@@ -404,7 +404,7 @@ const _http = <T>(
     protocol: parsedUrl.protocol,
     hostname: parsedUrl.hostname,
     port: !!parsedUrl.port ? Number(parsedUrl.port) : isHTTPS ? 443 : 80,
-    path: parsedUrl.pathname,
+    path: parsedUrl.pathname + parsedUrl.search,
     method,
     headers,
     timeout: _http.timeout,

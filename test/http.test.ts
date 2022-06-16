@@ -49,7 +49,7 @@ it("should not throw error when .noThrow is called", async () => {
 });
 
 it("should PUT data", async () => {
-  fakeweb.registerUri({ uri: "https://putfake.ts/", body: `{ "text": "It worked", "status": true }` });
-  const response = await http.put("https://putfake.ts/", { param: "one" });
+  fakeweb.registerUri({ uri: "https://putfake.ts/?parma1=value", body: `{ "text": "It worked", "status": true }` });
+  const response = await http.put("https://putfake.ts/?parma1=value", { param: "one" });
   expect(response).toEqual({ text: "It worked", status: true });
 });
