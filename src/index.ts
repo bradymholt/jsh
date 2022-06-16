@@ -1,4 +1,5 @@
 import { spawnSync } from "child_process";
+import * as stream from "stream";
 import * as nodePath from "node:path";
 import * as http from "http";
 import * as https from "https";
@@ -345,6 +346,7 @@ global.exec = _$.echo;
 
 // HTTP
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+export type HttpData = object | stream.Readable | null;
 export interface IHttpRequestOptions {
   protocol: string;
   hostname: string;
@@ -388,14 +390,14 @@ export class HttpRequestError<T> extends Error {
  * Makes an asynchronous HTTP request and returns the response.   Will reject with an error if the response status code is not 2xx.
  * @param method
  * @param url
- * @param requestBody
+ * @param data
  * @param headers
  * @returns IHttpResponse<T>
  */
 const _http = <T>(
   method: HttpMethod,
   url: string,
-  requestBody: any = null,
+  data: HttpData = null,
   headers: any = {}
 ): Promise<IHttpResponse<T>> => {
   const parsedUrl = new URL(url);
@@ -423,13 +425,13 @@ const _http = <T>(
     }
   };
 
-  let requestBodyData = requestBody ?? "";
-  if (typeof requestBody == "object") {
+  let requestBodyData = data ?? "";
+  if (!(data instanceof stream.Readable) && typeof data == "object") {
     // Add JSON headers if needed
     headers["Content-Type"] = headers["Content-Type"] || "application/json; charset=utf-8";
     headers["Accept"] = headers["Accept"] || "application/json";
 
-    requestBodyData = JSON.stringify(requestBody);
+    requestBodyData = JSON.stringify(data);
   }
 
   let request = http.request;
@@ -468,8 +470,12 @@ const _http = <T>(
       reject(new HttpRequestError<T>(err.message, requestOptions));
     });
 
-    req.write(requestBodyData);
-    req.end();
+    if (data instanceof stream.Readable) {
+      data.pipe(req);
+    } else {
+      req.write(requestBodyData);
+      req.end();
+    }
   });
 };
 _http.timeout = 120000; // 2 minutes
@@ -479,18 +485,18 @@ global.http = _http;
  * Makes a synchronous HTTP request and returns the response.   Will not throw an error if the response status code is not 2xx.
  * @param method
  * @param url
- * @param requestBody
+ * @param data
  * @param headers
  * @returns
  */
 _http.noThrow = async <T>(
   method: HttpMethod,
   url: string,
-  requestBody: any = null,
+  data: HttpData = null,
   headers: any = {}
 ): Promise<IHttpResponse<T>> => {
   try {
-    return await _http<T>(method, url, requestBody, headers);
+    return await _http<T>(method, url, data, headers);
   } catch (err) {
     if (err instanceof HttpRequestError) {
       return err.response as IHttpResponse<T>;
@@ -504,7 +510,7 @@ _http.noThrow = async <T>(
  * Makes a HTTP request and returns the response.   Will retry up to maxTries if an error is thrown because the status code is not 2xx.
  * @param method
  * @param url
- * @param requestBody
+ * @param data
  * @param headers
  * @param maxTries
  * @param waitMillisecondsBeforeRetry
@@ -514,14 +520,14 @@ _http.noThrow = async <T>(
 _http.retry = async <T>(
   method: HttpMethod,
   url: string,
-  requestBody: any = null,
+  data: HttpData = null,
   headers: any = {},
   maxTries = 5,
   waitMillisecondsBeforeRetry = 5000,
   echoFailures = true
 ) => {
   return _retry<Promise<IHttpResponse<T>>>(
-    () => _http<T>(method, url, requestBody, headers),
+    () => _http<T>(method, url, data, headers),
     maxTries,
     waitMillisecondsBeforeRetry,
     echoFailures
@@ -544,7 +550,7 @@ _http.get = async <T>(url: string, headers: any = {}) => {
  * @param headers
  * @returns
  */
-_http.post = async <T>(url: string, data: any, headers: any = {}) => {
+_http.post = async <T>(url: string, data: HttpData, headers: any = {}) => {
   const response = await _http<T>("POST", url, data, headers);
   return response.data;
 };
@@ -554,7 +560,7 @@ _http.post = async <T>(url: string, data: any, headers: any = {}) => {
  * @param headers
  * @returns
  */
-_http.put = async <T>(url: string, data: any, headers: any = {}) => {
+_http.put = async <T>(url: string, data: HttpData, headers: any = {}) => {
   const response = await _http<T>("PUT", url, data, headers);
   return response.data;
 };
@@ -574,7 +580,7 @@ _http.patch = async <T>(url: string, data: any, headers: any = {}) => {
  * @param headers
  * @returns
  */
-_http.delete = async <T>(url: string, data: any, headers: any = {}) => {
+_http.delete = async <T>(url: string, data: HttpData, headers: any = {}) => {
   const response = await _http<T>("DELETE", url, data, headers);
   return response.data;
 };
