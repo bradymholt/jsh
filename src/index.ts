@@ -151,7 +151,7 @@ function envVarAssert(
       exitCode
     );
   } else if (!envVarsIsArray) {
-    return envVarValues[0]
+    return envVarValues[0];
   }
 
   return envVarValues;
@@ -564,7 +564,7 @@ _http.put = async <T>(url: string, data: any, headers: any = {}) => {
  * @param headers
  * @returns
  */
- _http.patch = async <T>(url: string, data: any, headers: any = {}) => {
+_http.patch = async <T>(url: string, data: any, headers: any = {}) => {
   const response = await _http<T>("PATCH", url, data, headers);
   return response.data;
 };
