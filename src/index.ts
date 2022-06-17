@@ -21,7 +21,7 @@ export function setEntryScriptPath(scriptPath: string) {
   global.__dirname = nodePath.dirname(scriptAbsolutePath);
 }
 // By default, we will expect the entry script to be specified in second argument (`node myscript.js`).
-setEntryScriptPath(nodePath.resolve(process.argv[1]));
+setEntryScriptPath(nodePath.resolve(process.argv[1] ?? ""));
 
 global.dirname = path.dirname;
 global.exit = process.exit;
@@ -213,7 +213,10 @@ _echo.red = (content: string) => {
 };
 
 global.echo = _echo;
-global.printf = process.stdout.write;
+const _printf = function (content: string) {
+  return process.stdout.write(content, "utf8");
+};
+global.printf = _printf;
 
 /**
  * Sleeps synchronously for the specified number of milliseconds
@@ -690,7 +693,7 @@ declare global {
   var dirname: typeof path.dirname;
   var exit: typeof process.exit;
   var error: typeof _error;
-  var printf: typeof process.stdout.write;
+  var printf: typeof _printf;
   var sleep: typeof _sleep;
   var echo: typeof _echo;
   var $: typeof _$;
