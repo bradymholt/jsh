@@ -217,6 +217,25 @@ const response = await http.get("https://www.myapi.com);
 echo(response) // { data: "Testing" }
 ```
 
+### data
+
+You can pass a `data` parameter which will then be sent as the body of the request.  If you pass a JavaScript object, it will be converted to JSON automatically and headers `Content-Type`, `Accept` will be set to `application/json`, unless specified differently.
+
+
+#### Stream
+You may also pass a readable Stream as `data`.  This is common when sending a file as part of a request:
+
+```
+const fs = require("fs");
+const filePath = "./my_image.jpg";
+const imageStream = fs.createReadStream(filePath);
+const fileSize = fs.statSync(filePath).size;
+await http.post("https://fakeimageserver.com/uploads", imageStream, {
+  "Content-Type": "image/jpeg",
+  "Content-Length": fileSize,
+});
+```
+
 
 ### Default Headers
 
