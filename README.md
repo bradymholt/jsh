@@ -14,7 +14,7 @@ jsh, pronounced "j shell", is a small JavaScript library (with no dependencies!)
 
 ## Quick Start
 
-Create a file called script.js:
+Create a file called `script.js`:
 
 ```
 #!/usr/bin/env npx jsh
@@ -236,7 +236,6 @@ await http.post("https://fakeimageserver.com/uploads", data, {
 });
 ```
 
-
 ### Default Headers
 
 If any of the following headers are not specified, these default values will be used:
@@ -289,6 +288,8 @@ By far the easiest way to use jsh is with a [npx](https://docs.npmjs.com/cli/v7/
 
 #### macOS
 
+Create a file called `script.js`:
+
 ```
 #!/usr/bin/env npx jsh
 
@@ -298,6 +299,8 @@ echo("Hello jsh")
 #### Linux
 
 Since most Linux distributions do not support multiple arguments in the shebang, you need to call npx at its absolute path. Usually npx is installed in `/usr/local/bin/` but you can run `which npx` to locate it.
+
+Create a file called `script.js`:
 
 ```
 #!/usr/local/bin/npx jsh
@@ -315,7 +318,7 @@ If you don't want to use npx, you can install jsh globally with npm:
 npm install -g jsh
 ```
 
-Once it is installed globally, you can write your script with a jsh [shebang](<https://en.wikipedia.org/wiki/Shebang_(Unix)>) which will allow your script to be executed directly, with the globally installed jsh loaded at runtime.
+Once it is installed globally, you can write your script with a jsh [shebang](<https://en.wikipedia.org/wiki/Shebang_(Unix)>) which will allow your script to be executed directly, with the globally installed jsh loaded at runtime.  Run `which jsh` to locate the absolute path the jsh and use that for the shebang path.
 
 ```
 #!/usr/local/bin/jsh
@@ -330,14 +333,14 @@ Rather than installing jsh globally, you can simply download it to a local folde
 First, download jsh:
 
 ```
-wget -O jsh.js https://github.com/bradymholt/jsh/releases/latest/download/index.cjs
+wget -O jsh.cjs https://github.com/bradymholt/jsh/releases/latest/download/index.cjs
 ```
 
 Then, in your script:
 
 ```
 #!/usr/bin/env node
-require('./jsh.js')
+require('./jsh.cjs')
 
 echo(`Hello jsh`)
 ```
