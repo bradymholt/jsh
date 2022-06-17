@@ -212,7 +212,6 @@ _echo.green = (content: string, ...optionalArgs: any[]) => {
 _echo.red = (content: string, ...optionalArgs: any[]) => {
   echo("\x1b[31m%s\x1b[0m", content, ...optionalArgs);
 };
-global.echo = _echo;
 
 /**
  * Prints content *without* a trailing newline.
@@ -222,6 +221,10 @@ global.echo = _echo;
 const _printf = function (content: string) {
   return process.stdout.write(content, "utf8");
 };
+
+_echo.noNewLine = _printf;
+global.echo = _echo;
+
 global.printf = _printf;
 
 /**
@@ -735,11 +738,11 @@ declare global {
   var dirname: typeof path.dirname;
   var exit: typeof process.exit;
   var error: typeof _error;
+  var echo: typeof _echo;
   var printf: typeof _printf;
   var prompt: typeof _prompt;
   var read: typeof _prompt;
   var sleep: typeof _sleep;
-  var echo: typeof _echo;
   var $: typeof _$;
   var exec: typeof _$.echo;
   var http: typeof _http;

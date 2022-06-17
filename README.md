@@ -41,7 +41,7 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 | `echo.yellow("Hello")` | Print yellow colored text to console with trailing newline |
 | `echo.green("Hello")` | Print green colored text to console with trailing newline |
 | `echo.red("Hello")` | Print red colored text to console with trailing newline |
-| `printf("one\ntwo")` | Print text to console with no trailing newline |
+| `echo.noNewLine("Processing...")` | Print text to console without a trailing newline; also aliased as `printf()`. |
 | `exit(1)` | Halt the script and return an exit code |
 | `error("An error", 1)` | Echo an error and halt the script with an exit code |
 | `const name = prompt("What is your name?");` | Prompt (synchronously) for user input and return after \<Enter\> pressed; also aliased as `read()`. |
@@ -65,7 +65,7 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 |     | Description |
 | --- | --- |
 | `result=$("cmd.sh")` | Execute a command and return the stdout |
-| `$.echo("cmd.sh")` or `exec("cmd.sh")` | Execute a command and stream stdout to console without returning a value. |
+| `$.echo("cmd.sh")` | Execute a command and stream stdout to console without returning a value; also aliased as `exec()`. |
 | `$.noThrow("cmd.sh")` | Execute a command and do not throw an error if its exit code is not 0 |
 | `$.quiet("cmd.sh")` | Execute a command and do not echo the command before running it |
 | `$.retry("cmd.sh", 5)` | Execute a command and if it throws and error, retry up to a number of times until it succeeds |
@@ -74,7 +74,7 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 |     | Description |
 | --- | --- |
 | `cd("/usr/bin")` | Change the current working directory |
-| `config=readFile("cnf.txt")` or `config=cat("cnf.txt")` | Read text from file |
+| `config=readFile("cnf.txt")` | Read text from file; also aliased as `cat()`. |
 | `writeFile("cnf.txt", "World")` | Write text to file |
 | `dirExists("./myDir")` | Check if directory exists |
 | `mkdir("./newDirName")` | Create a directory |
