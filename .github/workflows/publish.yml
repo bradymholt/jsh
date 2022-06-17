@@ -27,9 +27,16 @@ jobs:
           node-version: 16
           registry-url: "https://registry.npmjs.org"
       - run: npm install
-      - name: Version and publish to npm
+      - name: Version
         run: |                    
-          npm version ${{ github.event.inputs.version_type }} --force -m "Version %s"
+          npm version ${{ github.event.inputs.version_type }} --force -m "Version %s"                
+      - name: Push release commit and tag to GitHub
+        id: push
+        run: |
+          git push gh-origin HEAD:main --tags
+          echo "::set-output name=tag-name::$(git describe --tags --abbrev=0)"
+      - name: Publish to npm
+        run: |                             
           npm set //registry.npmjs.org/:_authToken ${{ secrets.NODE_AUTH_TOKEN }}
           npm publish
       - uses: actions/upload-artifact@v2
@@ -37,11 +44,6 @@ jobs:
         with:
           name: npm-logs
           path: ~/.npm/_logs
-      - name: Push release commit and tag to GitHub
-        id: push
-        run: |
-          git push gh-origin HEAD:main --tags
-          echo "::set-output name=tag-name::$(git describe --tags --abbrev=0)"
       - name: Create a Release
         uses: softprops/action-gh-release@v1
         with:
