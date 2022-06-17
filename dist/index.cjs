@@ -1,4 +1,4 @@
-// jsh - v0.12.0
+// jsh - v0.13.0
 // https://github.com/bradymholt/jsh#README
 
 "use strict";
@@ -27,7 +27,7 @@ function setEntryScriptPath(scriptPath) {
 }
 exports.setEntryScriptPath = setEntryScriptPath;
 // By default, we will expect the entry script to be specified in second argument (`node myscript.js`).
-setEntryScriptPath(nodePath.resolve(process.argv[1]));
+setEntryScriptPath(nodePath.resolve(process.argv[1] ?? ""));
 global.dirname = path.dirname;
 global.exit = process.exit;
 /**
@@ -171,7 +171,10 @@ _echo.red = (content) => {
     echo("\x1b[31m%s\x1b[0m", content);
 };
 global.echo = _echo;
-global.printf = process.stdout.write;
+const _printf = function (content) {
+    return process.stdout.write(content, "utf8");
+};
+global.printf = _printf;
 /**
  * Sleeps synchronously for the specified number of milliseconds
  * @param ms

@@ -69,6 +69,7 @@ declare const _echo: {
      */
     red(content: string): void;
 };
+declare const _printf: (content: string) => boolean;
 /**
  * Sleeps synchronously for the specified number of milliseconds
  * @param ms
@@ -265,7 +266,7 @@ declare global {
     var dirname: typeof path.dirname;
     var exit: typeof process.exit;
     var error: typeof _error;
-    var printf: typeof process.stdout.write;
+    var printf: typeof _printf;
     var sleep: typeof _sleep;
     var echo: typeof _echo;
     var $: typeof _$;
