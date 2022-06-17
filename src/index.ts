@@ -121,8 +121,8 @@ setupArguments(process.argv.slice(2));
 
 // Environment variables
 let _envAny: any = Object.getOwnPropertyNames(process.env).map((e) => process.env[e]);
-function envVarAssert(envVars: string, throwIfEmpty: boolean, exitCode: number): string;
-function envVarAssert(envVars: string[], throwIfEmpty: boolean, exitCode: number): string[];
+function envVarAssert(envVars: string, throwIfEmpty?: boolean, exitCode?: number): string;
+function envVarAssert(envVars: string[], throwIfEmpty?: boolean, exitCode?: number): string[];
 function envVarAssert(
   envVars: string | string[],
   throwIfEmpty: boolean = false,
@@ -169,8 +169,8 @@ const _env: {
    * @param exitCode
    * @returns
    */
-  assert(envVarName: string, exitCode?: number, throwIfEmpty?: boolean): string;
-  assert(envVarName: string[], exitCode?: number, throwIfEmpty?: boolean): string[];
+  assert(envVarName: string, throwIfEmpty?: boolean, exitCode?: number): string;
+  assert(envVarName: string[], throwIfEmpty?: boolean, exitCode?: number): string[];
 } = _envAny;
 global.env = _env;
 // Environmental variables prefixed with $
