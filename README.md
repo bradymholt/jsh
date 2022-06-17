@@ -121,7 +121,7 @@ You can also use `$0` to reference the name of the current script rather than ha
 
 You can call `usage.printAndExit()` at any time to print the usage instructions and then immediately exit with an error code.  If you call usage.printAndExit() _before_ calling usage(), a simple default message will be echoed but if you call usage.printAndExit() _after_ calling usage(), your custom usage instructions will be echoed.
 
-There are a few ways that usage.printAndExit() will be called implicitly.
+There are a few ways that usage.printAndExit() will be called implicitly:
 1. If `--help` or `-h` is passed in as an argument
 1. If `args.assertCount()` is called and the required number of arguments were not passed in.  For example, if args.assertCount(3) is called and only 2 arguments were passed in.
 1. If `env.assert()` is called and the environment variable(s) are not defined.
