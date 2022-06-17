@@ -246,7 +246,6 @@ If any of the following headers are not specified, these default values will be 
 | `Accept`            | `*/*` or `application/json` if `data` is an object     |
 | `Connection`        | `close`                                                |
 | `User-Agent`        | `jsh`                                                  |
-| `Transfer-Encoding` | `chunked` when `data` parameter is a stream            |
 
 ### Error Handling
 

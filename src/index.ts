@@ -434,9 +434,7 @@ const _http = <T>(
   headers["Connection"] = headers["Connection"] || "close";
   headers["User-Agent"] = headers["User-Agent"] || "jsh";
 
-  if (data instanceof stream.Readable) {
-    headers["Transfer-Encoding"] = headers["Transfer-Encoding"] || "chunked";
-  } else if (typeof data == "object") {
+  if (!(data instanceof stream.Readable) && typeof data == "object") {
     // Add JSON headers if needed
     headers["Content-Type"] = headers["Content-Type"] || "application/json; charset=utf-8";
     headers["Accept"] = headers["Accept"] || "application/json";
