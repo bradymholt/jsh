@@ -193,7 +193,7 @@ const _echo = (content: string, ...optionalArgs: any[]) => {
  * @param optionalArgs
  */
 _echo.yellow = (content: string, ...optionalArgs: any[]) => {
-  echo("\x1b[33m%s\x1b[0m", content, optionalArgs);
+  echo("\x1b[33m%s\x1b[0m", content, ...optionalArgs);
 };
 /**
  * Prints green colored content to stdout with a trailing newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
@@ -201,7 +201,7 @@ _echo.yellow = (content: string, ...optionalArgs: any[]) => {
  * @param optionalArgs
  */
 _echo.green = (content: string, ...optionalArgs: any[]) => {
-  echo("\x1b[32m%s\x1b[0m", content, optionalArgs);
+  echo("\x1b[32m%s\x1b[0m", content, ...optionalArgs);
 };
 /**
  * Prints red colored content to stdout with a trailing newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
@@ -209,7 +209,7 @@ _echo.green = (content: string, ...optionalArgs: any[]) => {
  * @param optionalArgs
  */
 _echo.red = (content: string, ...optionalArgs: any[]) => {
-  echo("\x1b[31m%s\x1b[0m", content, optionalArgs);
+  echo("\x1b[31m%s\x1b[0m", content, ...optionalArgs);
 };
 global.echo = _echo;
 
