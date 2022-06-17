@@ -12,11 +12,6 @@ it("asserts an array of variables", () => {
   expect(env.assert(["HOME"])).toEqual(expect.arrayContaining([process.env.HOME]));
 });
 
-it("allows accessing vars from env object", () => {
-  expect(env["HOME"]).toEqual(process.env.HOME);
-  expect(env.HOME).toEqual(process.env.HOME);
-});
-
 it("calls printUsageAndExit when asserting env that does not exist", () => {
   const exitSpy = jest.spyOn<any, any>(global, "exit").mockImplementation(() => {});
   const printAndExitSpy = jest.spyOn<any, any>(usage, "printAndExit").mockImplementation();

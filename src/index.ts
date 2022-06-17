@@ -120,7 +120,7 @@ export function setupArguments(passedInArguments: Array<string>) {
 setupArguments(process.argv.slice(2));
 
 // Environment variables
-let _envAny: any = { ...process.env };
+let _envAny: any = Object.getOwnPropertyNames(process.env).map((e) => process.env[e]);
 function envVarAssert(envVars: string, throwIfEmpty?: boolean, exitCode?: number): string;
 function envVarAssert(envVars: string[], throwIfEmpty?: boolean, exitCode?: number): string[];
 function envVarAssert(

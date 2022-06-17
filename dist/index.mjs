@@ -2,7 +2,6 @@
 // https://github.com/bradymholt/jsh#README
 
 import { spawnSync } from "child_process";
-import * as stream from "stream";
 import * as nodePath from "node:path";
 import * as http from "http";
 import * as https from "https";
@@ -278,7 +277,7 @@ _$.retry = (cmd, maxTries = 5, waitMillisecondsBeforeRetry = 5000, echoFailures 
     return _retry(() => _$(cmd, pipe, echoCommand), maxTries, waitMillisecondsBeforeRetry, echoFailures);
 };
 // Options
-_$.shell = null;
+_$.shell = true;
 _$.maxBuffer = 1024 * 1024 * 256 /* 256MB */;
 global.$ = _$;
 global.exec = _$.echo;
@@ -304,18 +303,18 @@ export class HttpRequestError extends Error {
  * Makes an asynchronous HTTP request and returns the response.   Will reject with an error if the response status code is not 2xx.
  * @param method
  * @param url
- * @param data
+ * @param requestBody
  * @param headers
  * @returns IHttpResponse<T>
  */
-const _http = (method, url, data = null, headers = {}) => {
+const _http = (method, url, requestBody = null, headers = {}) => {
     const parsedUrl = new URL(url);
     const isHTTPS = parsedUrl.protocol.startsWith("https");
     const requestOptions = {
         protocol: parsedUrl.protocol,
         hostname: parsedUrl.hostname,
         port: !!parsedUrl.port ? Number(parsedUrl.port) : isHTTPS ? 443 : 80,
-        path: parsedUrl.pathname + parsedUrl.search,
+        path: parsedUrl.pathname,
         method,
         headers,
         timeout: _http.timeout,
@@ -332,12 +331,12 @@ const _http = (method, url, data = null, headers = {}) => {
             return false;
         }
     };
-    let requestBodyData = data ?? "";
-    if (!(data instanceof stream.Readable) && typeof data == "object") {
+    let requestBodyData = requestBody ?? "";
+    if (typeof requestBody == "object") {
         // Add JSON headers if needed
         headers["Content-Type"] = headers["Content-Type"] || "application/json; charset=utf-8";
         headers["Accept"] = headers["Accept"] || "application/json";
-        requestBodyData = JSON.stringify(data);
+        requestBodyData = JSON.stringify(requestBody);
     }
     let request = http.request;
     if (isHTTPS) {
@@ -370,13 +369,8 @@ const _http = (method, url, data = null, headers = {}) => {
         }).on("error", (err) => {
             reject(new HttpRequestError(err.message, requestOptions));
         });
-        if (data instanceof stream.Readable) {
-            data.pipe(req);
-        }
-        else {
-            req.write(requestBodyData);
-            req.end();
-        }
+        req.write(requestBodyData);
+        req.end();
     });
 };
 _http.timeout = 120000; // 2 minutes
@@ -385,13 +379,13 @@ global.http = _http;
  * Makes a synchronous HTTP request and returns the response.   Will not throw an error if the response status code is not 2xx.
  * @param method
  * @param url
- * @param data
+ * @param requestBody
  * @param headers
  * @returns
  */
-_http.noThrow = async (method, url, data = null, headers = {}) => {
+_http.noThrow = async (method, url, requestBody = null, headers = {}) => {
     try {
-        return await _http(method, url, data, headers);
+        return await _http(method, url, requestBody, headers);
     }
     catch (err) {
         if (err instanceof HttpRequestError) {
@@ -407,15 +401,15 @@ _http.noThrow = async (method, url, data = null, headers = {}) => {
  * Makes a HTTP request and returns the response.   Will retry up to maxTries if an error is thrown because the status code is not 2xx.
  * @param method
  * @param url
- * @param data
+ * @param requestBody
  * @param headers
  * @param maxTries
  * @param waitMillisecondsBeforeRetry
  * @param echoFailures
  * @returns
  */
-_http.retry = async (method, url, data = null, headers = {}, maxTries = 5, waitMillisecondsBeforeRetry = 5000, echoFailures = true) => {
-    return _retry(() => _http(method, url, data, headers), maxTries, waitMillisecondsBeforeRetry, echoFailures);
+_http.retry = async (method, url, requestBody = null, headers = {}, maxTries = 5, waitMillisecondsBeforeRetry = 5000, echoFailures = true) => {
+    return _retry(() => _http(method, url, requestBody, headers), maxTries, waitMillisecondsBeforeRetry, echoFailures);
 };
 /**
  * Makes a GET HTTP request and returns the response data.  Will throw an error if the response status code is not 2xx.
