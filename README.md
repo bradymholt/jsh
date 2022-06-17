@@ -57,14 +57,14 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 | `const [source_file, target_file] = args.assertCount(2)` | Return arg values as array or call `usage.printAndExit()` if less than number of arguments specified were supplied |
 | `$0` | Return the name of the current script file (ex: `my_script.js`) |
 | `$HOME` | Access an environment variable |
-| `env.HOME` | Access an environment variable from the `env` object |
-| `const [HOME, USER] = env.assert(["HOME", "USER"])` | Return environment variable values as an array or call `usage.printAndExit()` if any are undefined.  You can also pass a single environment variable name in as a string and it will return the string value (ex: `const HOME = env.assert("HOME")`) |
+| `env.HOME` or `env["HOME"]` | Access an environment variable from the `env` object |
+| `const USER = env.assert("USER")` or `const [HOME, USER] = env.assert(["HOME", "USER"])` | Return environment variable value or call `usage.printAndExit()` if undefined.  You can also pass an array of environment variable names and an array of values will be returned.  |
 
 **Command Execution**
 |     | Description |
 | --- | --- |
 | `result=$("cmd.sh")` | Execute a command and return the stdout |
-| `$.echo("cmd.sh")` | Execute a command and stream stdout to console without returning a value.  Also aliased as `exec()`. |
+| `$.echo("cmd.sh")` or `exec("cmd.sh")` | Execute a command and stream stdout to console without returning a value. |
 | `$.noThrow("cmd.sh")` | Execute a command and do not throw an error if its exit code is not 0 |
 | `$.quiet("cmd.sh")` | Execute a command and do not echo the command before running it |
 | `$.retry("cmd.sh", 5)` | Execute a command and if it throws and error, retry up to a number of times until it succeeds |
@@ -73,7 +73,7 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 |     | Description |
 | --- | --- |
 | `cd("/usr/bin")` | Change the current working directory |
-| `config=readFile("cnf.txt")` | Read text from file.  Also aliased as `cat()`. |
+| `config=readFile("cnf.txt")` or `config=cat("cnf.txt")` | Read text from file. |
 | `writeFile("cnf.txt", "World")` | Write text to file |
 | `dirExists("./myDir")` | Check if directory exists |
 | `mkDir("./newDirName")` | Create a directory |
