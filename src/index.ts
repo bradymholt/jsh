@@ -339,7 +339,7 @@ _$.retry = (
   return _retry<string>(() => _$(cmd, pipe, echoCommand), maxTries, waitMillisecondsBeforeRetry, echoFailures);
 };
 // Options
-_$.shell = true;
+_$.shell = null as string | null;
 _$.maxBuffer = 1024 * 1024 * 256 /* 256MB */;
 global.$ = _$;
 global.exec = _$.echo;

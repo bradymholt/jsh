@@ -189,6 +189,10 @@ echo(content);
 > cat: invalid.txt: No such file or directory
 ```
 
+### Options
+
+- `$.shell` - By default, commands will be run inside of a shell (`/bin/sh` on *nix systems and `process.env.ComSpec` on Windows).  You can specify the path to a different shell to execute commands with by setting the `$.shell` config variable.  All subsequent command executions will honor this setting.  For example: `$.shell = "/bin/bash";`
+
 ## HTTP Requests
 
 The http helper can be used to make asynchronous HTTP requests. It returns a promise and resolves with an `IHttpResponse` object that contains these properties: `{ data, headers, statusCode, statusMessage, requestOptions }`.
