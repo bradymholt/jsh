@@ -228,9 +228,9 @@ You may also pass a readable Stream as `data`.  This is common when sending a fi
 ```
 const fs = require("fs");
 const filePath = "./my_image.jpg";
-const imageStream = fs.createReadStream(filePath);
+const data = fs.createReadStream(filePath);
 const fileSize = fs.statSync(filePath).size;
-await http.post("https://fakeimageserver.com/uploads", imageStream, {
+await http.post("https://fakeimageserver.com/uploads", data, {
   "Content-Type": "image/jpeg",
   "Content-Length": fileSize,
 });
