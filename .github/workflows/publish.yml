@@ -21,7 +21,7 @@ jobs:
         run: |
           git config user.name $GITHUB_ACTOR
           git config user.email gh-actions-${GITHUB_ACTOR}@github.com
-          git remote add gh-origin https://${GITHUB_ACTOR}:${{secrets.PUBLISH_GITHUB_TOKEN}}@github.com/${GITHUB_REPOSITORY}.git
+          git remote add gh-origin https://${GITHUB_ACTOR}:${{secrets.GITHUB_TOKEN}}@github.com/${GITHUB_REPOSITORY}.git
       - uses: actions/setup-node@v1
         with:
           node-version: 16
@@ -38,6 +38,11 @@ jobs:
           name: npm-logs
           path: ~/.npm/_logs
       - name: Push release commit and tag to GitHub
-        run: |
-          git add --all dist/ && git commit --amend --no-edit # Add any updates from dist/ after building
-          git push gh-origin HEAD:main --tags
+        run: git push gh-origin HEAD:main --tags
+      - name: Create a Release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            ./dist/**
