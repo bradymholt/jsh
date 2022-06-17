@@ -40,8 +40,8 @@ declare const _env: {
      * @param exitCode
      * @returns
      */
-    assert(envVarName: string, exitCode?: number, throwIfEmpty?: boolean): string;
-    assert(envVarName: string[], exitCode?: number, throwIfEmpty?: boolean): string[];
+    assert(envVarName: string, throwIfEmpty?: boolean, exitCode?: number): string;
+    assert(envVarName: string[], throwIfEmpty?: boolean, exitCode?: number): string[];
 };
 /**
  * Prints content to stdout with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values

@@ -1,3 +1,6 @@
+// jsh - v0.11.0
+// https://github.com/bradymholt/jsh#README
+
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HttpRequestError = exports.CommandError = exports.setupArguments = exports.setEntryScriptPath = void 0;
@@ -102,7 +105,7 @@ exports.setupArguments = setupArguments;
 // By default, we will expect the passed arguments to begin with process.argv[2] (`node myscript.js arg1 arg2`)
 setupArguments(process.argv.slice(2));
 // Environment variables
-let _envAny = Object.getOwnPropertyNames(process.env).map((e) => process.env[e]);
+let _envAny = { ...process.env };
 function envVarAssert(envVars, throwIfEmpty = false, exitCode = 1) {
     let envVarsIsArray = true;
     if (!Array.isArray(envVars)) {
