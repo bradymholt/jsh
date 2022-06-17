@@ -113,7 +113,8 @@ Usage:
 Example:
   ${$0} "My text" ./test.txt --verbose
 
-Writes some text to a file`);
+Writes some text to a file\
+`);
 
 const [text, target_file] = args.assertCount(2);
 
@@ -122,6 +123,27 @@ if (args.verbose) echo(`Writing text to file...`);
 writeFile(target_file, text);
 
 if (args.verbose) echo.green(`Done!`);
+```
+</details>
+
+<details>
+<summary>Prompt for input</summary>
+
+```
+#!/usr/bin/env npx jsh
+
+usage(`\
+Usage:
+  ${$0} prompt_text
+
+Example:
+  ${$0} "What is your name?"
+
+Prompts for input and then echos it\
+`);
+
+const input = prompt($1); // `$1` contains the first argument which is prompt_text
+echo(input);
 ```
 </details>
 
