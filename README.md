@@ -32,8 +32,7 @@ chmod +x ./script.js && ./script.js
 
 ## Helpers
 
-You can refer to the [definition file](https://github.com/bradymholt/jsh/blob/main/dist/index.d.ts) for a full list of the helpers and JSDoc documentation for arguments and usage.  Below is a summarized list of the available helpers.
-
+Below is a summarized list of the available helpers.  You can refer to the [definition file](https://github.com/bradymholt/jsh/blob/main/dist/index.d.ts) for a full list of the helpers and JSDoc documentation for arguments and usage.  
 
 **General Scripting**
 |     | Description |
@@ -85,7 +84,7 @@ You can refer to the [definition file](https://github.com/bradymholt/jsh/blob/ma
 
 **HTTP Requests**
 
-Note: The HTTP helpers are asynchronous.
+**Note:** The HTTP helpers are asynchronous and return a Promise.
 
 |     | Description |
 | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
