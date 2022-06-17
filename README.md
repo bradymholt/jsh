@@ -217,6 +217,18 @@ const response = await http.get("https://www.myapi.com);
 echo(response) // { data: "Testing" }
 ```
 
+
+### Default Headers
+
+If any of the following headers are not specified, these default values will be used:
+
+| Header              | Value                                                  |
+| ------------------- | ------------------------------------------------------ |
+| `Accept`            | `*/*` or `application/json` if `data` is an object     |
+| `Connection`        | `close`                                                |
+| `User-Agent`        | `jsh`                                                  |
+| `Transfer-Encoding` | `chunked` when `data` parameter is a stream            |
+
 ### Error Handling
 
 If a status code outside the range 20X is returned in the HTTP response, a `HttpRequestError` error will be thrown. The error contains these properties: `{ message, data, statusCode, statusMessage, request, response }`.
