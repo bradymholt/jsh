@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
+    "lib": ["ESNext"],
     "noEmitOnError": true,
     "moduleResolution": "node",
     "declaration": true,
