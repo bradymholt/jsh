@@ -38,6 +38,6 @@ jobs:
           name: npm-logs
           path: ~/.npm/_logs
       - name: Push release commit and tag to GitHub
-        run:
+        run: |
           git add --all dist/ && git commit --amend --no-edit # Add any updates from dist/ after building
           git push gh-origin HEAD:main --tags
