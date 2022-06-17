@@ -76,8 +76,8 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 | `config=readFile("cnf.txt")` or `config=cat("cnf.txt")` | Read text from file |
 | `writeFile("cnf.txt", "World")` | Write text to file |
 | `dirExists("./myDir")` | Check if directory exists |
-| `mkDir("./newDirName")` | Create a directory |
-| `rmDir("./newDirName")` | Delete a directory |
+| `mkdir("./newDirName")` | Create a directory |
+| `rmdir("./newDirName")` | Delete a directory |
 | `exists("./aFile.txt")` | Check if a file exists |
 | `rm("./myFile")` | Delete a file |
 | `dirname("./path/file.txt")` | Return the directory name for a path |
