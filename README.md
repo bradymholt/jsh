@@ -112,8 +112,7 @@ Usage:
 Example:
   ${$0} "My text" ./test.txt --verbose
 
-Writes some text to a file
-`);
+Writes some text to a file`);
 
 const [text, target_file] = args.assertCount(2);
 
