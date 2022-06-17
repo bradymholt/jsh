@@ -1,5 +1,5 @@
-#!bin/jsh-local.mjs
-import "../dist/index.mjs";
+#!./node_modules/ts-node/dist/bin-esm.js
+import "../src/index.js";
 
 usage(`\
 Usage: ${$0}
@@ -12,7 +12,7 @@ cd(`${__dirname}/../`);
 
 // Prefix source with jsh - v0.0.0
 const packageJson = JSON.parse(readFile("./package.json"));
-const prefix = (sourceFile) => {
+const prefix = (sourceFile: string) => {
   const content = readFile(sourceFile);
   writeFile(
     sourceFile,
