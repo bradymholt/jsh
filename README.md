@@ -47,7 +47,7 @@ You can refer to the [definition file](https://github.com/bradymholt/jsh/blob/ma
 | `error("An error", 1)` | Echo an error and halt the script with an exit code |
 | `usage("Usage: myscript.js [--verbose]")` | Define a usage message |
 | `usage.printAndExit()` | Print the usage message and then exit with an error exit code.  If `usage()` was not previously called to define a usage message, a default one will be used. |
-| `sleep(2000)` | Sleep (synchronously) for specified number of milliseconds. |
+| `sleep(2000)` | Sleep (synchronously) for specified number of milliseconds |
 
 **Arguments and Environment**
 |     | Description |
