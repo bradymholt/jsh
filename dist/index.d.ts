@@ -1,4 +1,5 @@
 /// <reference types="node" />
+import * as stream from "stream";
 import * as path from "path";
 export declare function setEntryScriptPath(scriptPath: string): void;
 /**
@@ -124,10 +125,11 @@ declare const _$: {
      * @returns
      */
     retry(cmd: string, maxTries?: number, waitMillisecondsBeforeRetry?: number, echoFailures?: boolean, pipe?: boolean, echoCommand?: boolean): string;
-    shell: boolean;
+    shell: string | null;
     maxBuffer: number;
 };
 export declare type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+export declare type HttpData = object | stream.Readable | null;
 export interface IHttpRequestOptions {
     protocol: string;
     hostname: string;
@@ -156,34 +158,34 @@ export declare class HttpRequestError<T> extends Error {
  * Makes an asynchronous HTTP request and returns the response.   Will reject with an error if the response status code is not 2xx.
  * @param method
  * @param url
- * @param requestBody
+ * @param data
  * @param headers
  * @returns IHttpResponse<T>
  */
 declare const _http: {
-    <T>(method: HttpMethod, url: string, requestBody?: any, headers?: any): Promise<IHttpResponse<T>>;
+    <T>(method: HttpMethod, url: string, data?: HttpData, headers?: any): Promise<IHttpResponse<T>>;
     timeout: number;
     /**
      * Makes a synchronous HTTP request and returns the response.   Will not throw an error if the response status code is not 2xx.
      * @param method
      * @param url
-     * @param requestBody
+     * @param data
      * @param headers
      * @returns
      */
-    noThrow<T_1>(method: HttpMethod, url: string, requestBody?: any, headers?: any): Promise<IHttpResponse<T_1>>;
+    noThrow<T_1>(method: HttpMethod, url: string, data?: HttpData, headers?: any): Promise<IHttpResponse<T_1>>;
     /**
      * Makes a HTTP request and returns the response.   Will retry up to maxTries if an error is thrown because the status code is not 2xx.
      * @param method
      * @param url
-     * @param requestBody
+     * @param data
      * @param headers
      * @param maxTries
      * @param waitMillisecondsBeforeRetry
      * @param echoFailures
      * @returns
      */
-    retry<T_2>(method: HttpMethod, url: string, requestBody?: any, headers?: any, maxTries?: number, waitMillisecondsBeforeRetry?: number, echoFailures?: boolean): Promise<IHttpResponse<T_2>>;
+    retry<T_2>(method: HttpMethod, url: string, data?: HttpData, headers?: any, maxTries?: number, waitMillisecondsBeforeRetry?: number, echoFailures?: boolean): Promise<IHttpResponse<T_2>>;
     /**
      * Makes a GET HTTP request and returns the response data.  Will throw an error if the response status code is not 2xx.
      * @param url
@@ -197,14 +199,14 @@ declare const _http: {
      * @param headers
      * @returns
      */
-    post<T_4>(url: string, data: any, headers?: any): Promise<T_4>;
+    post<T_4>(url: string, data: HttpData, headers?: any): Promise<T_4>;
     /**
      * Makes a PUT HTTP request and returns the response data.  Will throw an error if the response status code is not 2xx.
      * @param url
      * @param headers
      * @returns
      */
-    put<T_5>(url: string, data: any, headers?: any): Promise<T_5>;
+    put<T_5>(url: string, data: HttpData, headers?: any): Promise<T_5>;
     /**
      * Makes a PATCH HTTP request and returns the response data.  Will throw an error if the response status code is not 2xx.
      * @param url
@@ -218,7 +220,7 @@ declare const _http: {
      * @param headers
      * @returns
      */
-    delete<T_7>(url: string, data: any, headers?: any): Promise<T_7>;
+    delete<T_7>(url: string, data: HttpData, headers?: any): Promise<T_7>;
 };
 /**
  * Returns `true` if the path exists, `false` otherwise.
