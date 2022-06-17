@@ -97,7 +97,35 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 | `await http.noThrow("GET", "https://www.myapi.com")`        | Make a HTTP request and do not throw an error if status code is not 20X                                  |
 | `await http.retry("GET", "https://www.myapi.com")`          | Make a HTTP request and if response status code is not 20X, retry up to a number of times until it is    |
 
-## Usage
+## Examples
+
+<details>
+<summary>Write text to file</summary>
+
+```
+#!/usr/bin/env npx jsh
+
+usage(`\
+Usage:
+  ${$0} text target_file [--verbose]
+
+Example:
+  ${$0} "My text" ./test.txt --verbose
+
+Writes some text to a file
+`);
+
+const [text, target_file] = args.assertCount(2);
+
+if (args.verbose) echo(`Writing text to file...`);
+
+writeFile(target_file, text);
+
+if (args.verbose) echo.green(`Done!`);
+```
+</details>
+
+## Usage Helpers
 
 To define usage instructions for your script, you can call `usage()` and pass in a usage string that describes the script and documents any required or optional arguments.  
 
@@ -125,7 +153,7 @@ There are a few ways that usage.printAndExit() will be called implicitly:
 1. If `args.assertCount()` is called and the required number of arguments were not passed in.  For example, if args.assertCount(3) is called and only 2 arguments were passed in.
 1. If `env.assert()` is called and the environment variable(s) are not defined.
 
-## Command Execution
+## Command Execution Helpers
 
 ### $()
 
@@ -192,7 +220,7 @@ echo(content);
 
 - `$.shell` - By default, commands will be run inside of a shell (`/bin/sh` on *nix systems and `process.env.ComSpec` on Windows).  You can specify the path to a different shell to execute commands with by setting the `$.shell` config variable.  All subsequent command executions will honor this setting.  For example: `$.shell = "/bin/bash";`
 
-## HTTP Requests
+## HTTP Request Helpers
 
 The http helper can be used to make asynchronous HTTP requests. It returns a promise and resolves with an `IHttpResponse` object that contains these properties: `{ data, headers, statusCode, statusMessage, requestOptions }`.
 
@@ -207,7 +235,7 @@ echo(response.statusCode) // 200
 echo(response.statusMessage) // "OK"
 ```
 
-There are also helpers for each of the 4 primary HTTP methods: `http.get`, `http.post`, `http.put`, `http.delete`. These helpers do not require having to pass in the method type and will also return the response _body_. If the response is of JSON format, it will be parsed before being returned.
+There are also helpers for the primary HTTP methods: `http.get`, `http.post`, `http.put`, `http.patch`, and `http.delete`. These helpers do not require having to pass in the method type and will also return the response _body_ data. If the response is of JSON format, it will be parsed before being returned.
 
 Example:
 
