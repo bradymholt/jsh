@@ -73,7 +73,7 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 |     | Description |
 | --- | --- |
 | `cd("/usr/bin")` | Change the current working directory |
-| `config=readFile("cnf.txt")` or `config=cat("cnf.txt")` | Read text from file. |
+| `config=readFile("cnf.txt")` or `config=cat("cnf.txt")` | Read text from file |
 | `writeFile("cnf.txt", "World")` | Write text to file |
 | `dirExists("./myDir")` | Check if directory exists |
 | `mkDir("./newDirName")` | Create a directory |
