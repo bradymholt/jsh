@@ -180,7 +180,7 @@ for (let p of Object.getOwnPropertyNames(process.env)) {
 
 // Echoing
 /**
- * Prints content to stdout with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
+ * Prints content to stdout with a trailing newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
  * @param content
  * @param optionalArgs
  */
@@ -188,31 +188,36 @@ const _echo = (content: string, ...optionalArgs: any[]) => {
   console.log(content, ...optionalArgs);
 };
 /**
- * Prints yellow colored content to stdout with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
+ * Prints yellow colored content to stdout with a trailing newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
  * @param content
  * @param optionalArgs
  */
-_echo.yellow = (content: string) => {
-  echo("\x1b[33m%s\x1b[0m", content);
+_echo.yellow = (content: string, ...optionalArgs: any[]) => {
+  echo("\x1b[33m%s\x1b[0m", content, optionalArgs);
 };
 /**
- * Prints green colored content to stdout with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
+ * Prints green colored content to stdout with a trailing newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
  * @param content
  * @param optionalArgs
  */
-_echo.green = (content: string) => {
-  echo("\x1b[32m%s\x1b[0m", content);
+_echo.green = (content: string, ...optionalArgs: any[]) => {
+  echo("\x1b[32m%s\x1b[0m", content, optionalArgs);
 };
 /**
- * Prints red colored content to stdout with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
+ * Prints red colored content to stdout with a trailing newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
  * @param content
  * @param optionalArgs
  */
-_echo.red = (content: string) => {
-  echo("\x1b[31m%s\x1b[0m", content);
+_echo.red = (content: string, ...optionalArgs: any[]) => {
+  echo("\x1b[31m%s\x1b[0m", content, optionalArgs);
 };
-
 global.echo = _echo;
+
+/**
+ * Prints content *without* a trailing newline.
+ * @param content
+ * @returns
+ */
 const _printf = function (content: string) {
   return process.stdout.write(content, "utf8");
 };
