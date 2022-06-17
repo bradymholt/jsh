@@ -44,6 +44,7 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 | `printf("one\ntwo")` | Print text to console with no trailing newline |
 | `exit(1)` | Halt the script and return an exit code |
 | `error("An error", 1)` | Echo an error and halt the script with an exit code |
+| `const name = prompt("What is your name?");` | Prompt (synchronously) for user input and return after \<Enter\> pressed; also aliased as `read()`. |
 | `usage("Usage: myscript.js [--verbose]")` | Define a usage message |
 | `usage.printAndExit()` | Print the usage message and then exit with an error exit code.  If `usage()` was not previously called to define a usage message, a default one will be used. |
 | `sleep(2000)` | Sleep (synchronously) for specified number of milliseconds |

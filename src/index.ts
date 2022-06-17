@@ -1,5 +1,6 @@
 import { spawnSync } from "child_process";
 import * as stream from "stream";
+import * as os from "os";
 import * as nodePath from "node:path";
 import * as http from "http";
 import * as https from "https";
@@ -222,6 +223,35 @@ const _printf = function (content: string) {
   return process.stdout.write(content, "utf8");
 };
 global.printf = _printf;
+
+/**
+ * Prints a text prompt, waits for user input, and returns the input.
+ * @param prompt A string or function that prompts the user for input.
+ *   If a string is provided, echo() will be called with it.
+ *   If a function is provided, the function will be called before prompting the user
+ 
+*    Examples:
+       const name = prompt("What's your name?");
+       const name = prompt(() => { echo.noNewLine("What's your name? "); });
+       const name = prompt(() => { echo.yellow("What's your name? "); });
+});
+ */
+const _prompt = function (prompt: string | (() => void)): string {
+  const promptShellCommand =
+    os.platform() == "win32" ? "cmd /V:ON /C set /p RESPONSE= && echo !RESPONSE!'" : "read RESPONSE; echo $RESPONSE";
+
+  if (typeof prompt === "function") {
+    prompt();
+  } else {
+    echo(prompt);
+  }
+
+  const output = $.quiet(promptShellCommand);
+  return output;
+};
+
+global.prompt = _prompt;
+global.read = _prompt;
 
 /**
  * Sleeps synchronously for the specified number of milliseconds
@@ -706,6 +736,8 @@ declare global {
   var exit: typeof process.exit;
   var error: typeof _error;
   var printf: typeof _printf;
+  var prompt: typeof _prompt;
+  var read: typeof _prompt;
   var sleep: typeof _sleep;
   var echo: typeof _echo;
   var $: typeof _$;
