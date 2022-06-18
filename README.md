@@ -4,7 +4,7 @@
 
 Helpers for Bash like shell scripting in JavaScript
 
-<p align="center">
+<p align="left">
 <img alt="jsh logo" src="https://user-images.githubusercontent.com/759811/174220014-2dcb1c9b-17b4-4a61-8f40-ddfa2d1e7c7f.png">
 </p>
 
