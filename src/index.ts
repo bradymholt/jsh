@@ -67,19 +67,19 @@ type Arguments = Array<string> & {
    * @param exitCode
    * @returns
    */
-  assertCount(argCount: number, errorMessage?: string, exitCode?: boolean): string[];
+  assertCount(argCount: number, errorMessage?: string, exitCode?: number): string[];
 } & {
   [argName: string]: string | boolean;
 };
 export function setupArguments(passedInArguments: Array<string>) {
-  let _argsAny: any = passedInArguments;
-  _argsAny.assertCount = (argCount: number, errorMessage?: string, exitCode = 1): string[] => {
-    if (_argsAny.length < argCount) {
+  const _args: Arguments = passedInArguments as any;
+  _args.assertCount = (argCount: number, errorMessage?: string, exitCode = 1): string[] => {
+    if (_args.length < argCount) {
       const argErrorMessage =
         errorMessage ??
         `${argCount} argument${argCount == 1 ? "" : "s"} ${argCount == 1 ? "was" : "were"} expected but ${
-          _argsAny.length == 0 ? "none" : _argsAny.length
-        } ${_argsAny.length == 1 ? "was" : "were"} provided`;
+          _args.length == 0 ? "none" : _args.length
+        } ${_args.length == 1 ? "was" : "were"} provided`;
 
       usage.printAndExit(argErrorMessage, exitCode);
       // We'll never get here
@@ -89,23 +89,23 @@ export function setupArguments(passedInArguments: Array<string>) {
     }
   };
   // Parse arguments and add properties to args object
-  for (let i = 0; i < _argsAny.length; i++) {
-    const currentArgValue = _argsAny[i];
+  for (let i = 0; i < _args.length; i++) {
+    const currentArgValue = _args[i];
     if (currentArgValue.startsWith("--") && currentArgValue.length > 2) {
       const match = currentArgValue.match(/\-\-(?<name>\w+)=?(?<value>\w*)/);
       if (match?.groups?.name) {
         if (match?.groups?.value) {
           // `--argument_name=value` format - will be accessible as args.argument_name == "value"
-          _argsAny[match.groups.name] = match.groups.value;
+          _args[match.groups.name] = match.groups.value;
         } else {
           // `--argument_name` format - will be accessible as args.argument_name == true
-          _argsAny[match.groups.name] = true;
+          _args[match.groups.name] = true;
         }
       }
     }
   }
 
-  global.args = _argsAny;
+  global.args = _args;
 
   // Alias arguments as $1, $2, etc.
   for (let i = 1; i <= Math.max(10, args.length); i++) {
@@ -121,7 +121,19 @@ export function setupArguments(passedInArguments: Array<string>) {
 setupArguments(process.argv.slice(2));
 
 // Environment variables
-let _envAny: any = { ...process.env };
+type Environment = {
+  [envVar: string]: string;
+} & {
+  /**
+   * Returns environment variable value and throws an error and exits if it is undefined
+   * @param argCount
+   * @param errorMessage
+   * @param exitCode
+   * @returns
+   */
+  assert(envVarName: string, throwIfEmpty?: boolean, exitCode?: number): string;
+  assert(envVarName: string[], throwIfEmpty?: boolean, exitCode?: number): string[];
+};
 function envVarAssert(envVars: string, throwIfEmpty?: boolean, exitCode?: number): string;
 function envVarAssert(envVars: string[], throwIfEmpty?: boolean, exitCode?: number): string[];
 function envVarAssert(
@@ -158,21 +170,8 @@ function envVarAssert(
 
   return envVarValues;
 }
-
-_envAny.assert = envVarAssert;
-const _env: {
-  [envVar: string]: string;
-} & {
-  /**
-   * Returns environment variable value and throws an error and exits if it is undefined
-   * @param argCount
-   * @param errorMessage
-   * @param exitCode
-   * @returns
-   */
-  assert(envVarName: string, throwIfEmpty?: boolean, exitCode?: number): string;
-  assert(envVarName: string[], throwIfEmpty?: boolean, exitCode?: number): string[];
-} = _envAny;
+const _env: Environment = { ...process.env } as any;
+_env.assert = envVarAssert;
 global.env = _env;
 // Environmental variables prefixed with $
 for (let p of Object.getOwnPropertyNames(process.env)) {
@@ -439,7 +438,7 @@ const _http = <T>(
   method: HttpMethod,
   url: string,
   data: HttpData = null,
-  headers: any = {}
+  headers: { [name: string]: string } = {}
 ): Promise<IHttpResponse<T>> => {
   const parsedUrl = new URL(url);
   const isHTTPS = parsedUrl.protocol.startsWith("https");
@@ -539,7 +538,7 @@ _http.noThrow = async <T>(
   method: HttpMethod,
   url: string,
   data: HttpData = null,
-  headers: any = {}
+  headers: { [name: string]: string } = {}
 ): Promise<IHttpResponse<T>> => {
   try {
     return await _http<T>(method, url, data, headers);
@@ -567,7 +566,7 @@ _http.retry = async <T>(
   method: HttpMethod,
   url: string,
   data: HttpData = null,
-  headers: any = {},
+  headers: { [name: string]: string } = {},
   maxTries = 5,
   waitMillisecondsBeforeRetry = 5000,
   echoFailures = true
@@ -586,7 +585,7 @@ _http.retry = async <T>(
  * @param headers
  * @returns
  */
-_http.get = async <T>(url: string, headers: any = {}) => {
+_http.get = async <T>(url: string, headers: { [name: string]: string } = {}) => {
   const response = await _http<T>("GET", url, null, headers);
   return response.data;
 };
@@ -596,7 +595,7 @@ _http.get = async <T>(url: string, headers: any = {}) => {
  * @param headers
  * @returns
  */
-_http.post = async <T>(url: string, data: HttpData, headers: any = {}) => {
+_http.post = async <T>(url: string, data: HttpData, headers: { [name: string]: string } = {}) => {
   const response = await _http<T>("POST", url, data, headers);
   return response.data;
 };
@@ -606,7 +605,7 @@ _http.post = async <T>(url: string, data: HttpData, headers: any = {}) => {
  * @param headers
  * @returns
  */
-_http.put = async <T>(url: string, data: HttpData, headers: any = {}) => {
+_http.put = async <T>(url: string, data: HttpData, headers: { [name: string]: string } = {}) => {
   const response = await _http<T>("PUT", url, data, headers);
   return response.data;
 };
@@ -616,7 +615,7 @@ _http.put = async <T>(url: string, data: HttpData, headers: any = {}) => {
  * @param headers
  * @returns
  */
-_http.patch = async <T>(url: string, data: any, headers: any = {}) => {
+_http.patch = async <T>(url: string, data: HttpData, headers: { [name: string]: string } = {}) => {
   const response = await _http<T>("PATCH", url, data, headers);
   return response.data;
 };
@@ -626,7 +625,7 @@ _http.patch = async <T>(url: string, data: any, headers: any = {}) => {
  * @param headers
  * @returns
  */
-_http.delete = async <T>(url: string, data: HttpData, headers: any = {}) => {
+_http.delete = async <T>(url: string, data: HttpData, headers: { [name: string]: string } = {}) => {
   const response = await _http<T>("DELETE", url, data, headers);
   return response.data;
 };
@@ -717,9 +716,11 @@ process.on("uncaughtException", handleUnhandledError);
 const _retry = <T>(tryFunction: () => T, maxTries = 5, waitMillisecondsBeforeRetry = 5000, echoFailures = true): T => {
   try {
     return tryFunction();
-  } catch (e: any) {
+  } catch (err: unknown) {
     if (echoFailures) {
-      echo(e);
+      if (err instanceof Error) {
+        echo(err.toString());
+      }
       echo(`Will retry in ${waitMillisecondsBeforeRetry} milliseconds...`);
     }
 
@@ -728,7 +729,7 @@ const _retry = <T>(tryFunction: () => T, maxTries = 5, waitMillisecondsBeforeRet
 
       return _retry(tryFunction, maxTries - 1);
     }
-    throw e;
+    throw err;
   }
 };
 
