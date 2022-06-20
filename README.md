@@ -103,7 +103,7 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 <details>
 <summary>Write text to file</summary>
 
-```
+```js
 #!/usr/bin/env npx jsh
 
 usage(`\
@@ -129,7 +129,7 @@ if (args.verbose) echo.green(`Done!`);
 <details>
 <summary>Prompt for input</summary>
 
-```
+```js
 #!/usr/bin/env npx jsh
 
 usage(`\
