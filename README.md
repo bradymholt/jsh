@@ -293,8 +293,10 @@ If any of the following headers are not specified, these default values will be 
 | Header              | Value                                                  |
 | ------------------- | ------------------------------------------------------ |
 | `Accept`            | `*/*` or `application/json` if `data` is an object     |
+| `Accept-Encoding`   | `gzip`                                                 |
 | `Connection`        | `close`                                                |
 | `User-Agent`        | `jsh`                                                  |
+| `Host`              | (extracted from `url` in format hostname:port)         |
 
 ### Error Handling
 
