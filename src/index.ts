@@ -5,6 +5,7 @@ import * as nodePath from "node:path";
 import * as http from "http";
 import * as https from "https";
 import { URL } from "node:url";
+import * as zlib from "zlib";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -468,8 +469,10 @@ const _http = <T>(
   let requestBodyData = data ?? "";
 
   headers["Accept"] = headers["Accept"] || "*/*";
+  headers["Accept-Encoding"] = headers["Accept-Encoding"] || "gzip";  
   headers["Connection"] = headers["Connection"] || "close";
   headers["User-Agent"] = headers["User-Agent"] || "jsh";
+  headers["Host"] = headers["Host"] || `${requestOptions.hostname}:${requestOptions.port}`;
 
   if (!(data instanceof stream.Readable) && typeof data == "object") {
     // Add JSON headers if needed
@@ -485,14 +488,14 @@ const _http = <T>(
   }
 
   return new Promise<IHttpResponse<T>>((resolve, reject) => {
+    const onError = (err: Error) => {
+      reject(new HttpRequestError<T>(err.message, requestOptions));
+    };
+
     const req = request(requestOptions, (res) => {
       let responseBody: any = "";
 
-      res.on("data", (chunk) => {
-        responseBody += chunk;
-      });
-
-      res.on("end", () => {
+      const onEnd = () => {
         const jsonData = tryParseJson(responseBody);
         const responseData = jsonData || responseBody;
 
@@ -510,9 +513,35 @@ const _http = <T>(
         } else {
           resolve(response);
         }
-      });
+      };
+
+      if (res.headers["content-encoding"]?.includes("gzip")) {
+        // Response is gzipped so decompress it
+        const gunzip = zlib.createGunzip();
+        res.pipe(gunzip);
+
+        gunzip
+          .on("data", function (chunk) {
+            responseBody += chunk;
+          })
+          .on("end", function () {
+            onEnd();
+          })
+          .on("error", function (err) {
+            onError(err);
+          });
+      } else {
+        // Response is not gzipped
+        res
+          .on("data", (chunk) => {
+            responseBody += chunk;
+          })
+          .on("end", () => {
+            onEnd();
+          });
+      }
     }).on("error", (err) => {
-      reject(new HttpRequestError<T>(err.message, requestOptions));
+      onError(err);
     });
 
     if (data instanceof stream.Readable) {

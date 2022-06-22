@@ -1,6 +1,7 @@
 import * as jsh from "../src/index";
 import * as fs from "fs";
 import * as fakeweb from "node-fakeweb";
+import * as https from "https";
 
 it("should throw an error when host does not exist", async () => {
   expect.assertions(3);
@@ -55,11 +56,42 @@ it("should PUT data", async () => {
   expect(response).toEqual({ text: "It worked", status: true });
 });
 
+it("should include correct default headers", async () => {  
+  fakeweb.registerUri({
+    uri: "https://putfake.ts/?parma1=value",  
+  });
+
+  jest.spyOn(https, "request");
+  await http.put("https://putfake.ts/?parma1=value", { param: "one" });
+
+  expect(https.request).toHaveBeenNthCalledWith(1, {
+    headers: {
+      Accept: "*/*",
+      "Accept-Encoding": "gzip",
+      Connection: "close",
+      "Content-Type": "application/json; charset=utf-8",
+      Host: "putfake.ts:443",
+      "User-Agent": "jsh",
+    },
+    hostname: "putfake.ts",
+    method: "PUT",
+    path: "/?parma1=value",
+    port: 443,
+    protocol: "https:",
+    timeout: 120000,
+  }, expect.any(Function));  
+});
 
 it("accepts a file stream", async () => {
-  const fakeWebSpy = fakeweb.registerUri({ uri: "https://filefake.com/", method: "POST", body: `{ "text": "It worked", "status": true }` });
-  const response = await http.post("https://filefake.com/", fs.createReadStream("./README.md"), { "Content-Type": "application/text"});
-  expect(response).toEqual({ text: "It worked", status: true });  
+  const fakeWebSpy = fakeweb.registerUri({
+    uri: "https://filefake.com/",
+    method: "POST",
+    body: `{ "text": "It worked", "status": true }`,
+  });
+  const response = await http.post("https://filefake.com/", fs.createReadStream("./README.md"), {
+    "Content-Type": "application/text",
+  });
+  expect(response).toEqual({ text: "It worked", status: true });
   expect(fakeWebSpy.used).toBe(true);
   expect(fakeWebSpy.body).toEqual(fs.readFileSync("./README.md", "utf8"));
 });
