@@ -217,10 +217,10 @@ Example:
 try {
   const output = $(`cat invalid.txt`)
 } catch (err) {
-  console.log(err.message) // Error running command: `cat invalid.txt`
-  console.log(err.command) // cat invalid.txt
-  console.log(err.stderr) // "cat: invalid.txt: No such file or directory"
-  console.log(err.status) // 1
+  echo(err.message) // Error running command: `cat invalid.txt`
+  echo(err.command) // cat invalid.txt
+  echo(err.stderr) // "cat: invalid.txt: No such file or directory"
+  echo(err.status) // 1
 }
 ```
 
@@ -308,10 +308,10 @@ Example:
 try {
   const response = http.post("https://www.myapi.com", { data: "1" });
 } catch (err) {
-  console.log(err.message) // Bad Request
-  console.log(err.data) // { error: "The 'data' property is formatted incorrectly" }
-  console.log(err.statusCode) // 400
-  console.log(err.statusMessage) // Bad Request
+  echo(err.message) // Bad Request
+  echo(err.data) // { error: "The 'data' property is formatted incorrectly" }
+  echo(err.statusCode) // 400
+  echo(err.statusMessage) // Bad Request
 }
 ```
 
