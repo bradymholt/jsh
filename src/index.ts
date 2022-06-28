@@ -734,7 +734,7 @@ global.writeFile = _writeFile;
 
 // Error handling
 const handleUnhandledError = (err: Error) => {
-  process.stderr.write(err.message + "\n");
+  process.stderr.write(err.toString() + "\n");
   if (err instanceof CommandError) {
     exit(err.status ?? 1);
   }
