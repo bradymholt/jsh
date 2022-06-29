@@ -399,6 +399,7 @@ export interface IHttpRequestOptions {
 }
 export interface IHttpResponse<T> {
   data: T;
+  body: string;
   headers: NodeJS.Dict<string | string[]>;
   statusCode: number | undefined;
   statusMessage: string | undefined;
@@ -418,12 +419,24 @@ export class HttpRequestError<T> extends Error {
     return this.response?.data;
   }
 
+  get body() {
+    return this.response?.body;
+  }
+
   get statusCode() {
     return this.response?.statusCode;
   }
 
   get statusMessage() {
     return this.response?.statusMessage;
+  }
+
+  toString(): string {
+    if (!!this.response){
+      return `${this.statusCode} ${this.statusMessage}: ${this.body}`;
+    } else {
+      return this.message;
+    }
   }
 }
 
@@ -488,19 +501,20 @@ const _http = <T>(
   }
 
   return new Promise<IHttpResponse<T>>((resolve, reject) => {
-    const onError = (err: Error) => {
+    const onRequestError = (err: Error) => {
       reject(new HttpRequestError<T>(err.message, requestOptions));
     };
 
     const req = request(requestOptions, (res) => {
       let responseBody: any = "";
 
-      const onEnd = () => {
+      const onResponseEnd = () => {
         const jsonData = tryParseJson(responseBody);
         const responseData = jsonData || responseBody;
 
         const response: IHttpResponse<T> = {
           data: responseData,
+          body: responseBody,
           headers: res.headers,
           statusCode: res.statusCode,
           statusMessage: res.statusMessage,
@@ -509,7 +523,7 @@ const _http = <T>(
 
         if (!response.statusCode?.toString().startsWith("2")) {
           const errorMessage = response.statusMessage ?? "Request Error";
-          reject(new HttpRequestError<T>(errorMessage, response.requestOptions, response));
+          reject(new HttpRequestError<T>(errorMessage, requestOptions, response));
         } else {
           resolve(response);
         }
@@ -525,10 +539,10 @@ const _http = <T>(
             responseBody += chunk;
           })
           .on("end", function () {
-            onEnd();
+            onResponseEnd();
           })
           .on("error", function (err) {
-            onError(err);
+            onRequestError(err);
           });
       } else {
         // Response is not gzipped
@@ -537,11 +551,11 @@ const _http = <T>(
             responseBody += chunk;
           })
           .on("end", () => {
-            onEnd();
+            onResponseEnd();
           });
       }
     }).on("error", (err) => {
-      onError(err);
+      onRequestError(err);
     });
 
     if (data instanceof stream.Readable) {
