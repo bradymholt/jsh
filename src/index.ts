@@ -506,8 +506,8 @@ const _http = <T>(
   }
 
   return new Promise<IHttpResponse<T>>((resolve, reject) => {
-    const onRequestError = (err: Error) => {
-      reject(new HttpRequestError<T>(err.message, requestOptions));
+    const onRequestError = (errorMessage: string) => {
+      reject(new HttpRequestError<T>(errorMessage, requestOptions));
     };
 
     const req = request(requestOptions, (res) => {
@@ -543,11 +543,14 @@ const _http = <T>(
           .on("data", function (chunk) {
             responseBody += chunk;
           })
-          .on("end", function () {
+          .on("end", () => {
             onResponseEnd();
           })
-          .on("error", function (err) {
-            onRequestError(err);
+          .on("error", (err) => {
+            onRequestError(err.message);
+          })
+          .on("timeout", () => {
+            onRequestError("Timeout");
           });
       } else {
         // Response is not gzipped
@@ -559,9 +562,13 @@ const _http = <T>(
             onResponseEnd();
           });
       }
-    }).on("error", (err) => {
-      onRequestError(err);
-    });
+    })
+      .on("error", (err) => {
+        onRequestError(err.message);
+      })
+      .on("timeout", () => {
+        onRequestError("Timeout");
+      });
 
     if (data instanceof stream.Readable) {
       data.pipe(req);
