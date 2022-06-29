@@ -439,7 +439,9 @@ ${this.statusCode} ${this.statusMessage}
 ${this.request.method} ${this.request.url}
 ${this.body}`;
     } else {
-      return this.message;
+      return `\
+HTTP Error: ${this.message}
+${this.request.method} ${this.request.url}`;
     }
   }
 }
