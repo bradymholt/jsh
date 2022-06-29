@@ -393,6 +393,7 @@ export interface IHttpRequestOptions {
   hostname: string;
   port: number;
   path: string;
+  url: string;
   method: string;
   headers: NodeJS.Dict<string | string[]>;
   timeout: number;
@@ -432,8 +433,11 @@ export class HttpRequestError<T> extends Error {
   }
 
   toString(): string {
-    if (!!this.response){
-      return `${this.statusCode} ${this.statusMessage}: ${this.body}`;
+    if (!!this.response) {
+      return `\
+${this.statusCode} ${this.statusMessage}
+${this.request.method} ${this.request.url}
+${this.body}`;
     } else {
       return this.message;
     }
@@ -461,6 +465,7 @@ const _http = <T>(
     hostname: parsedUrl.hostname,
     port: !!parsedUrl.port ? Number(parsedUrl.port) : isHTTPS ? 443 : 80,
     path: parsedUrl.pathname + parsedUrl.search,
+    url,
     method,
     headers,
     timeout: _http.timeout,
@@ -482,7 +487,7 @@ const _http = <T>(
   let requestBodyData = data ?? "";
 
   headers["Accept"] = headers["Accept"] || "*/*";
-  headers["Accept-Encoding"] = headers["Accept-Encoding"] || "gzip";  
+  headers["Accept-Encoding"] = headers["Accept-Encoding"] || "gzip";
   headers["Connection"] = headers["Connection"] || "close";
   headers["User-Agent"] = headers["User-Agent"] || "jsh";
   headers["Host"] = headers["Host"] || `${requestOptions.hostname}:${requestOptions.port}`;

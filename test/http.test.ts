@@ -77,6 +77,7 @@ it("should include correct default headers", async () => {
     method: "PUT",
     path: "/?parma1=value",
     port: 443,
+    url: "https://putfake.ts/?parma1=value",
     protocol: "https:",
     timeout: 120000,
   }, expect.any(Function));  
