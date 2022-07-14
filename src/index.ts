@@ -753,6 +753,8 @@ const handleUnhandledError = (err: Error) => {
   if (err instanceof CommandError) {
     // Pass through the exit status from the command
     exit(err.status ?? 1);
+  } else {
+    exit(1);
   }
 };
 process.on("unhandledRejection", handleUnhandledError);
