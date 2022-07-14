@@ -2,7 +2,7 @@ import "../src/index";
 import * as child_process from "child_process";
 
 it("$0 should return the file name of the current script", () => {
-  const result = child_process.spawnSync("./node_modules/ts-node/dist/bin-esm.js", ["test/fixtures/echo-$0.ts"]);
+  const result = child_process.spawnSync("test/fixtures/run-fixture.sh", ["test/fixtures/echo-$0.ts"]);
   expect(result.stdout.toString()).toEqual("echo-$0.ts\n");
 });
 
@@ -13,7 +13,7 @@ it("$11 should be undeclared", () => {
 });
 
 it("assert 1 argument", () => {
-  const result = child_process.spawnSync("./node_modules/ts-node/dist/bin-esm.js", [
+  const result = child_process.spawnSync("test/fixtures/run-fixture.sh", [
     "test/fixtures/assert-arg-count-1.ts",
   ]);
   expect(result.stderr.toString()).toEqual(`\
@@ -24,7 +24,7 @@ Usage: assert-arg-count-1.ts
 });
 
 it("assert 2 arguments when 1 is provided", () => {
-  const result = child_process.spawnSync("./node_modules/ts-node/dist/bin-esm.js", [
+  const result = child_process.spawnSync("test/fixtures/run-fixture.sh", [
     "test/fixtures/assert-arg-count-2.ts",
     "--one",
   ]);
@@ -36,7 +36,7 @@ Usage: assert-arg-count-2.ts
 });
 
 it("assert 2 arguments", () => {
-  const result = child_process.spawnSync("./node_modules/ts-node/dist/bin-esm.js", [
+  const result = child_process.spawnSync("test/fixtures/run-fixture.sh", [
     "test/fixtures/assert-arg-count-2.ts",
     "--one",
     "--two",
@@ -48,7 +48,7 @@ Second: --two
 });
 
 it("assert arguments with custom error message", () => {
-  const result = child_process.spawnSync("./node_modules/ts-node/dist/bin-esm.js", [
+  const result = child_process.spawnSync("test/fixtures/run-fixture.sh", [
     "test/fixtures/assert-arg-count-3-error.ts",
     "--one",
   ]);
@@ -60,7 +60,7 @@ Not enough arguments!
 });
 
 it("parses args correctly", () => {
-  const result = child_process.spawnSync("./node_modules/ts-node/dist/bin-esm.js", [
+  const result = child_process.spawnSync("test/fixtures/run-fixture.sh", [
     "test/fixtures/reflect-args.ts",
     "a",
     "b",
