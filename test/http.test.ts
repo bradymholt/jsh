@@ -11,7 +11,7 @@ it("should throw an error when host does not exist", async () => {
     expect(err instanceof jsh.HttpRequestError).toBeTruthy();
     if (err instanceof jsh.HttpRequestError) {
       expect(err.request.hostname).toBe("unknown.ts");
-      expect(err.message).toBe("getaddrinfo ENOTFOUND unknown.ts");
+      expect(err.message).toBe("getaddrinfo ENOTFOUND unknown.ts\nGET https://unknown.ts");
     }
   }
 });
