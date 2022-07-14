@@ -1,0 +1,1 @@
+node --no-warnings --experimental-modules --loader ts-node/esm "$@"

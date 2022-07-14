@@ -19,7 +19,7 @@ it("should throw an error with non zero exit code", () => {
 });
 
 it("writes to stderr when there is an error", () => {
-  let result = child_process.spawnSync("./node_modules/ts-node/dist/bin-esm.js", ["test/fixtures/error-exit-code.ts"]);
+  let result = child_process.spawnSync("test/fixtures/run-fixture.sh", ["test/fixtures/error-exit-code.ts"]);
   expect(result.stderr.toString()).toEqual("This script returns an error status code\n");
 });
 
