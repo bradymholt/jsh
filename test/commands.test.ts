@@ -31,7 +31,7 @@ it("should return CommandError with expected values", () => {
     commandError = err;
   }
 
-  expect(commandError.message).toEqual("Error running command: `unknown_command`");
+  expect(commandError.message).toEqual("unknown_command: command not found");
   expect(commandError.command).toEqual("unknown_command");
   expect(commandError.stderr).toContain("not found");
   expect(commandError.stdout).toEqual("");

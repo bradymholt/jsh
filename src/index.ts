@@ -276,16 +276,12 @@ export class CommandError extends Error {
   public status: number;
 
   constructor(command: string, stdout: string, stderr: string, status: number) {
-    super(`Error running command: \`${command}\``);
+    super(stderr || stdout);
 
     this.command = command;
     this.stdout = stdout;
     this.stderr = stderr;
     this.status = status;
-  }
-
-  toString(): string {
-    return `${this.message}\n${this.stderr || this.stdout}`;
   }
 }
 /**
@@ -411,7 +407,10 @@ export class HttpRequestError<T> extends Error {
   public response: IHttpResponse<T> | null;
 
   constructor(message: string, request: IHttpRequestOptions, response: IHttpResponse<T> | null = null) {
-    super(message);
+    const errorMessage = !!response
+      ? `${response.statusCode} ${response.statusMessage}\n${request.method} ${request.url}`
+      : `${message}\n${request.method} ${request.url}`;
+    super(errorMessage);
     this.request = request;
     this.response = response;
   }
@@ -430,20 +429,7 @@ export class HttpRequestError<T> extends Error {
 
   get statusMessage() {
     return this.response?.statusMessage;
-  }
-
-  toString(): string {
-    if (!!this.response) {
-      return `\
-${this.statusCode} ${this.statusMessage}
-${this.request.method} ${this.request.url}
-${this.body}`;
-    } else {
-      return `\
-HTTP Error: ${this.message}
-${this.request.method} ${this.request.url}`;
-    }
-  }
+  }  
 }
 
 /**
@@ -762,8 +748,10 @@ global.writeFile = _writeFile;
 
 // Error handling
 const handleUnhandledError = (err: Error) => {
-  process.stderr.write(err.toString() + "\n");
+  console.error(err); // Will print to stderr
+
   if (err instanceof CommandError) {
+    // Pass through the exit status from the command
     exit(err.status ?? 1);
   }
 };
