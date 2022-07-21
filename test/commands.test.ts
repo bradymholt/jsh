@@ -1,5 +1,6 @@
 import * as jsh from "../src/index";
 import * as child_process from "child_process";
+import { red } from "./helpers/color";
 
 it("should return the output of a command", () => {
   const [file, text] = ["/tmp/temp.txt", "hello there"];
@@ -20,7 +21,7 @@ it("should throw an error with non zero exit code", () => {
 
 it("writes to stderr when there is an error", () => {
   let result = child_process.spawnSync("test/fixtures/run-fixture.sh", ["test/fixtures/error-exit-code.ts"]);
-  expect(result.stderr.toString()).toEqual("This script returns an error status code\n");
+  expect(result.stderr.toString()).toEqual(red("This script returns an error status code") + "\n");
 });
 
 it("should return CommandError with expected values", () => {

@@ -28,12 +28,12 @@ setEntryScriptPath(nodePath.resolve(process.argv[1] ?? ""));
 global.dirname = path.dirname;
 global.exit = process.exit;
 /**
- * Echos error message and then exists with the specified exit code (defaults to 1)
- * @param errorMessage
+ * Echos error message to stdout and then exits with the specified exit code (defaults to 1)
+ * @param error The error message string or Error object to print
  * @param exitCode
  */
-const _error = (errorMessage: string, exitCode: number = 1) => {
-  process.stderr.write(errorMessage + "\n");
+const _error = (error: string | Error, exitCode: number = 1) => {  
+  console.error("\x1b[31m%s\x1b[0m", error); // Will print to stderr  
   exit(exitCode);
 };
 global.error = _error;
@@ -429,7 +429,7 @@ export class HttpRequestError<T> extends Error {
 
   get statusMessage() {
     return this.response?.statusMessage;
-  }  
+  }
 }
 
 /**
@@ -748,14 +748,7 @@ global.writeFile = _writeFile;
 
 // Error handling
 const handleUnhandledError = (err: Error) => {
-  console.error(err); // Will print to stderr
-
-  if (err instanceof CommandError) {
-    // Pass through the exit status from the command
-    exit(err.status ?? 1);
-  } else {
-    exit(1);
-  }
+  error(err, err instanceof CommandError ? err.status : 1);
 };
 process.on("unhandledRejection", handleUnhandledError);
 process.on("uncaughtException", handleUnhandledError);
