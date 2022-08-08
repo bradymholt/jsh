@@ -22,7 +22,7 @@ it("calls printUsageAndExit when asserting env that does not exist", () => {
   const printAndExitSpy = jest.spyOn<any, any>(usage, "printAndExit").mockImplementation();
   try {
     env.assert("DOES_NOT_EXIST");
-    expect(usage.printAndExit).toHaveBeenNthCalledWith(1, "Environment variable must be set: DOES_NOT_EXIST", 1);
+    expect(usage.printAndExit).toHaveBeenNthCalledWith(1, 1, "Environment variable must be set: DOES_NOT_EXIST");
   } finally {
     exitSpy.mockRestore();
     printAndExitSpy.mockRestore();
