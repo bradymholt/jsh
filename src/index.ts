@@ -25,6 +25,10 @@ export function setEntryScriptPath(scriptPath: string) {
 // By default, we will expect the entry script to be specified in second argument (`node myscript.js`).
 setEntryScriptPath(nodePath.resolve(process.argv[1] ?? ""));
 
+const ECHO_YELLOW_FORMAT = "\x1b[33m%s\x1b[0m";
+const ECHO_GREEN_FORMAT = "\x1b[32m%s\x1b[0m";
+const ECHO_RED_FORMAT = "\x1b[31m%s\x1b[0m";
+
 global.dirname = path.dirname;
 global.exit = process.exit;
 /**
@@ -32,23 +36,34 @@ global.exit = process.exit;
  * @param error The error message string or Error object to print
  * @param exitCode
  */
-const _error = (error: string | Error, exitCode: number = 1) => {  
-  console.error("\x1b[31m%s\x1b[0m", error); // Will print to stderr  
+const _error = (error: string | Error, exitCode: number = 1) => {
+  console.error(ECHO_RED_FORMAT, error); // Will print to stderr
   exit(exitCode);
 };
 global.error = _error;
 
 // Usage
 let defaultUsageMessage: string = `Usage: ${$0}`;
-const _printUsageAndExit = (additionalMessage?: string, exitCode = 1): void => {
-  error(`${defaultUsageMessage}${!!additionalMessage ? `\n\n${additionalMessage}` : ""}`, exitCode);
+const _printUsageAndExit = (exitCode = 1, additionalMessage?: string): void => {
+  if (exitCode == 0) {
+    // If exit code is 0, we'll simply print usage message (along with additional message if supplied) to stdout
+    echo(`${defaultUsageMessage}${!!additionalMessage ? `\n\n${additionalMessage}` : ""}`);
+  } else {
+    // If exit code is <> 0, we'll print usage message (along with red colored additional message if supplied) to stderr
+    console.error(defaultUsageMessage);
+    if (additionalMessage) {      
+      console.error(`\n${ECHO_RED_FORMAT}`, additionalMessage);
+    }
+  }
+
+  exit(exitCode);
 };
 
 const _usage = (message: string, printAndExitIfHelpArgumentSpecified = true) => {
   defaultUsageMessage = message;
 
   if (printAndExitIfHelpArgumentSpecified && (process.argv.includes("--help") || process.argv.includes("-h"))) {
-    _printUsageAndExit();
+    _printUsageAndExit(0);
   }
 };
 /**
@@ -82,7 +97,7 @@ export function setupArguments(passedInArguments: Array<string>) {
           _args.length == 0 ? "none" : _args.length
         } ${_args.length == 1 ? "was" : "were"} provided`;
 
-      usage.printAndExit(argErrorMessage, exitCode);
+      usage.printAndExit(exitCode, argErrorMessage);
       // We'll never get here
       return [];
     } else {
@@ -162,8 +177,8 @@ function envVarAssert(
 
   if (missingVars.length > 0) {
     usage.printAndExit(
-      `Environment variable${missingVars.length > 1 ? "s" : ""} must be set: ${missingVars.join(", ")}`,
-      exitCode
+      exitCode,
+      `Environment variable${missingVars.length > 1 ? "s" : ""} must be set: ${missingVars.join(", ")}`
     );
   } else if (!envVarsIsArray) {
     return envVarValues[0];
@@ -194,7 +209,7 @@ const _echo = (content: string, ...optionalArgs: any[]) => {
  * @param optionalArgs
  */
 _echo.yellow = (content: string, ...optionalArgs: any[]) => {
-  echo("\x1b[33m%s\x1b[0m", content, ...optionalArgs);
+  echo(ECHO_YELLOW_FORMAT, content, ...optionalArgs);
 };
 /**
  * Prints green colored content to stdout with a trailing newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
@@ -202,7 +217,7 @@ _echo.yellow = (content: string, ...optionalArgs: any[]) => {
  * @param optionalArgs
  */
 _echo.green = (content: string, ...optionalArgs: any[]) => {
-  echo("\x1b[32m%s\x1b[0m", content, ...optionalArgs);
+  echo(ECHO_GREEN_FORMAT, content, ...optionalArgs);
 };
 /**
  * Prints red colored content to stdout with a trailing newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
@@ -210,7 +225,7 @@ _echo.green = (content: string, ...optionalArgs: any[]) => {
  * @param optionalArgs
  */
 _echo.red = (content: string, ...optionalArgs: any[]) => {
-  echo("\x1b[31m%s\x1b[0m", content, ...optionalArgs);
+  echo(ECHO_RED_FORMAT, content, ...optionalArgs);
 };
 
 /**

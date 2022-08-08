@@ -15,12 +15,8 @@ it("$11 should be undeclared", () => {
 
 it("assert 1 argument", () => {
   const result = child_process.spawnSync("test/fixtures/run-fixture.sh", ["test/fixtures/assert-arg-count-1.ts"]);
-  expect(result.stderr.toString()).toEqual(
-    red(`\
-Usage: assert-arg-count-1.ts
-
-1 argument was expected but none were provided`) + "\n"
-  );
+  expect(result.stderr.toString()).toContain("Usage: assert-arg-count-1.ts\n\n");
+  expect(result.stderr.toString()).toContain("\n\n" + red("1 argument was expected but none were provided"));
 });
 
 it("assert 2 arguments when 1 is provided", () => {
@@ -28,12 +24,8 @@ it("assert 2 arguments when 1 is provided", () => {
     "test/fixtures/assert-arg-count-2.ts",
     "--one",
   ]);
-  expect(result.stderr.toString()).toEqual(
-    red(`\
-Usage: assert-arg-count-2.ts
-
-2 arguments were expected but 1 was provided`) + "\n"
-  );
+  expect(result.stderr.toString()).toContain("Usage: assert-arg-count-2.ts\n\n");
+  expect(result.stderr.toString()).toContain("\n\n" + red("2 arguments were expected but 1 was provided"));
 });
 
 it("assert 2 arguments", () => {
@@ -53,13 +45,8 @@ it("assert arguments with custom error message", () => {
     "test/fixtures/assert-arg-count-3-error.ts",
     "--one",
   ]);
-  expect(result.stderr.toString()).toEqual(
-    red(`\
-Usage: assert-arg-count-3-error.ts
-
-Not enough arguments!\
-`) + "\n"
-  );
+  expect(result.stderr.toString()).toContain("Usage: assert-arg-count-3-error.ts\n\n");
+  expect(result.stderr.toString()).toContain("\n\n" + red("Not enough arguments!"));
 });
 
 it("parses args correctly", () => {
