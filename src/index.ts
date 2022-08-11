@@ -51,7 +51,7 @@ const _printUsageAndExit = (exitCode = 1, additionalMessage?: string): void => {
   } else {
     // If exit code is <> 0, we'll print usage message (along with red colored additional message if supplied) to stderr
     console.error(defaultUsageMessage);
-    if (additionalMessage) {      
+    if (additionalMessage) {
       console.error(`\n${ECHO_RED_FORMAT}`, additionalMessage);
     }
   }
@@ -264,7 +264,7 @@ const _prompt = function (prompt: string | (() => void)): string {
     echo(prompt);
   }
 
-  const output = $.quiet(promptShellCommand);
+  const output = $(promptShellCommand, { echoCommand: false });
   return output;
 };
 
@@ -284,6 +284,27 @@ const _sleep = (ms: number) => {
 global.sleep = _sleep;
 
 // Command execution
+
+export interface ICommandOptions {
+  /**
+   * If true will echo stdout of the command as it runs and not capture its output
+   */
+  echoStdout?: boolean;
+  /**
+   * If true will echo the command itself before running it
+   */
+  echoCommand?: boolean;
+  /**
+   * If set to true, will not throw if the command returns a non-zero exit code
+   */
+  noThrow?: boolean;
+  /**
+   *  In milliseconds the maximum amount of time the process is allowed to run
+   */
+  timeout?: number;
+  shell?: string | boolean | undefined;
+  maxBuffer?: number;
+}
 export class CommandError extends Error {
   public command: string;
   public stdout: string;
@@ -302,21 +323,32 @@ export class CommandError extends Error {
 /**
  * Runs a command and returns the stdout
  * @param command The command to run.
- * @param echoStdout If true will echo stdout of the command as it runs and not capture its output
- * @param echoCommand If true will echo the command before running it
+ * @param options
  * @returns
  */
-const _$ = (command: string, echoStdout: boolean = false, echoCommand = true): string => {
-  if (echoCommand) {
+const _$ = (command: string, options: ICommandOptions = {}): string => {
+  // Set default options for those not provided
+  options = Object.assign(
+    {
+      echoStdout: false,
+      echoCommand: true,
+      shell: true,
+      maxBuffer: 1024 * 1024 * 256 /* 256MB */,
+    } as ICommandOptions,
+    options
+  );
+
+  if (options.echoCommand) {
     echo(command);
   }
 
   let result = spawnSync(command, [], {
-    stdio: [0, echoStdout ? "inherit" : "pipe", echoStdout ? "inherit" : "pipe"],
-    shell: $.shell ?? true,
+    stdio: [0, options.echoStdout ? "inherit" : "pipe", options.echoStdout ? "inherit" : "pipe"],
+    shell: options.shell,
     windowsHide: true,
-    maxBuffer: $.maxBuffer,
+    maxBuffer: options.maxBuffer,
     encoding: "utf-8",
+    timeout: options.timeout,
   });
 
   const scrubOutput = (output: string) => {
@@ -327,72 +359,26 @@ const _$ = (command: string, echoStdout: boolean = false, echoCommand = true): s
   const status = result.status ?? 0;
 
   if (status != 0) {
-    throw new CommandError(command, stdout, stderr, status);
+    if (options.noThrow === true) {
+      return stderr || stdout;
+    } else {
+      throw new CommandError(command, stdout, stderr, status);
+    }
+  } else {
+    return stdout;
   }
-
-  return stdout;
 };
+type IEchoCommandOptions = Omit<ICommandOptions, "echoStdout">;
 /**
  * Runs a command and echo its stdout as it executes.  Stdout from the command is not captured.
- * @param command The command to run.
- * @param echoStdout If true will echo stdout of the command as it runs and not capture its output
- * @param echoCommand If true will echo the command before running it
+ * @param command The command to run
+ * @param options
  * @returns void
  */
-_$.echo = (command: string, echoCommand = true): void => {
-  _$(command, true, echoCommand);
+_$.echo = (command: string, options: IEchoCommandOptions = {}): void => {
+  _$(command, Object.assign({ echoStdout: true } as ICommandOptions, options) as ICommandOptions);
 };
-/**
- * Runs a command and will not throw if the command returns a non-zero exit code.  Instead the stderr (or stdout if stderr is empty) will be returned.
- * @param command
- * @param pipe
- * @param echoCommand
- * @returns
- */
-_$.noThrow = (command: string, pipe: boolean = false, echoCommand = true) => {
-  try {
-    return _$(command, pipe, echoCommand);
-  } catch (err) {
-    if (err instanceof CommandError) {
-      return err.stderr || err.stdout;
-    } else {
-      // Unknown error so rethrow
-      throw err;
-    }
-  }
-};
-/**
- * Runs a command without echoing it
- * @param command
- * @param pipe
- * @returns
- */
-_$.quiet = (command: string, pipe: boolean = false) => {
-  return _$(command, pipe, false);
-};
-/**
- * Runs a command and will retry up to maxTries if the command returns a non-zero exit code
- * @param cmd
- * @param maxTries
- * @param waitMillisecondsBeforeRetry
- * @param echoFailures
- * @param pipe
- * @param echoCommand
- * @returns
- */
-_$.retry = (
-  cmd: string,
-  maxTries = 5,
-  waitMillisecondsBeforeRetry = 5000,
-  echoFailures = true,
-  pipe: boolean = false,
-  echoCommand = true
-) => {
-  return _retry<string>(() => _$(cmd, pipe, echoCommand), maxTries, waitMillisecondsBeforeRetry, echoFailures);
-};
-// Options
-_$.shell = null as string | null;
-_$.maxBuffer = 1024 * 1024 * 256 /* 256MB */;
+
 global.$ = _$;
 global.exec = _$.echo;
 
@@ -609,33 +595,6 @@ _http.noThrow = async <T>(
     }
   }
 };
-/**
- * Makes a HTTP request and returns the response.   Will retry up to maxTries if an error is thrown because the status code is not 2xx.
- * @param method
- * @param url
- * @param data
- * @param headers
- * @param maxTries
- * @param waitMillisecondsBeforeRetry
- * @param echoFailures
- * @returns
- */
-_http.retry = async <T>(
-  method: HttpMethod,
-  url: string,
-  data: HttpData = null,
-  headers: { [name: string]: string } = {},
-  maxTries = 5,
-  waitMillisecondsBeforeRetry = 5000,
-  echoFailures = true
-) => {
-  return _retry<Promise<IHttpResponse<T>>>(
-    () => _http<T>(method, url, data, headers),
-    maxTries,
-    waitMillisecondsBeforeRetry,
-    echoFailures
-  );
-};
 
 /**
  * Makes a GET HTTP request and returns the response data.  Will throw an error if the response status code is not 2xx.
@@ -767,26 +726,6 @@ const handleUnhandledError = (err: Error) => {
 };
 process.on("unhandledRejection", handleUnhandledError);
 process.on("uncaughtException", handleUnhandledError);
-
-const _retry = <T>(tryFunction: () => T, maxTries = 5, waitMillisecondsBeforeRetry = 5000, echoFailures = true): T => {
-  try {
-    return tryFunction();
-  } catch (err: unknown) {
-    if (echoFailures) {
-      if (err instanceof Error) {
-        echo(err.toString());
-      }
-      echo(`Will retry in ${waitMillisecondsBeforeRetry} milliseconds...`);
-    }
-
-    if (maxTries > 0) {
-      sleep(waitMillisecondsBeforeRetry);
-
-      return _retry(tryFunction, maxTries - 1);
-    }
-    throw err;
-  }
-};
 
 declare global {
   var __filename: string;

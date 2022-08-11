@@ -66,9 +66,6 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 | --- | --- |
 | `result=$("cmd.sh")` | Execute a command and return the stdout |
 | `$.echo("cmd.sh")` | Execute a command and stream stdout to console without returning a value; also aliased as `exec()`. |
-| `$.noThrow("cmd.sh")` | Execute a command and do not throw an error if its exit code is not 0 |
-| `$.quiet("cmd.sh")` | Execute a command and do not echo the command before running it |
-| `$.retry("cmd.sh", 5)` | Execute a command and if it throws and error, retry up to a number of times until it succeeds |
 
 **File System**
 |     | Description |
@@ -96,7 +93,6 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 | `await http.delete("https://www.myapi.com", { data: "1" })` | Make a HTTP DELETE request and return the response body data                                             |
 | `await http("GET", "https://www.myapi.com")`                | Make a HTTP request and return the response: (`{ data, headers, statusCode, statusMessage }`)            |
 | `await http.noThrow("GET", "https://www.myapi.com")`        | Make a HTTP request and do not throw an error if status code is not 20X                                  |
-| `await http.retry("GET", "https://www.myapi.com")`          | Make a HTTP request and if response status code is not 20X, retry up to a number of times until it is    |
 
 ## Examples
 
