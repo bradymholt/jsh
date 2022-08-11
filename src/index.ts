@@ -367,19 +367,19 @@ const _$ = (command: string, options: ICommandOptions = {}): string => {
     return stdout;
   }
 };
-type IEchoCommandOptions = Omit<ICommandOptions, "echoStdout">;
+type IExecCommandOptions = Omit<ICommandOptions, "echoStdout">;
 /**
  * Runs a command and echo its stdout as it executes.  Stdout from the command is not captured.
  * @param command The command to run
  * @param options
  * @returns void
  */
-_$.echo = (command: string, options: IEchoCommandOptions = {}): void => {
   _$(command, Object.assign({ echoStdout: true } as ICommandOptions, options) as ICommandOptions);
+const _exec = (command: string, options: IExecCommandOptions = {}): void => {
 };
 
 global.$ = _$;
-global.exec = _$.echo;
+global.exec = _exec;
 
 // HTTP
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -732,7 +732,7 @@ declare global {
   var read: typeof _prompt;
   var sleep: typeof _sleep;
   var $: typeof _$;
-  var exec: typeof _$.echo;
+  var exec: typeof _exec;
   var http: typeof _http;
   var cd: typeof process.chdir;
   var exists: typeof _exists;
