@@ -285,9 +285,9 @@ global.sleep = _sleep;
 
 export interface ICommandOptions {
   /**
-   * If true will echo stdout of the command as it runs and not capture its output
+   * If true will capture stdout from command and return it.  If false, stdout will not be captured but only printed to the console.  Default: true
    */
-  echoStdout?: boolean;
+  captureStdout?: boolean;
   /**
    * If true will echo the command itself before running it
    */
@@ -328,7 +328,7 @@ const _$ = (command: string, options: ICommandOptions = {}): string => {
   // Set default options for those not provided
   options = Object.assign(
     {
-      echoStdout: false,
+      captureStdout: true,
       echoCommand: true,
       noThrow: false,
       shell: true,
@@ -342,7 +342,7 @@ const _$ = (command: string, options: ICommandOptions = {}): string => {
   }
 
   let result = spawnSync(command, [], {
-    stdio: [0, options.echoStdout ? "inherit" : "pipe", options.echoStdout ? "inherit" : "pipe"],
+    stdio: [0, options.captureStdout ? "pipe" : "inherit", options.captureStdout ? "pipe" : "inherit"],
     shell: options.shell,
     windowsHide: true,
     maxBuffer: options.maxBuffer,
@@ -367,19 +367,19 @@ const _$ = (command: string, options: ICommandOptions = {}): string => {
     return stdout;
   }
 };
-type IEchoCommandOptions = Omit<ICommandOptions, "echoStdout">;
+type IExecCommandOptions = Omit<ICommandOptions, "echoStdout">;
 /**
- * Runs a command and echo its stdout as it executes.  Stdout from the command is not captured.
+ * Runs a command and echos its stdout as it executes.  Stdout from the command is not captured.
  * @param command The command to run
  * @param options
  * @returns void
  */
-_$.echo = (command: string, options: IEchoCommandOptions = {}): void => {
-  _$(command, Object.assign({ echoStdout: true } as ICommandOptions, options) as ICommandOptions);
+const _exec = (command: string, options: IExecCommandOptions = {}): void => {
+  _$(command, Object.assign({ captureStdout: false } as ICommandOptions, options) as ICommandOptions);
 };
 
 global.$ = _$;
-global.exec = _$.echo;
+global.exec = _exec;
 
 // HTTP
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -732,7 +732,7 @@ declare global {
   var read: typeof _prompt;
   var sleep: typeof _sleep;
   var $: typeof _$;
-  var exec: typeof _$.echo;
+  var exec: typeof _exec;
   var http: typeof _http;
   var cd: typeof process.chdir;
   var exists: typeof _exists;

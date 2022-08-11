@@ -65,7 +65,7 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 |     | Description |
 | --- | --- |
 | `result=$("cmd.sh")` | Execute a command and return the stdout |
-| `$.echo("cmd.sh")` | Execute a command and stream stdout to console without returning a value; also aliased as `exec()`. |
+| `exec("cmd.sh")` | Execute a command and streams stdout to console without returning a value |
 
 **File System**
 |     | Description |
@@ -185,17 +185,17 @@ Example:
 let result=$(`git status --porcelain`);
 ```
 
-### $.echo()
+### exec
 
-**$.echo()** (also aliased as `exec()`) should be used when running commands where the output (stdout) does not need to be captured, but only printed to the console. This helper is intended for long running commands or those where output does not need to be captured.
+**exec** should be used when running commands where the output (stdout) does not need to be captured, but only printed to the console. This helper is intended for long running commands or those where output does not need to be captured.
 
 Example:
 
 ```
 // Will print `npm install` output immediately as it happens
-// $.echo() will not return anything (void)
+// exec will not return anything (void)
 
-$.echo(`npm install`) // or exec(`npm install`)
+exec(`npm install`)
 
 > added 379 packages, and audited 380 packages in 1s
 > 29 packages are looking for funding
@@ -235,7 +235,7 @@ echo(content);
 
 ### Command Options
 
-`$()` and `$.echo()` accept an `options` parameter object that may contain any of the following fields:
+`$()` and `exec()` accept an `options` parameter object that may contain any of the following fields:
  
 - `echoCommand: boolean` - If true will echo the command itself before running it (Default: `true`)
 - `noThrow: boolean` -  If set to true, will not throw if the command returns a non-zero exit code (Default: `false`)
