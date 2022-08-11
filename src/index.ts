@@ -332,6 +332,7 @@ const _$ = (command: string, options: ICommandOptions = {}): string => {
     {
       echoStdout: false,
       echoCommand: true,
+      noThrow: false,
       shell: true,
       maxBuffer: 1024 * 1024 * 256 /* 256MB */,
     } as ICommandOptions,
