@@ -248,7 +248,7 @@ global.printf = _printf;
  
 *    Examples:
        const name = prompt("What's your name?");
-       const name = prompt(() => { echo.noNewLine("What's your name? "); });
+       const name = prompt(() => { printf("What's your name? "); });
        const name = prompt(() => { echo.yellow("What's your name? "); });
 });
  */
