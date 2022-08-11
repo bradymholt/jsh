@@ -220,23 +220,29 @@ try {
 }
 ```
 
-#### $.noThrow()
+#### `noThrow` option
 
-You can call `$.noThrow()` to prevent an error from being thrown. Instead, the stderr will be returned.
+You can pass in the option `noThrow: true` to prevent an error from being thrown. Instead, the stderr will be returned.
 
 Example:
 
 ```
 // This command will error out but will not throw because `$.noThrow()` was called.
-let content=$(`cat invalid.txt`)
+let content=$(`cat invalid.txt`, { noThrow: true})
 echo(content);
 
 > cat: invalid.txt: No such file or directory
 ```
 
-### Options
+### Command Options
 
-- `$.shell` - By default, commands will be run inside of a shell (`/bin/sh` on *nix systems and `process.env.ComSpec` on Windows).  You can specify the path to a different shell to execute commands with by setting the `$.shell` config variable.  All subsequent command executions will honor this setting.  For example: `$.shell = "/bin/bash";`
+`$()` and `$.echo()` accept an `options` parameter object that may contain any of the following fields:
+ 
+- `echoCommand: boolean` - If true will echo the command itself before running it (Default: `true`)
+- `noThrow: boolean` -  If set to true, will not throw if the command returns a non-zero exit code (Default: `false`)
+- `timeout: number` - In milliseconds the maximum amount of time the process is allowed to run (Default: `undefined` (unlimited))
+- `shell: string` - By default, commands will be run inside of a shell (`/bin/sh` on *nix systems and `process.env.ComSpec` on Windows).  This option can be used to specify the path to a different shell to execute commands with.  For example, you could specify `shell: "/bin/bash"` to use bash.
+  `maxBuffer: number` - Specifies the largest number of bytes allowed on stdout or stderr. If this value is exceeded, the child process will be terminated. (Default: `268435456` (256MB))
 
 ## HTTP Request Helpers
 
