@@ -85,14 +85,13 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 **Note:** The HTTP helpers are asynchronous and return a Promise.
 
 |     | Description |
-| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | `await http.get("https://www.myapi.com")`                   | Make a HTTP GET request and return the response body data                                                |
-| `await http.post("https://www.myapi.com", { data: "1" }) `  | Make a HTTP POST request and return the response body data                                               |
+| `await http.post("https://www.myapi.com", { data: "1" })`   | Make a HTTP POST request and return the response body data                                               |
 | `await http.put("https://www.myapi.com", { data: "1" })`    | Make a HTTP PUT request and return the response body data                                                |
 | `await http.patch("https://www.myapi.com", { data: "1" })`  | Make a HTTP PATCH request and return the response body data                                              |
 | `await http.delete("https://www.myapi.com", { data: "1" })` | Make a HTTP DELETE request and return the response body data                                             |
-| `await http("GET", "https://www.myapi.com")`                | Make a HTTP request and return the response: (`{ data, headers, statusCode, statusMessage }`)            |
-| `await http.noThrow("GET", "https://www.myapi.com")`        | Make a HTTP request and do not throw an error if status code is not 20X                                  |
+| `await http("POST", "https://www.myapi.com", { data: "1" }, { headers: { Accept: "application/json" } })`                | Make a HTTP request and return the response: (`{ data, headers, statusCode, statusMessage }`)            |
 
 ## Examples
 
@@ -317,20 +316,28 @@ try {
 }
 ```
 
-#### http.noThrow()
+#### `noThrow` option
 
-You can call `http.noThrow()` to prevent an error from being thrown. Instead, the response will be returned.
+You can pass in the option `noThrow: true` when calling `http()` to prevent an error from being thrown when the response status is not 2xx. Instead, the response will be returned.
 
 Example:
 
 ```
-const response = await http.noThrow("GET", "https://www.myapi.com);
+const response = await http("POST", "https://www.myapi.com", { data: 2 }, { noThrow: true });
 
 echo(response.data) // "A server error occurred.  Please try again later."
 echo(response.headers) // { "Content-Type": "text/plain" }
 echo(response.statusCode) // 500
 echo(response.statusMessage) // "Internal Server Error"
 ```
+
+### HTTP Request Options
+
+`http()` accepts an `options` parameter object that may contain any of the following fields:
+ 
+- `headers: object` - The request headers to send with the request.  A set of default headers will be included with the request even if not specified here.  See "Default Headers" section above for more info.
+- `timeout: number` - The number of milliseconds of inactivity before a socket is presumed to have timed out (Default: `120000` (2 minutes))
+- `noThrow: boolean` - If set to true, will not throw if the response status code is not 2xx (Default: false)
 
 ## Installation
 
