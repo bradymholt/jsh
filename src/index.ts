@@ -332,6 +332,7 @@ const _$ = (command: string, options: ICommandOptions = {}): string => {
     {
       echoStdout: false,
       echoCommand: true,
+      noThrow: false,
       shell: true,
       maxBuffer: 1024 * 1024 * 256 /* 256MB */,
     } as ICommandOptions,
@@ -385,29 +386,38 @@ global.exec = _$.echo;
 // HTTP
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 export type HttpData = object | stream.Readable | null;
-export interface IHttpRequestOptions {
+export interface IHttpRawRequestOptions {
   protocol: string;
   hostname: string;
   port: number;
   path: string;
   url: string;
   method: string;
-  headers: NodeJS.Dict<string | string[]>;
-  timeout: number;
+  headers?: NodeJS.Dict<string | string[]>;
+  /**
+   * The number of milliseconds of inactivity before a socket is presumed to have timed out.
+   */
+  timeout?: number;
 }
+export type IHttpRequestOptions = Pick<Partial<IHttpRawRequestOptions>, "headers" | "timeout"> & {
+  /**
+   * If set to true, will not throw if the response status code is not 2xx
+   */
+  noThrow?: boolean;
+};
 export interface IHttpResponse<T> {
   data: T;
   body: string;
   headers: NodeJS.Dict<string | string[]>;
   statusCode: number | undefined;
   statusMessage: string | undefined;
-  requestOptions: IHttpRequestOptions;
+  requestOptions: IHttpRawRequestOptions;
 }
 export class HttpRequestError<T> extends Error {
-  public request: IHttpRequestOptions;
+  public request: IHttpRawRequestOptions;
   public response: IHttpResponse<T> | null;
 
-  constructor(message: string, request: IHttpRequestOptions, response: IHttpResponse<T> | null = null) {
+  constructor(message: string, request: IHttpRawRequestOptions, response: IHttpResponse<T> | null = null) {
     const errorMessage = !!response
       ? `${response.statusCode} ${response.statusMessage}\n${request.method} ${request.url}`
       : `${message}\n${request.method} ${request.url}`;
@@ -445,20 +455,24 @@ const _http = <T>(
   method: HttpMethod,
   url: string,
   data: HttpData = null,
-  headers: { [name: string]: string } = {}
+  options: IHttpRequestOptions = {}
 ): Promise<IHttpResponse<T>> => {
   const parsedUrl = new URL(url);
   const isHTTPS = parsedUrl.protocol.startsWith("https");
-  const requestOptions: IHttpRequestOptions = {
-    protocol: parsedUrl.protocol,
-    hostname: parsedUrl.hostname,
-    port: !!parsedUrl.port ? Number(parsedUrl.port) : isHTTPS ? 443 : 80,
-    path: parsedUrl.pathname + parsedUrl.search,
-    url,
-    method,
-    headers,
-    timeout: _http.timeout,
-  };
+
+  const rawRequestOptions: IHttpRawRequestOptions = Object.assign(
+    {
+      protocol: parsedUrl.protocol,
+      hostname: parsedUrl.hostname,
+      port: !!parsedUrl.port ? Number(parsedUrl.port) : isHTTPS ? 443 : 80,
+      path: parsedUrl.pathname + parsedUrl.search,
+      url,
+      method,
+      headers: {},
+      timeout: 120000 /* 2 minutes */,
+    },
+    options
+  );
 
   const tryParseJson = (data: string) => {
     // Tries to parse JSON and returns parsed object if successful.  If not, returns false.
@@ -473,18 +487,22 @@ const _http = <T>(
     }
   };
 
-  let requestBodyData = data ?? "";
+  if (!!options.headers) {
+    options.headers["Accept"] = options.headers["Accept"] || "*/*";
+    options.headers["Accept-Encoding"] = options.headers["Accept-Encoding"] || "gzip";
+    options.headers["Connection"] = options.headers["Connection"] || "close";
+    options.headers["User-Agent"] = options.headers["User-Agent"] || "jsh";
+    options.headers["Host"] = options.headers["Host"] || `${rawRequestOptions.hostname}:${rawRequestOptions.port}`;
+  }
 
-  headers["Accept"] = headers["Accept"] || "*/*";
-  headers["Accept-Encoding"] = headers["Accept-Encoding"] || "gzip";
-  headers["Connection"] = headers["Connection"] || "close";
-  headers["User-Agent"] = headers["User-Agent"] || "jsh";
-  headers["Host"] = headers["Host"] || `${requestOptions.hostname}:${requestOptions.port}`;
+  let requestBodyData = data ?? "";
 
   if (!(data instanceof stream.Readable) && typeof data == "object") {
     // Add JSON headers if needed
-    headers["Content-Type"] = headers["Content-Type"] || "application/json; charset=utf-8";
-    headers["Accept"] = headers["Accept"] || "application/json";
+    if (!!options.headers) {
+      options.headers["Content-Type"] = options.headers["Content-Type"] || "application/json; charset=utf-8";
+      options.headers["Accept"] = options.headers["Accept"] || "application/json";
+    }
 
     requestBodyData = JSON.stringify(data);
   }
@@ -496,10 +514,10 @@ const _http = <T>(
 
   return new Promise<IHttpResponse<T>>((resolve, reject) => {
     const onRequestError = (errorMessage: string) => {
-      reject(new HttpRequestError<T>(errorMessage, requestOptions));
+      reject(new HttpRequestError<T>(errorMessage, rawRequestOptions));
     };
 
-    const req = request(requestOptions, (res) => {
+    const req = request(rawRequestOptions, (res) => {
       let responseBody: any = "";
 
       const onResponseEnd = () => {
@@ -512,12 +530,16 @@ const _http = <T>(
           headers: res.headers,
           statusCode: res.statusCode,
           statusMessage: res.statusMessage,
-          requestOptions: requestOptions,
+          requestOptions: rawRequestOptions,
         };
 
         if (!response.statusCode?.toString().startsWith("2")) {
-          const errorMessage = response.statusMessage ?? "Request Error";
-          reject(new HttpRequestError<T>(errorMessage, requestOptions, response));
+          if (options.noThrow === true) {
+            resolve(response);
+          } else {
+            const errorMessage = response.statusMessage ?? "Request Error";
+            reject(new HttpRequestError<T>(errorMessage, rawRequestOptions, response));
+          }
         } else {
           resolve(response);
         }
@@ -567,34 +589,7 @@ const _http = <T>(
     }
   });
 };
-_http.timeout = 120000; // 2 minutes
 global.http = _http;
-
-/**
- * Makes a synchronous HTTP request and returns the response.   Will not throw an error if the response status code is not 2xx.
- * @param method
- * @param url
- * @param data
- * @param headers
- * @returns
- */
-_http.noThrow = async <T>(
-  method: HttpMethod,
-  url: string,
-  data: HttpData = null,
-  headers: { [name: string]: string } = {}
-): Promise<IHttpResponse<T>> => {
-  try {
-    return await _http<T>(method, url, data, headers);
-  } catch (err) {
-    if (err instanceof HttpRequestError) {
-      return err.response as IHttpResponse<T>;
-    } else {
-      // Unknown error so rethrow
-      throw err;
-    }
-  }
-};
 
 /**
  * Makes a GET HTTP request and returns the response data.  Will throw an error if the response status code is not 2xx.
@@ -603,7 +598,7 @@ _http.noThrow = async <T>(
  * @returns
  */
 _http.get = async <T>(url: string, headers: { [name: string]: string } = {}) => {
-  const response = await _http<T>("GET", url, null, headers);
+  const response = await _http<T>("GET", url, null, { headers });
   return response.data;
 };
 /**
@@ -613,7 +608,7 @@ _http.get = async <T>(url: string, headers: { [name: string]: string } = {}) => 
  * @returns
  */
 _http.post = async <T>(url: string, data: HttpData, headers: { [name: string]: string } = {}) => {
-  const response = await _http<T>("POST", url, data, headers);
+  const response = await _http<T>("POST", url, data, { headers });
   return response.data;
 };
 /**
@@ -623,7 +618,7 @@ _http.post = async <T>(url: string, data: HttpData, headers: { [name: string]: s
  * @returns
  */
 _http.put = async <T>(url: string, data: HttpData, headers: { [name: string]: string } = {}) => {
-  const response = await _http<T>("PUT", url, data, headers);
+  const response = await _http<T>("PUT", url, data, { headers });
   return response.data;
 };
 /**
@@ -633,7 +628,7 @@ _http.put = async <T>(url: string, data: HttpData, headers: { [name: string]: st
  * @returns
  */
 _http.patch = async <T>(url: string, data: HttpData, headers: { [name: string]: string } = {}) => {
-  const response = await _http<T>("PATCH", url, data, headers);
+  const response = await _http<T>("PATCH", url, data, { headers });
   return response.data;
 };
 /**
@@ -643,7 +638,7 @@ _http.patch = async <T>(url: string, data: HttpData, headers: { [name: string]: 
  * @returns
  */
 _http.delete = async <T>(url: string, data: HttpData, headers: { [name: string]: string } = {}) => {
-  const response = await _http<T>("DELETE", url, data, headers);
+  const response = await _http<T>("DELETE", url, data, { headers });
   return response.data;
 };
 global.http = _http;

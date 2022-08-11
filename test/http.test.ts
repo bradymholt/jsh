@@ -42,10 +42,10 @@ it("should throw error on status not in 200 range", async () => {
   }
 });
 
-it("should not throw error when .noThrow is called", async () => {
+it("should not throw error when noThrow option is used", async () => {
   expect.assertions(2);
   fakeweb.registerUri({ uri: "http://errorserver.ts/", body: `{ "text": "Error" }`, statusCode: 500 });
-  const response = await http.noThrow("GET", "http://errorserver.ts/");
+  const response = await http("GET", "http://errorserver.ts/", null, { noThrow: true });
   expect(response.statusCode).toBe(500);
   expect(response.data).toEqual({ text: "Error" });
 });
@@ -56,31 +56,35 @@ it("should PUT data", async () => {
   expect(response).toEqual({ text: "It worked", status: true });
 });
 
-it("should include correct default headers", async () => {  
+it("should include correct default headers", async () => {
   fakeweb.registerUri({
-    uri: "https://putfake.ts/?parma1=value",  
+    uri: "https://putfake.ts/?parma1=value",
   });
 
   jest.spyOn(https, "request");
   await http.put("https://putfake.ts/?parma1=value", { param: "one" });
 
-  expect(https.request).toHaveBeenNthCalledWith(1, {
-    headers: {
-      Accept: "*/*",
-      "Accept-Encoding": "gzip",
-      Connection: "close",
-      "Content-Type": "application/json; charset=utf-8",
-      Host: "putfake.ts:443",
-      "User-Agent": "jsh",
+  expect(https.request).toHaveBeenNthCalledWith(
+    1,
+    {
+      headers: {
+        Accept: "*/*",
+        "Accept-Encoding": "gzip",
+        Connection: "close",
+        "Content-Type": "application/json; charset=utf-8",
+        Host: "putfake.ts:443",
+        "User-Agent": "jsh",
+      },
+      hostname: "putfake.ts",
+      method: "PUT",
+      path: "/?parma1=value",
+      port: 443,
+      url: "https://putfake.ts/?parma1=value",
+      protocol: "https:",
+      timeout: 120000,
     },
-    hostname: "putfake.ts",
-    method: "PUT",
-    path: "/?parma1=value",
-    port: 443,
-    url: "https://putfake.ts/?parma1=value",
-    protocol: "https:",
-    timeout: 120000,
-  }, expect.any(Function));  
+    expect.any(Function)
+  );
 });
 
 it("accepts a file stream", async () => {
