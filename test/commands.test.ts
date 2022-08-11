@@ -40,22 +40,5 @@ it("should return CommandError with expected values", () => {
 });
 
 it("$.noThrow should not throw with non zero exit code", () => {
-  expect($.noThrow("unknown_command")).toContain("not found");
-});
-
-it("$.retry should retry when first call results in error", () => {
-  const spawnSyncSpy = jest.spyOn(child_process, "spawnSync");
-  const consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
-
-  try {
-    spawnSyncSpy.mockImplementationOnce(() => {
-      throw new Error("error!");
-    });
-    expect($.retry("echo 'test'", 5, 500)).toEqual("test");
-    expect(spawnSyncSpy).toBeCalledTimes(2);
-    expect(consoleLogSpy).toBeCalledTimes(4);
-  } finally {
-    spawnSyncSpy.mockRestore();
-    consoleLogSpy.mockRestore();
-  }
+  expect($("unknown_command", { noThrow: true })).toContain("not found");
 });
