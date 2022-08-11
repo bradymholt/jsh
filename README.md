@@ -41,7 +41,7 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 | `echo.yellow("Hello")` | Print yellow colored text to console with trailing newline |
 | `echo.green("Hello")` | Print green colored text to console with trailing newline |
 | `echo.red("Hello")` | Print red colored text to console with trailing newline |
-| `echo.noNewLine("Processing...")` | Print text to console without a trailing newline; also aliased as `printf()`. |
+| `printf("Processing...")` | Print text to console without a trailing newline |
 | `exit(1)` | Halt the script and return an exit code |
 | `error("An error", 1)` | Echo an error and halt the script with an exit code |
 | `const name = prompt("What is your name?");` | Prompt (synchronously) for user input and return after \<Enter\> pressed; also aliased as `read()`. |

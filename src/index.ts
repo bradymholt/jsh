@@ -237,9 +237,7 @@ const _printf = function (content: string) {
   return process.stdout.write(content, "utf8");
 };
 
-_echo.noNewLine = _printf;
 global.echo = _echo;
-
 global.printf = _printf;
 
 /**
