@@ -65,7 +65,7 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 |     | Description |
 | --- | --- |
 | `result=$("cmd.sh")` | Execute a command and return the stdout |
-| `exec("cmd.sh")` | Execute a command and streams stdout to console without returning a value |
+| `exec("cmd.sh")` | Execute a command and stream stdout to console without returning a value |
 
 **File System**
 |     | Description |
