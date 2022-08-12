@@ -57,8 +57,7 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 | `args.source_file` | Access arguments prefixed with "--".<br/>If argument is in format `--source_file=input.txt` the value of `args.source_file` will be `"input.txt"`.<br/>If argument is in format `--source_file` the value of `args.source_file` will be `true`. |
 | `const [source_file, target_file] = args.assertCount(2)` | Return arg values as array or call `usage.printAndExit()` if less than number of arguments specified were supplied |
 | `$0` | Return the name of the current script file (ex: `my_script.js`) |
-| `$HOME` | Access an environment variable |
-| `env.HOME` or `env["HOME"]` | Access an environment variable from the `env` object |
+| `$HOME`,`env.HOME`, or `env["HOME"]`| Access an environment variable |
 | `const USER = env.assert("USER")` or `const [HOME, USER] = env.assert(["HOME", "USER"])` | Return environment variable value or call `usage.printAndExit()` if undefined.  You can also pass an array of environment variable names and an array of values will be returned.  |
 
 **Command Execution**
