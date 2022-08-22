@@ -78,6 +78,8 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 | `exists("./aFile.txt")` | Check if a file exists |
 | `rm("./myFile")` | Delete a file |
 | `dirname("./path/file.txt")` | Return the directory name for a path |
+| `__dirname` | Returns the absolute path (directory) containing the entry script |
+| `__filename` | Returns the name of the entry script |
 
 **HTTP Requests**
 
