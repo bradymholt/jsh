@@ -200,7 +200,7 @@ for (let p of Object.getOwnPropertyNames(process.env)) {
  * @param content
  * @param optionalArgs
  */
-const _echo = (content: string, ...optionalArgs: any[]) => {
+const _echo = (content: string | Error, ...optionalArgs: any[]) => {
   console.log(content, ...optionalArgs);
 };
 /**
@@ -208,7 +208,7 @@ const _echo = (content: string, ...optionalArgs: any[]) => {
  * @param content
  * @param optionalArgs
  */
-_echo.yellow = (content: string, ...optionalArgs: any[]) => {
+_echo.yellow = (content: string | Error, ...optionalArgs: any[]) => {
   echo(ECHO_YELLOW_FORMAT, content, ...optionalArgs);
 };
 /**
@@ -216,7 +216,7 @@ _echo.yellow = (content: string, ...optionalArgs: any[]) => {
  * @param content
  * @param optionalArgs
  */
-_echo.green = (content: string, ...optionalArgs: any[]) => {
+_echo.green = (content: string | Error, ...optionalArgs: any[]) => {
   echo(ECHO_GREEN_FORMAT, content, ...optionalArgs);
 };
 /**
@@ -224,7 +224,7 @@ _echo.green = (content: string, ...optionalArgs: any[]) => {
  * @param content
  * @param optionalArgs
  */
-_echo.red = (content: string, ...optionalArgs: any[]) => {
+_echo.red = (content: string | Error, ...optionalArgs: any[]) => {
   echo(ECHO_RED_FORMAT, content, ...optionalArgs);
 };
 
