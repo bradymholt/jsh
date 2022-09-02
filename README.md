@@ -88,7 +88,7 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 |     | Description |
 | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | `await http.get("https://www.myapi.com")`                   | Make a HTTP GET request and return the response body data                                                |
-| `await http.post("https://www.myapi.com", { data: "1" })`   | Make a HTTP POST request and return the response body data                                               |
+| `await http.post("https://www.myapi.com", { data: "1" }, { Authorization: "Bearer abc123"})`   | Make a HTTP POST request and return the response body data                                               |
 | `await http.put("https://www.myapi.com", { data: "1" })`    | Make a HTTP PUT request and return the response body data                                                |
 | `await http.patch("https://www.myapi.com", { data: "1" })`  | Make a HTTP PATCH request and return the response body data                                              |
 | `await http.delete("https://www.myapi.com", { data: "1" })` | Make a HTTP DELETE request and return the response body data                                             |
