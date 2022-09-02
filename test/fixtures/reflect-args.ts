@@ -9,3 +9,4 @@ echo("JSON.stringify(args):");
 echo(JSON.stringify(args));
 echo(`args.foo: ${args.foo.toString()}`);
 echo(`args.hello: ${args.hello.toString()}`);
+echo(`args.b: ${args.b.toString()}`);

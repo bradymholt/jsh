@@ -56,6 +56,7 @@ it("parses args correctly", () => {
     "b",
     "--foo",
     "--hello=world",
+    "-b",
   ]);
   expect(result.stdout.toString()).toEqual(`\
 First four argument values:
@@ -64,8 +65,9 @@ b
 --foo
 --hello=world
 JSON.stringify(args):
-["a","b","--foo","--hello=world"]
+["a","b","--foo","--hello=world","-b"]
 args.foo: true
 args.hello: world
+args.b: true
 `);
 });

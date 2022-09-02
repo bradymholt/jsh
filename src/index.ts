@@ -107,8 +107,8 @@ export function setupArguments(passedInArguments: Array<string>) {
   // Parse arguments and add properties to args object
   for (let i = 0; i < _args.length; i++) {
     const currentArgValue = _args[i];
-    if (currentArgValue.startsWith("--") && currentArgValue.length > 2) {
-      const match = currentArgValue.match(/\-\-(?<name>\w+)=?(?<value>\w*)/);
+    if (currentArgValue.startsWith("-") && currentArgValue.length >= 2) {
+      const match = currentArgValue.match(/\-\-?(?<name>\w+)=?(?<value>\w*)/);
       if (match?.groups?.name) {
         if (match?.groups?.value) {
           // `--argument_name=value` format - will be accessible as args.argument_name == "value"
