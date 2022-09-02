@@ -242,7 +242,7 @@ echo(content);
 - `noThrow: boolean` -  If set to true, will not throw if the command returns a non-zero exit code (Default: `false`)
 - `timeout: number` - In milliseconds the maximum amount of time the process is allowed to run (Default: `undefined` (unlimited))
 - `shell: string` - By default, commands will be run inside of a shell (`/bin/sh` on *nix systems and `process.env.ComSpec` on Windows).  This option can be used to specify the path to a different shell to execute commands with.  For example, you could specify `shell: "/bin/bash"` to use bash.
-  `maxBuffer: number` - Specifies the largest number of bytes allowed on stdout or stderr. If this value is exceeded, the child process will be terminated. (Default: `268435456` (256MB))
+- `maxBuffer: number` - Specifies the largest number of bytes allowed on stdout or stderr. If this value is exceeded, the child process will be terminated. (Default: `268435456` (256MB))
 
 ## HTTP Request Helpers
 
