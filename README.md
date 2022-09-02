@@ -444,7 +444,7 @@ myscript.ts:
 
 ```
 #!/usr/bin/env ts-node
-import("jsh")
+import "jsh"
 
 const contents: string = "Hello jsh from TypeScript";
 echo(contents)
