@@ -222,7 +222,7 @@ try {
 
 #### `noThrow` option
 
-You can pass in the option `noThrow: true` to prevent an error from being thrown. Instead, the stderr will be returned.
+You can pass in the option `noThrow: true` to prevent an error from being thrown. Instead, the stderr (or stdout) will be returned.
 
 Example:
 
