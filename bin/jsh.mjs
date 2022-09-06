@@ -1,9 +1,6 @@
 #!/usr/bin/env node
 import * as jsh from "jsh";
 import * as path from "path";
-usage(`\
-Usage: jsh <script> [args]\
-`);
 
 args.assertCount(1);
 
