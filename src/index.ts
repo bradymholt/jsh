@@ -60,7 +60,7 @@ const _printUsageAndExit = (exitCode = 1, additionalMessage?: string): void => {
 };
 
 const _usage = (message: string, printAndExitIfHelpArgumentSpecified = true) => {
-  defaultUsageMessage = message;
+  defaultUsageMessage = message?.replace(/\n+$/, ""); // Trailing newlines will be handled internally so remove them if present
 
   if (printAndExitIfHelpArgumentSpecified && (process.argv.includes("--help") || process.argv.includes("-h"))) {
     _printUsageAndExit(0);

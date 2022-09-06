@@ -24,8 +24,7 @@ it("assert 2 arguments when 1 is provided", () => {
     "test/fixtures/assert-arg-count-2.ts",
     "--one",
   ]);
-  expect(result.stderr.toString()).toContain("Usage: assert-arg-count-2.ts\n\n");
-  expect(result.stderr.toString()).toContain("\n\n" + red("2 arguments were expected but 1 was provided"));
+  expect(result.stderr.toString()).toContain("Usage: assert-arg-count-2.ts\n\n" + red("2 arguments were expected but 1 was provided"));  
 });
 
 it("assert 2 arguments", () => {
