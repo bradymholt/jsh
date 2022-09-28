@@ -28,6 +28,7 @@ setEntryScriptPath(nodePath.resolve(process.argv[1] ?? ""));
 const ECHO_YELLOW_FORMAT = "\x1b[33m%s\x1b[0m";
 const ECHO_GREEN_FORMAT = "\x1b[32m%s\x1b[0m";
 const ECHO_RED_FORMAT = "\x1b[31m%s\x1b[0m";
+const ECHO_BLUE_FORMAT = "\x1b[34m%s\x1b[0m";
 
 global.dirname = path.dirname;
 global.exit = process.exit;
@@ -226,6 +227,14 @@ _echo.green = (content: string | Error, ...optionalArgs: any[]) => {
  */
 _echo.red = (content: string | Error, ...optionalArgs: any[]) => {
   echo(ECHO_RED_FORMAT, content, ...optionalArgs);
+};
+/**
+ * Prints blue colored content to stdout with a trailing newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
+ * @param content
+ * @param optionalArgs
+ */
+ _echo.blue = (content: string | Error, ...optionalArgs: any[]) => {
+  echo(ECHO_BLUE_FORMAT, content, ...optionalArgs);
 };
 
 /**

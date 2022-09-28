@@ -38,9 +38,7 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 |     | Description |
 | --- | --- |
 | `echo("Hello")` | Print text to console with trailing newline |
-| `echo.yellow("Hello")` | Print yellow colored text to console with trailing newline |
-| `echo.green("Hello")` | Print green colored text to console with trailing newline |
-| `echo.red("Hello")` | Print red colored text to console with trailing newline |
+| `echo.yellow("Hello"), echo.green("Hello"), echo.red("Hello"), echo.blue("Hello")` | Prints colored text to console with trailing newline |
 | `printf("Processing...")` | Print text to console without a trailing newline |
 | `exit(1)` | Halt the script and return an exit code |
 | `error("An error", 1)` | Echo an error and halt the script with an exit code |
