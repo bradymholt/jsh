@@ -38,7 +38,7 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 |     | Description |
 | --- | --- |
 | `echo("Hello")` | Print text to console with trailing newline |
-| `echo.yellow("Hello")`, `echo.green("Hello")`, `echo.red("Hello")`, `echo.blue("Hello")` | Prints colored text to console with trailing newline |
+| `echo.yellow("Hello")`,<br/> `echo.green("Hello")`,<br/>`echo.red("Hello")`,<br/>`echo.blue("Hello")` | Prints colored text to console with trailing newline |
 | `printf("Processing...")` | Print text to console without a trailing newline |
 | `exit(1)` | Halt the script and return an exit code |
 | `error("An error", 1)` | Echo an error and halt the script with an exit code |
@@ -56,7 +56,7 @@ Below is a summarized list of the available helpers.  You can refer to the [defi
 | `const [source_file, target_file] = args.assertCount(2)` | Return arg values as array or call `usage.printAndExit()` if less than number of arguments specified were supplied |
 | `$0` | Return the name of the current script file (ex: `my_script.js`) |
 | `$HOME`,`env.HOME`, or `env["HOME"]`| Access an environment variable |
-| `const USER = env.assert("USER")` or `const [HOME, USER] = env.assert(["HOME", "USER"])` | Return environment variable value or call `usage.printAndExit()` if undefined.  You can also pass an array of environment variable names and an array of values will be returned.  |
+| `const USER = env.assert("USER")`or<br/>`const [HOME, USER] = env.assert(["HOME", "USER"])` | Return environment variable value or call `usage.printAndExit()` if undefined.  You can also pass an array of environment variable names and an array of values will be returned.  |
 
 **Command Execution**
 |     | Description |
