@@ -433,7 +433,7 @@ TypeScript declarations for jsh are available and specified with `"types": "inde
 First, install ts-node, TypeScript, and jsh globally:
 
 ```
-npm install -g ts-node typescript jsh
+npm install ts-node typescript jsh
 ```
 
 Then, create your jsh script file using a `.ts` file extension.
