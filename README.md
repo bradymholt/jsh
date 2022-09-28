@@ -430,7 +430,7 @@ jsh is distributed as both a CommonJS and an ES Module library.  When you `requi
 
 TypeScript declarations for jsh are available and specified with `"types": "index.d.ts"` in the package.json file. A clean way to use TypeScript with jsh is by using [ts-node](https://github.com/TypeStrong/ts-node).
 
-First, install ts-node, TypeScript, and jsh globally:
+First, install ts-node, TypeScript, and jsh:
 
 ```
 npm install ts-node typescript jsh
