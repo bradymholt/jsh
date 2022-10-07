@@ -457,10 +457,5 @@ Run it:
 ```
 chmod +x ./myscript.ts
 ./myscript.ts
-```
-
-And you should see the following printed to the console:
-
-```
-Hello jsh from TypeScript
+> Hello jsh from TypeScript
 ```
