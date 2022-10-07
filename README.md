@@ -30,7 +30,7 @@ chmod +x ./script.js && ./script.js
 > Hello jsh
 ```
 
-See [details installation instructions below](#installation).
+See [detailed installation instructions below](#installation).
 
 ## Helpers
 
