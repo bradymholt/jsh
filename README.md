@@ -513,9 +513,10 @@ jobs:
 ```
 
 ### TypeScript (with ES Modules)
-```
+```yaml
 jobs:
   test:
+    runs-on: ubuntu-latest
     steps:
       - run: |
           npm install ts-node jsh
