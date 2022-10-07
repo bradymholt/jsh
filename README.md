@@ -497,6 +497,8 @@ You can use jsh with TypeScript and ES Modules support so you can use features l
 
 ## GitHub Actions
 
+The following inline syntax can be used for jsh inside of a [GitHub Actions](https://github.com/features/actions) [workflow file](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions).
+
 ### JavaScript
 
 ```yaml
