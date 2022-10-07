@@ -465,19 +465,19 @@ You can use jsh with TypeScript and ES Modules support so you can use features l
 
     ```
     {
-      ...
       "type": "module",
       ...
     }
     ```
 
-1. Ensure you have a `tsconfig.json` file defined with (at leaast) the following config:
+1. Ensure you have a `tsconfig.json` file defined with (at least) the following config:
     ```
     {
       "compilerOptions": {
         "target": "ESNext",
         "module": "ESNext",
         "moduleResolution": "node"
+        ...
       }
     }
     ```
