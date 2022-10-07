@@ -508,7 +508,7 @@ jobs:
           npm install jsh
           node -r jsh <<EOF      
             echo("Hello");
-            setTimeout(()=> echo("Sleepyhead"), 5000);
+            setTimeout(()=> echo.yellow("Sleepyhead"), 5000);
           EOF
 ```
 
@@ -523,6 +523,6 @@ jobs:
           node --loader ts-node/esm -r jsh --no-warnings --input-type=module <<EOF
             echo("Hello");
             await new Promise((resolve) => setTimeout(resolve, 5000));
-            echo("Sleepyhead");
+            echo.yellow("Sleepyhead");
           EOF
 ```
