@@ -434,28 +434,61 @@ jsh is distributed as both a CommonJS and an ES Module library.  When you `requi
 
 TypeScript declarations for jsh are available and specified with `"types": "index.d.ts"` in the package.json file. A clean way to use TypeScript with jsh is by using [ts-node](https://github.com/TypeStrong/ts-node).
 
-First, install ts-node, TypeScript, and jsh:
+1. Install ts-node, TypeScript, and jsh:
+    ```
+    npm init -y && npm install ts-node typescript jsh
+    ```
+1. Create your jsh script file using a `.ts` file extension, following the below example.
+    
+    _myscript.ts_
+    
+    ```
+    #!/usr/bin/env npx ts-node
+    import "jsh"
+    
+    const contents: string = "Hello jsh from TypeScript";
+    echo(contents)
+    ```
+1. Run it: `chmod +x ./myscript.ts && ./myscript.ts`.
 
-```
-npm install ts-node typescript jsh
-```
+### ES Modules
 
-Then, create your jsh script file using a `.ts` file extension.
+You can use jsh with TypeScript and ES Modules support so you can use features like [top-level await](https://v8.dev/features/top-level-await).
 
-myscript.ts:
+1. Install ts-node, TypeScript, and jsh:
+    ```
+    npm init -y && npm install ts-node typescript jsh
+    ```
+1. Ensure you have a `package.json` file defined with (at least) `"type": "module"` specified:
 
-```
-#!/usr/bin/env ts-node
-import "jsh"
+    ```
+    {
+      ...
+      "type": "module",
+      ...
+    }
+    ```
 
-const contents: string = "Hello jsh from TypeScript";
-echo(contents)
-```
-
-Run it:
-
-```
-chmod +x ./myscript.ts
-./myscript.ts
-> Hello jsh from TypeScript
-```
+1. Ensure you have a `tsconfig.json` file defined with (at leaast) the following config:
+    ```
+    {
+      "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "node"
+      }
+    }
+    ```
+ 1. Create your jsh script, specifying `ts-node-esm` in the shebang:
+    
+    _myscript.ts_
+    
+    ```
+    #!/usr/bin/env npx ts-node-esm
+    import  "jsh"
+    
+    echo("Hello jsh from TypeScript")
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    echo("Goodbye!")
+    ```
+  1.  Run it: `chmod +x ./myscript.ts && ./myscript.ts`
