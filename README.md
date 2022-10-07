@@ -30,6 +30,8 @@ chmod +x ./script.js && ./script.js
 > Hello jsh
 ```
 
+See [details installation instructions below](#installation).
+
 ## Helpers
 
 Below is a summarized list of the available helpers.  You can refer to the [declaration file](https://github.com/bradymholt/jsh/releases/latest/download/index.d.ts) for a full list of the helpers and JSDoc documentation for arguments and usage.  
@@ -43,26 +45,26 @@ Below is a summarized list of the available helpers.  You can refer to the [decl
 | `exit(1)` | Halt the script and return an exit code |
 | `error("An error", 1)` | Echo an error and halt the script with an exit code |
 | `const name = prompt("What is your name?");` | Prompt (synchronously) for user input and return after \<Enter\> pressed; also aliased as `read()`. |
-| `usage("Usage: myscript.js [--verbose]")` | Define a usage message |
-| `usage.printAndExit()` | Print the usage message and then exit with an error exit code.  If `usage()` was not previously called to define a usage message, a default one will be used. |
 | `sleep(2000)` | Sleep (synchronously) for specified number of milliseconds |
 
-**Arguments and Environment**
-|     | Description |
-| --- | --- |
-| `args[0], args[1], ...` | Access arguments that have been passed in from args array |
-| `$1`, `$2`, `$3`, ... | Access arguments that have been passed by numeric order |
-| `args.source_file, args.v` | Access arguments prefixed with "--" or "-".<br/><br/>If argument is in format `--source_file=input.txt` the value of `args.source_file` would be `"input.txt"`.<br/><br/>If argument is in format `--source_file` or `-v` the argument name will be available on args as a `true` boolean (`args.source_file == true`, `args.v == true`)   |
-| `const [source_file, target_file] = args.assertCount(2)` | Return arg values as array or call `usage.printAndExit()` if less than number of arguments specified were supplied |
-| `$0` | Return the name of the current script file (ex: `my_script.js`) |
-| `$HOME`,`env.HOME`, or `env["HOME"]`| Access an environment variable |
-| `const USER = env.assert("USER")`or<br/>`const [HOME, USER] = env.assert(["HOME", "USER"])` | Return environment variable value or call `usage.printAndExit()` if undefined.  You can also pass an array of environment variable names and an array of values will be returned.  |
-
-**Command Execution**
+**Command Execution** ([detailed docs below](#command-execution-helpers))
 |     | Description |
 | --- | --- |
 | `result=$("cmd.sh")` | Execute a command and return the stdout |
 | `exec("cmd.sh")` | Execute a command and stream stdout to console without returning a value |
+
+**Arguments and Environment**
+|     | Description |
+| --- | --- |
+| `$0` | Return the name of the current script file (ex: `my_script.js`) |
+| `$1`, `$2`, `$3`, ... | Access arguments that have been passed by numeric order |
+| `args[0], args[1], ...` | Access arguments that have been passed in from args array |
+| `args.source_file, args.v` | Access arguments prefixed with "--" or "-".<br/><br/>If argument is in format `--source_file=input.txt` the value of `args.source_file` would be `"input.txt"`.<br/><br/>If argument is in format `--source_file` or `-v` the argument name will be available on args as a `true` boolean (`args.source_file == true`, `args.v == true`)   |
+| `const [source_file, target_file] = args.assertCount(2)` | Return arg values as array or call `usage.printAndExit()` if less than number of arguments specified were supplied.  See [details below](#usage-helpers). |
+| `$HOME`,`env.HOME`, or `env["HOME"]`| Access an environment variable |
+| `const USER = env.assert("USER")`or<br/>`const [HOME, USER] = env.assert(["HOME", "USER"])` | Return environment variable value or call `usage.printAndExit()` if undefined.  You can also pass an array of environment variable names and an array of values will be returned.  See [details below](#usage-helpers).  |
+| `usage("Usage: myscript.js [--verbose]")` | Define a usage message.  See [details below](#usage-helpers). |
+| `usage.printAndExit()` | Print the usage message and then exit with an error exit code.  If `usage()` was not previously called to define a usage message, a default one will be used.  See [details below](#usage-helpers). |
 
 **File System**
 |     | Description |
@@ -79,7 +81,7 @@ Below is a summarized list of the available helpers.  You can refer to the [decl
 | `__dirname` | Returns the absolute path (directory) containing the entry script |
 | `__filename` | Returns the name of the entry script |
 
-**HTTP Requests**
+**HTTP Requests** ([detailed docs below](#http-request-helpers))
 
 **Note:** The HTTP helpers are asynchronous and return a Promise.
 
@@ -140,34 +142,6 @@ const input = prompt($1); // `$1` contains the first argument which is prompt_te
 echo(input);
 ```
 </details>
-
-## Usage Helpers
-
-To define usage instructions for your script, you can call `usage()` and pass in a usage string that describes the script and documents any required or optional arguments.  
-
-Example:
-```
-usage(`\
-Usage:
-  json_formatter.js source_file target_file [--verbose]
-
-Example:
-  json_formatter.js ./my_in_file.json ./my_out_file.json --verbose
-
-Formats a JSON file
-`);
-```
-
-You can also use `$0` to reference the name of the current script rather than having to hardcode it.  The above example could be changed to (`${$0} source_file target_file [--verbose]` ...).
-
-### usage.printAndExit()
-
-You can call `usage.printAndExit()` at any time to print the usage instructions and then immediately exit with an error code.  If you call usage.printAndExit() _before_ calling usage(), a simple default message will be echoed but if you call usage.printAndExit() _after_ calling usage(), your custom usage instructions will be echoed.
-
-There are a few ways that usage.printAndExit() will be called implicitly:
-1. If `--help` or `-h` is passed in as an argument.  (Note: in this case, the exit code will be set to 0)
-1. If `args.assertCount()` is called and the required number of arguments were not passed in.  For example, if args.assertCount(3) is called and only 2 arguments were passed in.
-1. If `env.assert()` is called and the environment variable(s) are not defined.
 
 ## Command Execution Helpers
 
@@ -241,6 +215,36 @@ echo(content);
 - `timeout: number` - In milliseconds the maximum amount of time the process is allowed to run (Default: `undefined` (unlimited))
 - `shell: string` - By default, commands will be run inside of a shell (`/bin/sh` on *nix systems and `process.env.ComSpec` on Windows).  This option can be used to specify the path to a different shell to execute commands with.  For example, you could specify `shell: "/bin/bash"` to use bash.
 - `maxBuffer: number` - Specifies the largest number of bytes allowed on stdout or stderr. If this value is exceeded, the child process will be terminated. (Default: `268435456` (256MB))
+
+
+
+## Usage Helpers
+
+To define usage instructions for your script, you can call `usage()` and pass in a usage string that describes the script and documents any required or optional arguments.  
+
+Example:
+```
+usage(`\
+Usage:
+  json_formatter.js source_file target_file [--verbose]
+
+Example:
+  json_formatter.js ./my_in_file.json ./my_out_file.json --verbose
+
+Formats a JSON file
+`);
+```
+
+You can also use `$0` to reference the name of the current script rather than having to hardcode it.  The above example could be changed to (`${$0} source_file target_file [--verbose]` ...).
+
+### usage.printAndExit()
+
+You can call `usage.printAndExit()` at any time to print the usage instructions and then immediately exit with an error code.  If you call usage.printAndExit() _before_ calling usage(), a simple default message will be echoed but if you call usage.printAndExit() _after_ calling usage(), your custom usage instructions will be echoed.
+
+There are a few ways that usage.printAndExit() will be called implicitly:
+1. If `--help` or `-h` is passed in as an argument.  (Note: in this case, the exit code will be set to 0)
+1. If `args.assertCount()` is called and the required number of arguments were not passed in.  For example, if args.assertCount(3) is called and only 2 arguments were passed in.
+1. If `env.assert()` is called and the environment variable(s) are not defined.
 
 ## HTTP Request Helpers
 
