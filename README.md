@@ -32,7 +32,7 @@ chmod +x ./script.js && ./script.js
 
 ## Helpers
 
-Below is a summarized list of the available helpers.  You can refer to the [definition file](https://github.com/bradymholt/jsh/releases/latest/download/index.d.ts) for a full list of the helpers and JSDoc documentation for arguments and usage.  
+Below is a summarized list of the available helpers.  You can refer to the [declaration file](https://github.com/bradymholt/jsh/releases/latest/download/index.d.ts) for a full list of the helpers and JSDoc documentation for arguments and usage.  
 
 **General Scripting**
 |     | Description |
