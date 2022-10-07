@@ -450,7 +450,7 @@ TypeScript declarations for jsh are available and specified with `"types": "inde
     echo(contents)
     ```
     
-    _Note: The above shebang includes 2 arguments which will not work in some enviroments.  See [this post](https://github.com/TypeStrong/ts-node/issues/639#issuecomment-885817246) for a workaround._
+    _Note: The above shebang includes 2 arguments which will not work in some enviroments like Linux.  See [this post](https://github.com/TypeStrong/ts-node/issues/639#issuecomment-885817246) for a workaround._
 1. Run it: `chmod +x ./myscript.ts && ./myscript.ts`.
 
 ### ES Modules
@@ -494,5 +494,5 @@ You can use jsh with TypeScript and ES Modules support so you can use features l
     echo("Goodbye!")
     ```
     
-    _Note: The above shebang includes 2 arguments which will not work in some enviroments.  See [this post](https://github.com/TypeStrong/ts-node/issues/639#issuecomment-885817246) for a workaround._
+    _Note: The above shebang includes 2 arguments which will not work in some enviroments like Linux.  See [this post](https://github.com/TypeStrong/ts-node/issues/639#issuecomment-885817246) for a workaround._
   1.  Run it: `chmod +x ./myscript.ts && ./myscript.ts`
