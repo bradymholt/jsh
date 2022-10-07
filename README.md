@@ -449,6 +449,8 @@ TypeScript declarations for jsh are available and specified with `"types": "inde
     const contents: string = "Hello jsh from TypeScript";
     echo(contents)
     ```
+    
+    Note: The above shebang includes 2 arguments which will not work in some enviroments.  See [this post](https://github.com/TypeStrong/ts-node/issues/639#issuecomment-885817246) for a workaround.
 1. Run it: `chmod +x ./myscript.ts && ./myscript.ts`.
 
 ### ES Modules
@@ -491,4 +493,6 @@ You can use jsh with TypeScript and ES Modules support so you can use features l
     await new Promise((resolve) => setTimeout(resolve, 2000));
     echo("Goodbye!")
     ```
+    
+    Note: The above shebang includes 2 arguments which will not work in some enviroments.  See [this post](https://github.com/TypeStrong/ts-node/issues/639#issuecomment-885817246) for a workaround.
   1.  Run it: `chmod +x ./myscript.ts && ./myscript.ts`
