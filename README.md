@@ -16,7 +16,7 @@ jsh, pronounced "j shell", is a small JavaScript library (with no dependencies!)
 
 Create a file called `script.js`:
 
-```
+```js
 #!/usr/bin/env npx jsh
 
 echo("Hello jsh")
@@ -24,7 +24,7 @@ echo("Hello jsh")
 
 Make the file executable, run it, and you should see "Hello jsh" printed:
 
-```
+```shell
 chmod +x ./script.js && ./script.js
 
 > Hello jsh
@@ -151,7 +151,7 @@ When you want to run a command and buffer the output (stdout) of that command as
 
 Example:
 
-```
+```js
 // Will wait for `git status` to complete and assign output to `result` variable.
 // Nothing will be printed to the console.
 
@@ -164,7 +164,7 @@ let result=$(`git status --porcelain`);
 
 Example:
 
-```
+```js
 // Will print `npm install` output immediately as it happens
 // exec will not return anything (void)
 
@@ -181,7 +181,7 @@ If a command exits with a non-zero status, a `CommandError` error will be thrown
 
 Example:
 
-```
+```js
 try {
   const output = $(`cat invalid.txt`)
 } catch (err) {
@@ -198,7 +198,7 @@ You can pass in the option `noThrow: true` to prevent an error from being thrown
 
 Example:
 
-```
+```js
 // This command will error out but will not throw because `$.noThrow()` was called.
 let content=$(`cat invalid.txt`, { noThrow: true})
 echo(content);
@@ -223,7 +223,7 @@ echo(content);
 To define usage instructions for your script, you can call `usage()` and pass in a usage string that describes the script and documents any required or optional arguments.  
 
 Example:
-```
+```js
 usage(`\
 Usage:
   json_formatter.js source_file target_file [--verbose]
@@ -252,7 +252,7 @@ The http helper can be used to make asynchronous HTTP requests. It returns a pro
 
 Example:
 
-```
+```js
 const response = await http("GET", "https://www.myapi.com);
 
 echo(response.data) // { data: "Testing" }
@@ -265,7 +265,7 @@ There are also helpers for the primary HTTP methods: `http.get`, `http.post`, `h
 
 Example:
 
-```
+```js
 const response = await http.get("https://www.myapi.com);
 
 echo(response) // { data: "Testing" }
@@ -279,7 +279,7 @@ You can pass a `data` parameter which will then be sent as the body of the reque
 #### Stream
 You may also pass a readable Stream as `data`.  This is common when sending a file as part of a request:
 
-```
+```js
 const fs = require("fs");
 const filePath = "./my_image.jpg";
 const data = fs.createReadStream(filePath);
@@ -308,7 +308,7 @@ If a status code outside the range 20X is returned in the HTTP response, a `Http
 
 Example:
 
-```
+```js
 try {
   const response = http.post("https://www.myapi.com", { data: "1" });
 } catch (err) {
@@ -325,7 +325,7 @@ You can pass in the option `noThrow: true` when calling `http()` to prevent an e
 
 Example:
 
-```
+```js
 const response = await http("POST", "https://www.myapi.com", { data: 2 }, { noThrow: true });
 
 echo(response.data) // "A server error occurred.  Please try again later."
@@ -366,7 +366,7 @@ Since most Linux distributions do not support multiple arguments in the shebang,
 
 Create a file called `script.js`:
 
-```
+```js
 #!/usr/local/bin/npx jsh
 
 echo("Hello jsh")
@@ -378,13 +378,13 @@ npx will look for a globally installed (`npm install -g jsh`) or locally install
 
 If you don't want to use npx, you can install jsh globally with npm:
 
-```
+```shell
 npm install -g jsh
 ```
 
 Once it is installed globally, you can write your script with a jsh [shebang](<https://en.wikipedia.org/wiki/Shebang_(Unix)>) which will allow your script to be executed directly, with the globally installed jsh loaded at runtime.  Run `which jsh` to locate the absolute path the jsh and use that for the shebang path.
 
-```
+```js
 #!/usr/local/bin/jsh
 
 echo(`Hello jsh`)
@@ -396,13 +396,13 @@ Rather than installing jsh globally, you can simply download it to a local folde
 
 First, download jsh:
 
-```
+```shell
 wget -O jsh.cjs https://github.com/bradymholt/jsh/releases/latest/download/index.cjs
 ```
 
 Then, in your script:
 
-```
+```js
 #!/usr/bin/env node
 require('./jsh.cjs')
 
@@ -415,11 +415,11 @@ When you write your shell scripts in jsh, you get to use a simple Bash like synt
 
 Example:
 
-```
+```shell
 npm install uuid
 ```
 
-```
+```ts
 #!/usr/local/bin/jsh
 require('uuid/v4')
 
@@ -435,14 +435,14 @@ jsh is distributed as both a CommonJS and an ES Module library.  When you `requi
 TypeScript declarations for jsh are available and specified with `"types": "index.d.ts"` in the package.json file. A clean way to use TypeScript with jsh is by using [ts-node](https://github.com/TypeStrong/ts-node).
 
 1. Install ts-node, TypeScript, and jsh:
-    ```
+    ```shell
     npm init -y && npm install ts-node typescript jsh
     ```
 1. Create your jsh script file using a `.ts` file extension, following the below example.
     
     _myscript.ts_
     
-    ```
+    ```ts
     #!/usr/bin/env npx ts-node
     import "jsh"
     
@@ -458,26 +458,24 @@ TypeScript declarations for jsh are available and specified with `"types": "inde
 You can use jsh with TypeScript and ES Modules support so you can use features like [top-level await](https://v8.dev/features/top-level-await).
 
 1. Install ts-node, TypeScript, and jsh:
-    ```
+    ```shell
     npm init -y && npm install ts-node typescript jsh
     ```
 1. Ensure you have a `package.json` file defined with (at least) `"type": "module"` specified:
 
-    ```
+    ```json
     {
-      "type": "module",
-      ...
+      "type": "module"
     }
     ```
 
 1. Ensure you have a `tsconfig.json` file defined with (at least) the following config:
-    ```
+    ```json
     {
       "compilerOptions": {
         "target": "ESNext",
         "module": "ESNext",
         "moduleResolution": "node"
-        ...
       }
     }
     ```
@@ -485,7 +483,7 @@ You can use jsh with TypeScript and ES Modules support so you can use features l
     
     _myscript.ts_
     
-    ```
+    ```ts
     #!/usr/bin/env npx ts-node-esm
     import  "jsh"
     
@@ -496,3 +494,17 @@ You can use jsh with TypeScript and ES Modules support so you can use features l
     
     _Note: The above shebang includes 2 arguments which will not work in some enviroments like Linux.  See [this post](https://github.com/TypeStrong/ts-node/issues/639#issuecomment-885817246) for a workaround._
   1.  Run it: `chmod +x ./myscript.ts && ./myscript.ts`
+
+## GitHub Actions
+
+```yaml
+jobs:
+  test:
+    steps:
+      - run: |
+          npx ts-node <<EOF
+            const sleepMs:number = 5000;
+            console.log("Hello");
+            setTimeout(()=> console.log("Sleepyhead"), sleepMs);
+          EOF
+```
