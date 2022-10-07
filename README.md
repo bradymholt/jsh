@@ -497,14 +497,31 @@ You can use jsh with TypeScript and ES Modules support so you can use features l
 
 ## GitHub Actions
 
+### JavaScript
+
 ```yaml
+jobs:
+  test:
+    runs-on: ubuntu-latest    
+    steps:      
+      - run: |
+          npm install jsh
+          node -r jsh <<EOF      
+            echo("Hello");
+            setTimeout(()=> echo("Sleepyhead"), 5000);
+          EOF
+```
+
+### TypeScript (with ES Modules)
+```
 jobs:
   test:
     steps:
       - run: |
-          npx ts-node <<EOF
-            const sleepMs:number = 5000;
-            console.log("Hello");
-            setTimeout(()=> console.log("Sleepyhead"), sleepMs);
+          npm install ts-node jsh
+          node --loader ts-node/esm -r jsh --no-warnings --input-type=module <<EOF
+            echo("Hello");
+            await new Promise((resolve) => setTimeout(resolve, 5000));
+            echo("Sleepyhead");
           EOF
 ```
