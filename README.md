@@ -312,7 +312,7 @@ Example:
 try {
   const response = http.post("https://www.myapi.com", { data: "1" });
 } catch (err) {
-  echo(err.message) // Bad Request
+  echo(err.message) // "Bad Request"
   echo(err.data) // { error: "The 'data' property is formatted incorrectly" }
   echo(err.statusCode) // 400
   echo(err.statusMessage) // Bad Request
@@ -338,7 +338,7 @@ echo(response.statusMessage) // "Internal Server Error"
 
 `http()` accepts an `options` parameter object that may contain any of the following fields:
  
-- `headers: object` - The request headers to send with the request.  A set of default headers will be included with the request even if not specified here.  See "Default Headers" section above for more info.
+- `headers: object` - The request headers to send with the request.  A set of [default headers](#default-headers) will be included with the request even if not specified.
 - `timeout: number` - The number of milliseconds of inactivity before a socket is presumed to have timed out (Default: `120000` (2 minutes))
 - `noThrow: boolean` - If set to true, will not throw if the response status code is not 2xx (Default: false)
 
