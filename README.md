@@ -266,7 +266,7 @@ There are also helpers for the primary HTTP methods: `http.get`, `http.post`, `h
 Example:
 
 ```js
-const response = await http.get("https://www.myapi.com);
+const response = await http.get("https://www.myapi.com");
 
 echo(response) // { data: "Testing" }
 ```
@@ -275,6 +275,13 @@ echo(response) // { data: "Testing" }
 
 You can pass a `data` parameter which will then be sent as the body of the request.  If you pass a JavaScript object, it will be converted to JSON automatically and headers `Content-Type`, `Accept` will be set to `application/json`, unless specified differently.
 
+
+```js
+const newTask = { name: "My new task", completed: false };
+await http.post("https://www.myapi.com/tasks", newTask, {
+  "Authorization": `Bearer ${env.API_AUTH_TOKEN}`
+});
+```
 
 #### Stream
 You may also pass a readable Stream as `data`.  This is common when sending a file as part of a request:
