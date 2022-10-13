@@ -213,6 +213,10 @@ _echo.yellow = (content: string | Error, ...optionalArgs: any[]) => {
   echo(ECHO_YELLOW_FORMAT, content, ...optionalArgs);
 };
 /**
+ * Alias for `echo.yellow`. 
+ */
+_echo.warn = _echo.yellow;
+/**
  * Prints green colored content to stdout with a trailing newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
  * @param content
  * @param optionalArgs
@@ -220,6 +224,10 @@ _echo.yellow = (content: string | Error, ...optionalArgs: any[]) => {
 _echo.green = (content: string | Error, ...optionalArgs: any[]) => {
   echo(ECHO_GREEN_FORMAT, content, ...optionalArgs);
 };
+/**
+ * Alias for `echo.green`. 
+ */
+_echo.success = _echo.green;
 /**
  * Prints red colored content to stdout with a trailing newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
  * @param content
@@ -229,6 +237,10 @@ _echo.red = (content: string | Error, ...optionalArgs: any[]) => {
   echo(ECHO_RED_FORMAT, content, ...optionalArgs);
 };
 /**
+ * Alias for `echo.red`. 
+ */
+_echo.error = _echo.red;
+/**
  * Prints blue colored content to stdout with a trailing newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
  * @param content
  * @param optionalArgs
@@ -236,6 +248,10 @@ _echo.red = (content: string | Error, ...optionalArgs: any[]) => {
  _echo.blue = (content: string | Error, ...optionalArgs: any[]) => {
   echo(ECHO_BLUE_FORMAT, content, ...optionalArgs);
 };
+/**
+ * Alias for `echo.blue`. 
+ */
+_echo.notice = _echo.blue;
 
 /**
  * Prints content *without* a trailing newline.
