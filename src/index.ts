@@ -78,7 +78,7 @@ global.usage = _usage;
 // Arguments
 type Arguments = Array<string> & {
   /**
-   * Returns args as array (that can be destructured) and throws an error and exits if less than number of arguments specified were supplied
+   * Returns args as array (that can be destructured) or throws an error and exits if less than number of arguments specified were supplied
    * @param argCount
    * @param errorMessage
    * @param exitCode
@@ -142,7 +142,7 @@ type Environment = {
   [envVar: string]: string;
 } & {
   /**
-   * Returns environment variable value and throws an error and exits if it is undefined
+   * Returns environment variable value or throws an error and exits if it is undefined
    * @param argCount
    * @param errorMessage
    * @param exitCode
