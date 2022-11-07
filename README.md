@@ -57,8 +57,7 @@ Below is a summarized list of the available helpers.  You can refer to the [decl
 |     | Description |
 | --- | --- |
 | `$0` | Return the name of the current script file (ex: `my_script.js`) |
-| `$1`, `$2`, `$3`, ... | Access arguments that have been passed by numeric order |
-| `args[0], args[1], ...` | Access arguments that have been passed in from args array |
+| `$1, $2, $3` ... or<br/> `args[0], args[1], args[2]` ... | Access arguments that have been passed |
 | `args.source_file, args.v` | Access arguments prefixed with "--" or "-".<br/><br/>If argument is in format `--source_file=input.txt` the value of `args.source_file` would be `"input.txt"`.<br/><br/>If argument is in format `--source_file` or `-v` the argument name will be available on args as a `true` boolean (`args.source_file == true`, `args.v == true`)   |
 | `const [source_file, target_file] = args.assertCount(2)` | Return arg values as array or call `usage.printAndExit()` if less than number of arguments specified were supplied.  See [details below](#usage-helpers). |
 | `$HOME`,`env.HOME`, or `env["HOME"]`| Access an environment variable |
