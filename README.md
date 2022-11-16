@@ -209,7 +209,7 @@ echo(content);
 
 `$()` and `exec()` accept an `options` parameter object that may contain any of the following fields:
  
-- `echoCommand: boolean` - If true will echo the command itself before running it (Default: `true`)
+- `echoCommand: boolean` - If true will echo the command itself before running it (Default: `true` for `exec()` and `false` for `$()`)
 - `noThrow: boolean` -  If set to true, will not throw if the command returns a non-zero exit code (Default: `false`)
 - `timeout: number` - In milliseconds the maximum amount of time the process is allowed to run (Default: `undefined` (unlimited))
 - `shell: string` - By default, commands will be run inside of a shell (`/bin/sh` on *nix systems and `process.env.ComSpec` on Windows).  This option can be used to specify the path to a different shell to execute commands with.  For example, you could specify `shell: "/bin/bash"` to use bash.

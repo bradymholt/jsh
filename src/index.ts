@@ -354,7 +354,7 @@ const _$ = (command: string, options: ICommandOptions = {}): string => {
   options = Object.assign(
     {
       captureStdout: true,
-      echoCommand: true,
+      echoCommand: false,
       noThrow: false,
       shell: true,
       maxBuffer: 1024 * 1024 * 256 /* 256MB */,
@@ -400,7 +400,7 @@ type IExecCommandOptions = Omit<ICommandOptions, "echoStdout">;
  * @returns void
  */
 const _exec = (command: string, options: IExecCommandOptions = {}): void => {
-  _$(command, Object.assign({ captureStdout: false } as ICommandOptions, options) as ICommandOptions);
+  _$(command, Object.assign({ captureStdout: false, echoCommand: true } as ICommandOptions, options) as ICommandOptions);
 };
 
 global.$ = _$;
