@@ -42,3 +42,8 @@ it("should return CommandError with expected values", () => {
 it("$.noThrow should not throw with non zero exit code", () => {
   expect($("unknown_command", { noThrow: true })).toContain("not found");
 });
+
+it("foo", () => {
+  let result = child_process.spawnSync("test/fixtures/run-fixture.sh", ["test/fixtures/capture-command.ts"]);
+  expect(result.stdout.toString()).toEqual("");
+});
