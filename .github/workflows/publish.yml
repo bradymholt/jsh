@@ -14,7 +14,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest    
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
         with:
           ref: refs/heads/main
       - name: Setup git repo
@@ -22,10 +22,9 @@ jobs:
           git config user.name $GITHUB_ACTOR
           git config user.email gh-actions-${GITHUB_ACTOR}@github.com
           git remote add gh-origin https://${GITHUB_ACTOR}:${{secrets.PUBLISH_GITHUB_TOKEN}}@github.com/${GITHUB_REPOSITORY}.git
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
-          node-version: 16
-          registry-url: "https://registry.npmjs.org"
+          node-version: 16          
       - run: npm install
       - name: Version
         run: |                    
