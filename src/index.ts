@@ -195,6 +195,11 @@ for (let p of Object.getOwnPropertyNames(process.env)) {
   (<any>global)[`$${p}`] = process.env[p];
 }
 
+const _stdin = () => {
+  return fs.readFileSync(process.stdin.fd, "utf-8");
+};
+global.stdin = _stdin;
+
 // Echoing
 /**
  * Prints content to stdout with a trailing newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
@@ -771,6 +776,7 @@ declare global {
   var cat: typeof _readFile;
   var writeFile: typeof _writeFile;
   var env: typeof _env;
+  var stdin: typeof _stdin;
   var args: Arguments;
   var $0: string;
   var $1: string;
