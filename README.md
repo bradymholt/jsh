@@ -70,6 +70,7 @@ Below is a summarized list of the available helpers.  You can refer to the [decl
 | `const [source_file, target_file] = args.assertCount(2)` | Return arg values as array or call `usage.printAndExit()` if less than number of arguments specified were supplied.  See [details below](#usage-helpers). |
 | `$HOME`,`env.HOME`, or `env["HOME"]`| Access an environment variable |
 | `const USER = env.assert("USER")`or<br/>`const [HOME, USER] = env.assert(["HOME", "USER"])` | Return environment variable value or call `usage.printAndExit()` if undefined.  You can also pass an array of environment variable names and an array of values will be returned.  See [details below](#usage-helpers).  |
+| `stdin()` | Read stdin as a string |
 | `usage("Usage: myscript.js [--verbose]")` | Define a usage message.  See [details below](#usage-helpers). |
 | `usage.printAndExit()` | Print the usage message and then exit with an error exit code.  If `usage()` was not previously called to define a usage message, a default one will be used.  See [details below](#usage-helpers). |
 

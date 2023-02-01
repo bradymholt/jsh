@@ -195,6 +195,11 @@ for (let p of Object.getOwnPropertyNames(process.env)) {
   (<any>global)[`$${p}`] = process.env[p];
 }
 
+const _stdin = () => {
+  return fs.readFileSync(process.stdin.fd, "utf-8");
+};
+global.stdin = _stdin;
+
 // Echoing
 /**
  * Prints content to stdout with a trailing newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values
@@ -213,7 +218,7 @@ _echo.yellow = (content: string | Error, ...optionalArgs: any[]) => {
   echo(ECHO_YELLOW_FORMAT, content, ...optionalArgs);
 };
 /**
- * Alias for `echo.yellow`. 
+ * Alias for `echo.yellow`.
  */
 _echo.warn = _echo.yellow;
 /**
@@ -225,7 +230,7 @@ _echo.green = (content: string | Error, ...optionalArgs: any[]) => {
   echo(ECHO_GREEN_FORMAT, content, ...optionalArgs);
 };
 /**
- * Alias for `echo.green`. 
+ * Alias for `echo.green`.
  */
 _echo.success = _echo.green;
 /**
@@ -237,7 +242,7 @@ _echo.red = (content: string | Error, ...optionalArgs: any[]) => {
   echo(ECHO_RED_FORMAT, content, ...optionalArgs);
 };
 /**
- * Alias for `echo.red`. 
+ * Alias for `echo.red`.
  */
 _echo.error = _echo.red;
 /**
@@ -245,11 +250,11 @@ _echo.error = _echo.red;
  * @param content
  * @param optionalArgs
  */
- _echo.blue = (content: string | Error, ...optionalArgs: any[]) => {
+_echo.blue = (content: string | Error, ...optionalArgs: any[]) => {
   echo(ECHO_BLUE_FORMAT, content, ...optionalArgs);
 };
 /**
- * Alias for `echo.blue`. 
+ * Alias for `echo.blue`.
  */
 _echo.notice = _echo.blue;
 
@@ -400,7 +405,10 @@ type IExecCommandOptions = Omit<ICommandOptions, "echoStdout">;
  * @returns void
  */
 const _exec = (command: string, options: IExecCommandOptions = {}): void => {
-  _$(command, Object.assign({ captureStdout: false, echoCommand: true } as ICommandOptions, options) as ICommandOptions);
+  _$(
+    command,
+    Object.assign({ captureStdout: false, echoCommand: true } as ICommandOptions, options) as ICommandOptions
+  );
 };
 
 global.$ = _$;
@@ -771,6 +779,7 @@ declare global {
   var cat: typeof _readFile;
   var writeFile: typeof _writeFile;
   var env: typeof _env;
+  var stdin: typeof _stdin;
   var args: Arguments;
   var $0: string;
   var $1: string;
