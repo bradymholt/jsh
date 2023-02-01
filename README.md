@@ -399,7 +399,7 @@ npm install -g jsh
 Once it is installed globally, you can write your script with a jsh [shebang](<https://en.wikipedia.org/wiki/Shebang_(Unix)>) which will allow your script to be executed directly, with the globally installed jsh loaded at runtime.  Run `which jsh` to locate the absolute path the jsh and use that for the shebang path.
 
 ```js
-#!/usr/local/bin/jsh
+#!/usr/bin/env jsh
 
 echo(`Hello jsh`)
 ```
