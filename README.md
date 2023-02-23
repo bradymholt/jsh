@@ -27,7 +27,7 @@ Create a file called `script.js`:
 ```js
 #!/usr/bin/env -S npx jsh
 
-echo("Hello jsh")
+echo.green("Hello jsh!")
 ```
 
 Make the file executable, run it, and you should see "Hello jsh" printed:
