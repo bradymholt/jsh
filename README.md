@@ -35,7 +35,7 @@ Make the file executable, run it, and you should see "Hello jsh" printed:
 ```shell
 chmod +x ./script.js && ./script.js
 
-> Hello jsh
+> Hello jsh!
 ```
 
 See [detailed installation instructions below](#installation).
