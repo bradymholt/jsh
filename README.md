@@ -365,27 +365,15 @@ Note: **jsh requires Node >=16**
 
 By far the easiest way to use jsh is with a [npx](https://docs.npmjs.com/cli/v7/commands/npx) [shebang](<https://en.wikipedia.org/wiki/Shebang_(Unix)>).
 
-#### macOS
-
 Create a file called `script.js`:
 
 ```
-#!/usr/bin/env npx jsh
+#!/usr/bin/env -S npx jsh
 
 echo("Hello jsh")
 ```
 
-#### Linux
-
-Since most Linux distributions do not support multiple arguments in the shebang, you need to call npx at its absolute path. Usually npx is installed in `/usr/local/bin/` but you can run `which npx` to locate it.
-
-Create a file called `script.js`:
-
-```js
-#!/usr/local/bin/npx jsh
-
-echo("Hello jsh")
-```
+_Note: The above shebang includes multiple arguments which will not work in some enviroments (including older versions of Linux).  See [this post](https://github.com/TypeStrong/ts-node/issues/639#issuecomment-885817246) for a workaround._
 
 npx will look for a globally installed (`npm install -g jsh`) or locally installed (package.json / `node_modules` ) version of jsh, and use it if found.  Otherwise, it will download the latest version from npm. Therefore, it is recommended to install jsh globally or locally when using npx so that it will be available and not have to be downloaded each time.
 
@@ -458,14 +446,15 @@ TypeScript declarations for jsh are available and specified with `"types": "inde
     _myscript.ts_
     
     ```ts
-    #!/usr/bin/env npx ts-node
+    #!/usr/bin/env -S npx ts-node
     import "jsh"
     
     const contents: string = "Hello jsh from TypeScript";
     echo(contents)
     ```
     
-    _Note: The above shebang includes 2 arguments which will not work in some enviroments like Linux.  See [this post](https://github.com/TypeStrong/ts-node/issues/639#issuecomment-885817246) for a workaround._
+    _Note: The above shebang includes multiple arguments which will not work in some enviroments (including older versions of Linux).  See [this post](https://github.com/TypeStrong/ts-node/issues/639#issuecomment-885817246) for a workaround._
+    
 1. Run it: `chmod +x ./myscript.ts && ./myscript.ts`.
 
 ### ES Modules
@@ -499,7 +488,7 @@ You can use jsh with TypeScript and ES Modules support so you can use features l
     _myscript.ts_
     
     ```ts
-    #!/usr/bin/env npx ts-node-esm
+    #!/usr/bin/env -S npx ts-node-esm
     import  "jsh"
     
     echo("Hello jsh from TypeScript")
@@ -507,7 +496,7 @@ You can use jsh with TypeScript and ES Modules support so you can use features l
     echo("Goodbye!")
     ```
     
-    _Note: The above shebang includes 2 arguments which will not work in some enviroments like Linux.  See [this post](https://github.com/TypeStrong/ts-node/issues/639#issuecomment-885817246) for a workaround._
+    _Note: The above shebang includes multiple arguments which will not work in some enviroments (including older versions of Linux).  See [this post](https://github.com/TypeStrong/ts-node/issues/639#issuecomment-885817246) for a workaround._
   1.  Run it: `chmod +x ./myscript.ts && ./myscript.ts`
 
 ## GitHub Actions
