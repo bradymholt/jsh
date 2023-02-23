@@ -86,8 +86,8 @@ Below is a summarized list of the available helpers.  You can refer to the [decl
 | `exists("./aFile.txt")` | Check if a file exists |
 | `rm("./myFile")` | Delete a file |
 | `dirname("./path/file.txt")` | Return the directory name for a path |
-| `__dirname` | Returns the absolute path (directory) containing the entry script |
-| `__filename` | Returns the name of the entry script |
+| `__dirname` | Returns the absolute path (directory) containing the entry script (works inside of CommonJS or ES module) |
+| `__filename` | Returns the name of the entry script (works inside of CommonJS or ES module) |
 
 **HTTP Requests** ([detailed docs below](#http-request-helpers))
 
