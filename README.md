@@ -25,7 +25,7 @@ jsh, pronounced "j shell", is a small JavaScript library (with no dependencies!)
 Create a file called `script.js`:
 
 ```js
-#!/usr/bin/env npx jsh
+#!/usr/bin/env -S npx jsh
 
 echo("Hello jsh")
 ```
