@@ -315,7 +315,7 @@ global.sleep = _sleep;
 
 export interface ICommandOptions {
   /**
-   * If true will capture stdout from command and return it.  If false, stdout will not be captured but only printed to the console.  Default: true
+   * If true will capture stdout from command and return it.  If false, stdout will not be captured but only printed to the console.
    */
   captureStdout?: boolean;
   /**
