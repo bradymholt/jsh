@@ -529,13 +529,15 @@ const _http = <T>(
   let requestBodyData = data ?? "";
 
   if (!(data instanceof stream.Readable) && typeof data == "object") {
+    requestBodyData = JSON.stringify(data);
+
     // Add JSON headers if needed
     if (!!options.headers) {
       options.headers["Content-Type"] = options.headers["Content-Type"] || "application/json";
+      options.headers["Content-Length"] =
+        options.headers["Content-Length"] || Buffer.byteLength(requestBodyData, "utf8").toString();
       options.headers["Accept"] = options.headers["Accept"] || "application/json";
     }
-
-    requestBodyData = JSON.stringify(data);
   }
 
   let request = http.request;
