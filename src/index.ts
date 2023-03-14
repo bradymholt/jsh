@@ -531,7 +531,7 @@ const _http = <T>(
   if (!(data instanceof stream.Readable) && typeof data == "object") {
     // Add JSON headers if needed
     if (!!options.headers) {
-      options.headers["Content-Type"] = options.headers["Content-Type"] || "application/json; charset=utf-8";
+      options.headers["Content-Type"] = options.headers["Content-Type"] || "application/json";
       options.headers["Accept"] = options.headers["Accept"] || "application/json";
     }
 
