@@ -424,7 +424,7 @@ export interface IHttpRawRequestOptions {
   path: string;
   url: string;
   method: string;
-  headers?: NodeJS.Dict<string | string[]>;
+  headers?: NodeJS.Dict<string | string[] | number>;
   /**
    * The number of milliseconds of inactivity before a socket is presumed to have timed out.
    */
@@ -529,13 +529,15 @@ const _http = <T>(
   let requestBodyData = data ?? "";
 
   if (!(data instanceof stream.Readable) && typeof data == "object") {
+    requestBodyData = JSON.stringify(data);
+
     // Add JSON headers if needed
     if (!!options.headers) {
-      options.headers["Content-Type"] = options.headers["Content-Type"] || "application/json; charset=utf-8";
+      options.headers["Content-Type"] = options.headers["Content-Type"] || "application/json";
+      options.headers["Content-Length"] =
+        options.headers["Content-Length"] || Buffer.byteLength(requestBodyData, "utf8");
       options.headers["Accept"] = options.headers["Accept"] || "application/json";
     }
-
-    requestBodyData = JSON.stringify(data);
   }
 
   let request = http.request;

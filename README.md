@@ -281,7 +281,7 @@ echo(response) // { data: "Testing" }
 
 ### data
 
-You can pass a `data` parameter which will then be sent as the body of the request.  If you pass a JavaScript object, it will be converted to JSON automatically and headers `Content-Type`, `Accept` will be set to `application/json`, unless specified differently.
+You can pass a `data` parameter which will then be sent as the body of the request.  If you pass a JavaScript object, it will be converted to JSON and `Content-Type`, `Accept`, and `Content-Length` will be be automatically set, unless specified differently.
 
 
 ```js
