@@ -55,7 +55,7 @@ it("parses args correctly", () => {
     "b",
     "--foo",
     "--hello=world",
-    `--quotes="Some text in quotes"`,
+    `--quotes="/tmp/karma_results_ynab_shared_library_web.json"`,
     "-b",
   ]);
   expect(result.stdout.toString()).toEqual(`\
@@ -65,10 +65,10 @@ b
 --foo
 --hello=world
 JSON.stringify(args):
-["a","b","--foo","--hello=world","--quotes=\\"Some text in quotes\\"","-b"]
+["a","b","--foo","--hello=world","--quotes=\\"/tmp/karma_results_ynab_shared_library_web.json\\"","-b"]
 args.foo: true
 args.hello: world
-args.quotes: Some text in quotes
+args.quotes: /tmp/karma_results_ynab_shared_library_web.json
 args.b: true
 `);
 });
