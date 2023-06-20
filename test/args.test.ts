@@ -55,6 +55,7 @@ it("parses args correctly", () => {
     "b",
     "--foo",
     "--hello=world",
+    `--quotes="Some text in quotes"`,
     "-b",
   ]);
   expect(result.stdout.toString()).toEqual(`\
@@ -64,9 +65,10 @@ b
 --foo
 --hello=world
 JSON.stringify(args):
-["a","b","--foo","--hello=world","-b"]
+["a","b","--foo","--hello=world","--quotes=\\"Some text in quotes\\"","-b"]
 args.foo: true
 args.hello: world
+args.quotes: Some text in quotes
 args.b: true
 `);
 });
