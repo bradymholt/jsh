@@ -325,7 +325,7 @@ Example:
 
 ```js
 try {
-  const response = http.post("https://www.myapi.com", { data: "1" });
+  const response = await http.post("https://www.myapi.com", { data: "1" });
 } catch (err) {
   echo(err.message) // "Bad Request"
   echo(err.data) // { error: "The 'data' property is formatted incorrectly" }
