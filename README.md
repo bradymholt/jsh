@@ -356,6 +356,7 @@ echo(response.statusMessage) // "Internal Server Error"
 - `headers: object` - The request headers to send with the request.  A set of [default headers](#default-headers) will be included with the request even if not specified.
 - `timeout: number` - The number of milliseconds of inactivity before a socket is presumed to have timed out (Default: `120000` (2 minutes))
 - `noThrow: boolean` - If set to true, will not throw if the response status code is not 2xx (Default: false)
+- `omitResponseBodyInErrorMessage: boolean` - If set to true, will not include the response body in a thrown error message (Default: false)
 
 ## Installation
 
