@@ -435,6 +435,8 @@ export type IHttpRequestOptions = Pick<Partial<IHttpRawRequestOptions>, "headers
    * If set to true, will not throw if the response status code is not 2xx
    */
   noThrow?: boolean;
+  /** If set to true, will not include response body in  */
+  omitResponseBodyInErrorMessage?: boolean;
 };
 export interface IHttpResponse<T> {
   data: T;
@@ -448,9 +450,16 @@ export class HttpRequestError<T> extends Error {
   public request: IHttpRawRequestOptions;
   public response: IHttpResponse<T> | null;
 
-  constructor(message: string, request: IHttpRawRequestOptions, response: IHttpResponse<T> | null = null) {
+  constructor(
+    message: string,
+    request: IHttpRawRequestOptions,
+    options: IHttpRequestOptions,
+    response: IHttpResponse<T> | null = null
+  ) {
     const errorMessage = !!response
-      ? `${response.statusCode} ${response.statusMessage}\n${request.method} ${request.url}`
+      ? `${response.statusCode} ${response.statusMessage}\n` +
+        `${request.method} ${request.url}` +
+        `${!options.omitResponseBodyInErrorMessage ? `\nResponse Body: ${response.body}` : ""}`
       : `${message}\n${request.method} ${request.url}`;
     super(errorMessage);
     this.request = request;
@@ -547,7 +556,7 @@ const _http = <T>(
 
   return new Promise<IHttpResponse<T>>((resolve, reject) => {
     const onRequestError = (errorMessage: string) => {
-      reject(new HttpRequestError<T>(errorMessage, rawRequestOptions));
+      reject(new HttpRequestError<T>(errorMessage, rawRequestOptions, options));
     };
 
     const req = request(rawRequestOptions, (res) => {
@@ -571,7 +580,7 @@ const _http = <T>(
             resolve(response);
           } else {
             const errorMessage = response.statusMessage ?? "Request Error";
-            reject(new HttpRequestError<T>(errorMessage, rawRequestOptions, response));
+            reject(new HttpRequestError<T>(errorMessage, rawRequestOptions, options, response));
           }
         } else {
           resolve(response);
