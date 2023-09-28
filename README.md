@@ -265,7 +265,7 @@ Example:
 ```js
 const response = await http("GET", "https://www.myapi.com);
 
-echo(response.data) // { data: "Testing" }
+echo(response.data) // { message: "Testing" }
 echo(response.headers) // { "Content-Type": "application/json" }
 echo(response.statusCode) // 200
 echo(response.statusMessage) // "OK"
@@ -278,7 +278,7 @@ Example:
 ```js
 const response = await http.get("https://www.myapi.com");
 
-echo(response) // { data: "Testing" }
+echo(response) // { message: "Testing" }
 ```
 
 ### data
