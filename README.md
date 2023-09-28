@@ -42,7 +42,9 @@ See [detailed installation instructions below](#installation).
 
 ## Helpers
 
-Below is a summarized list of the available helpers.  You can refer to the [declaration file](https://github.com/bradymholt/jsh/releases/latest/download/index.d.ts) for a full list of the helpers and JSDoc documentation for arguments and usage.  
+Below is a list of the available helpers.  You can refer to the [declaration file](https://github.com/bradymholt/jsh/releases/latest/download/index.d.ts) for a full list of the helpers and JSDoc documentation for arguments and usage.
+
+All helpers listed below (except for the HTTP Requests helpers) are **synchronous** functions and will block while running.
 
 **General Scripting**
 |     | Description |
@@ -52,8 +54,8 @@ Below is a summarized list of the available helpers.  You can refer to the [decl
 | `printf("Processing...")` | Print text to console without a trailing newline |
 | `exit(1)` | Halt the script and return an exit code |
 | `error("An error", 1)` | Echo an error and halt the script with an exit code |
-| `const name = prompt("What is your name?");` | Prompt (synchronously) for user input and return after \<Enter\> pressed; also aliased as `read()`. |
-| `sleep(2000)` | Sleep (synchronously) for specified number of milliseconds |
+| `const name = prompt("What is your name?");` | Prompt for user input and return after \<Enter\> pressed; also aliased as `read()`. |
+| `sleep(2000)` | Sleep for specified number of milliseconds |
 
 **Command Execution** ([detailed docs below](#command-execution-helpers))
 |     | Description |
@@ -91,7 +93,7 @@ Below is a summarized list of the available helpers.  You can refer to the [decl
 
 **HTTP Requests** ([detailed docs below](#http-request-helpers))
 
-**Note:** The HTTP helpers are asynchronous and return a Promise.
+**Note:** The HTTP helper function are **asynchronous** and return a Promise.
 
 |     | Description |
 | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
