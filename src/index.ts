@@ -31,7 +31,7 @@ const ECHO_RED_FORMAT = "\x1b[31m%s\x1b[0m";
 const ECHO_BLUE_FORMAT = "\x1b[34m%s\x1b[0m";
 
 global.dirname = path.dirname;
-global.exit = process.exit;
+
 /**
  * Echos error message to stdout and then exits with the specified exit code (defaults to 1)
  * @param error The error message string or Error object to print
@@ -39,7 +39,7 @@ global.exit = process.exit;
  */
 const _error = (error: string | Error, exitCode: number = 1) => {
   console.error(ECHO_RED_FORMAT, error); // Will print to stderr
-  exit(exitCode);
+  _exit(exitCode);
 };
 global.error = _error;
 
@@ -57,7 +57,7 @@ const _printUsageAndExit = (exitCode = 1, additionalMessage?: string): void => {
     }
   }
 
-  exit(exitCode);
+  _exit(exitCode);
 };
 
 const _usage = (message: string, printAndExitIfHelpArgumentSpecified = true) => {
@@ -199,6 +199,32 @@ const _stdin = () => {
   return fs.readFileSync(process.stdin.fd, "utf-8");
 };
 global.stdin = _stdin;
+
+const _exit = (exitCode: number = 0) => {
+  // Ensure all streams are drained before exiting (code pulled from https://github.com/cowboy/node-exit)
+  let streams = [process.stdout, process.stderr];
+  let drainCount = 0;
+  function tryToExit() {
+    if (drainCount === streams.length) {
+      process.exit(exitCode);
+    }
+  }
+  streams.forEach(function (stream) {
+    // Count drained streams now, but monitor non-drained streams.
+    if (stream.writableLength === 0) {
+      drainCount++;
+    } else {
+      stream.write("", "utf-8", function () {
+        drainCount++;
+        tryToExit();
+      });
+    }
+    // Prevent further writing to stream
+    stream.write = <any>function () {};
+  });
+  tryToExit();
+};
+global.exit = _exit;
 
 // Echoing
 /**
@@ -768,7 +794,7 @@ declare global {
   var __filename: string;
   var __dirname: string;
   var dirname: typeof path.dirname;
-  var exit: typeof process.exit;
+  var exit: typeof _exit;
   var error: typeof _error;
   var echo: typeof _echo;
   var printf: typeof _printf;
