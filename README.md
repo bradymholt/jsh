@@ -403,7 +403,7 @@ Rather than installing jsh globally, you can simply download it to a local folde
 First, download jsh:
 
 ```shell
-curl -so jsh.cjs https://github.com/bradymholt/jsh/releases/latest/download/index.cjs
+curl -Lso jsh.cjs https://github.com/bradymholt/jsh/releases/latest/download/index.cjs
 ```
 
 Then, in your script:
