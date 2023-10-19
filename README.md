@@ -103,7 +103,9 @@ All helpers listed below (except for the HTTP Requests helpers) are **synchronou
 | `await http.patch("https://www.myapi.com", { data: "1" })`  | Make a HTTP PATCH request and return the response body data                                              |
 | `await http.delete("https://www.myapi.com", { data: "1" })` | Make a HTTP DELETE request and return the response body data                                             |
 | `await http("POST", "https://www.myapi.com", { data: "1" }, { headers: { Accept: "application/json" } })`                | Make a HTTP request and return the response: (`{ data, headers, statusCode, statusMessage }`)            |
-| `await http.download("https://www.myapp.com/logo.jpg", "./logo.jpg")` | Download a file from a URL and save it to a local file path |
+| `await http.upload("https://www.myapi.com/logo", "./logo.jpg", "image/jpg")` | Upload a file with a HTTP POST request |
+| `await http.download("https://www.myapp.com/logo.jpg", "./logo.jpg")` | Perform a HTTP GET request and save the response to a local file path |
+
 
 ## Examples
 
@@ -295,7 +297,7 @@ await http.post("https://www.myapi.com/tasks", newTask, {
 ```
 
 #### Stream
-You may also pass a readable Stream as `data`.  This is common when sending a file as part of a request:
+You may also pass a readable Stream as `data`.  This is common when sending a file as part of a request.
 
 ```js
 const fs = require("fs");
@@ -307,6 +309,8 @@ await http.post("https://fakeimageserver.com/uploads", data, {
   "Content-Length": fileSize.toString(),
 });
 ```
+
+_Note: If you are uploading a file, you can also use the `http.upload()` helper._
 
 ### Default Headers
 
