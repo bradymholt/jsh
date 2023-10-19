@@ -746,7 +746,7 @@ _http.delete = async <T>(url: string, data: HttpData, headers: { [name: string]:
  * @param headers
  * @returns
  */
-_http.upload = async (
+_http.upload = async <T>(
   url: string,
   sourceFilePath: string,
   contentType: string,
@@ -754,7 +754,7 @@ _http.upload = async (
 ) => {
   const data = fs.createReadStream(sourceFilePath);
   const fileSize = fs.statSync(sourceFilePath).size;
-  return _http.post<any>(
+  return _http.post<T>(
     url,
     data,
     Object.assign(headers, { "Content-Type": contentType, "Content-Length": fileSize })
@@ -768,8 +768,8 @@ _http.upload = async (
  * @param headers
  * @returns
  */
-_http.download = async (url: string, destinationFilePath: string, headers: { [name: string]: string } = {}) => {
-  return _http<any>("GET", url, null, { headers, saveResponseToFile: destinationFilePath });
+_http.download = async <T>(url: string, destinationFilePath: string, headers: { [name: string]: string } = {}) => {
+  return _http<T>("GET", url, null, { headers, saveResponseToFile: destinationFilePath });
 };
 global.http = _http;
 
