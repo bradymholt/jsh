@@ -461,12 +461,15 @@ export type IHttpRequestOptions = Pick<Partial<IHttpRawRequestOptions>, "headers
    * If set to true, will not throw if the response status code is not 2xx
    */
   noThrow?: boolean;
-  /** If set to true, will not include response body in  */
+  /** If set to true, will not include response body in error message */
   omitResponseBodyInErrorMessage?: boolean;
+  // Whether to automatically follow 301 and 302 redirects.  Defaults to false.
+  followRedirects?: boolean;
+  saveResponseToFile?: string;
 };
 export interface IHttpResponse<T> {
-  data: T;
-  body: string;
+  data?: T;
+  body?: string | null;
   headers: NodeJS.Dict<string | string[]>;
   statusCode: number | undefined;
   statusMessage: string | undefined;
@@ -524,21 +527,37 @@ const _http = <T>(
   options: IHttpRequestOptions = {}
 ): Promise<IHttpResponse<T>> => {
   const parsedUrl = new URL(url);
-  const isHTTPS = parsedUrl.protocol.startsWith("https");
+  const isHttps = parsedUrl.protocol.startsWith("https");
 
   const rawRequestOptions: IHttpRawRequestOptions = Object.assign(
     {
+      timeout: 120000 /* 2 minutes */,
+      followRedirects: true,
+    },
+    options,
+    {
+      method,
       protocol: parsedUrl.protocol,
       hostname: parsedUrl.hostname,
-      port: !!parsedUrl.port ? Number(parsedUrl.port) : isHTTPS ? 443 : 80,
+      port: !!parsedUrl.port ? Number(parsedUrl.port) : isHttps ? 443 : 80,
       path: parsedUrl.pathname + parsedUrl.search,
       url,
-      method,
-      headers: {},
-      timeout: 120000 /* 2 minutes */,
-    },
-    options
+    }
   );
+
+  options.headers = options.headers ?? {};
+  options.headers["Host"] = `${rawRequestOptions.hostname}:${rawRequestOptions.port}`;
+  // The following headers have default values if not specified in options
+  options.headers["Accept"] = options.headers["Accept"] || "*/*";
+  options.headers["Connection"] = options.headers["Connection"] || "close";
+  options.headers["User-Agent"] = options.headers["User-Agent"] || "jsh";
+
+  if (options.saveResponseToFile) {
+    // When saving response to file, we will ask server to send the file without modification or compression
+    options.headers["Accept-Encoding"] = "identity";
+  } else {
+    options.headers["Accept-Encoding"] = options.headers["Accept-Encoding"] || "gzip";
+  }
 
   const tryParseJson = (data: string) => {
     // Tries to parse JSON and returns parsed object if successful.  If not, returns false.
@@ -552,14 +571,6 @@ const _http = <T>(
       return false;
     }
   };
-
-  if (!!options.headers) {
-    options.headers["Accept"] = options.headers["Accept"] || "*/*";
-    options.headers["Accept-Encoding"] = options.headers["Accept-Encoding"] || "gzip";
-    options.headers["Connection"] = options.headers["Connection"] || "close";
-    options.headers["User-Agent"] = options.headers["User-Agent"] || "jsh";
-    options.headers["Host"] = options.headers["Host"] || `${rawRequestOptions.hostname}:${rawRequestOptions.port}`;
-  }
 
   let requestBodyData = data ?? "";
 
@@ -576,7 +587,7 @@ const _http = <T>(
   }
 
   let request = http.request;
-  if (isHTTPS) {
+  if (isHttps) {
     request = https.request;
   }
 
@@ -585,12 +596,16 @@ const _http = <T>(
       reject(new HttpRequestError<T>(errorMessage, rawRequestOptions, options));
     };
 
-    const req = request(rawRequestOptions, (res) => {
-      let responseBody: any = "";
+    const clientRequest = request(rawRequestOptions, (res) => {
+      if (options.followRedirects && (res.statusCode == 301 || res.statusCode == 302) && !!res.headers.location) {
+        return _http<T>(method, res.headers.location, data, options).then(resolve).catch(reject);
+      }
 
-      const onResponseEnd = () => {
-        const jsonData = tryParseJson(responseBody);
-        const responseData = jsonData || responseBody;
+      const onResponseEnd = (responseBody: string | null) => {
+        let responseData: any = responseBody;
+        if (responseBody) {
+          responseData = tryParseJson(responseBody) || responseBody;
+        }
 
         const response: IHttpResponse<T> = {
           data: responseData,
@@ -613,33 +628,47 @@ const _http = <T>(
         }
       };
 
-      if (res.headers["content-encoding"]?.includes("gzip")) {
-        // Response is gzipped so decompress it
-        const gunzip = zlib.createGunzip();
-        res.pipe(gunzip);
+      if (options.saveResponseToFile) {
+        // Download file
+        const outFileStream = fs.createWriteStream(options.saveResponseToFile);
+        res.pipe(outFileStream);
 
-        gunzip
-          .on("data", function (chunk) {
-            responseBody += chunk;
-          })
-          .on("end", () => {
-            onResponseEnd();
-          })
-          .on("error", (err) => {
-            onRequestError(err.message);
-          })
-          .on("timeout", () => {
-            onRequestError("Timeout");
+        res.on("end", () => {
+          outFileStream.close(() => {
+            onResponseEnd(null);
           });
+        });
       } else {
-        // Response is not gzipped
-        res
-          .on("data", (chunk) => {
-            responseBody += chunk;
-          })
-          .on("end", () => {
-            onResponseEnd();
-          });
+        let responseBody = "";
+
+        if (res.headers["content-encoding"]?.includes("gzip")) {
+          // Response is gzipped so decompress it
+          const gunzip = zlib.createGunzip();
+          res.pipe(gunzip);
+
+          gunzip
+            .on("data", function (chunk) {
+              responseBody += chunk;
+            })
+            .on("end", () => {
+              onResponseEnd(responseBody);
+            })
+            .on("error", (err) => {
+              onRequestError(err.message);
+            })
+            .on("timeout", () => {
+              onRequestError("Timeout");
+            });
+        } else {
+          // Response is not gzipped
+          res
+            .on("data", (chunk) => {
+              responseBody += chunk;
+            })
+            .on("end", () => {
+              onResponseEnd(responseBody);
+            });
+        }
       }
     })
       .on("error", (err) => {
@@ -650,10 +679,10 @@ const _http = <T>(
       });
 
     if (data instanceof stream.Readable) {
-      data.pipe(req);
+      data.pipe(clientRequest);
     } else {
-      req.write(requestBodyData);
-      req.end();
+      clientRequest.write(requestBodyData);
+      clientRequest.end();
     }
   });
 };
@@ -708,6 +737,18 @@ _http.patch = async <T>(url: string, data: HttpData, headers: { [name: string]: 
 _http.delete = async <T>(url: string, data: HttpData, headers: { [name: string]: string } = {}) => {
   const response = await _http<T>("DELETE", url, data, { headers });
   return response.data;
+};
+/**
+ * Makes a GET HTTP request and saves the response to a file.
+ * Will throw an error if the response status code is not 2xx.
+ * @param url
+ * @param filePath
+ * @param headers
+ * @returns
+ */
+_http.download = async (url: string, filePath: string, headers: { [name: string]: string } = {}) => {
+  const response = await _http<any>("GET", url, null, { headers, saveResponseToFile: filePath });
+  return response;
 };
 global.http = _http;
 

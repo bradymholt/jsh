@@ -67,6 +67,16 @@ it("should include correct default headers", async () => {
   expect(https.request).toHaveBeenNthCalledWith(
     1,
     {
+      hostname: "putfake.ts",
+      method: "PUT",
+      path: "/?parma1=value",
+      port: 443,
+      url: "https://putfake.ts/?parma1=value",
+      protocol: "https:",
+
+      followRedirects: true,
+      timeout: 120000,
+
       headers: {
         Accept: "*/*",
         "Accept-Encoding": "gzip",
@@ -76,13 +86,6 @@ it("should include correct default headers", async () => {
         Host: "putfake.ts:443",
         "User-Agent": "jsh",
       },
-      hostname: "putfake.ts",
-      method: "PUT",
-      path: "/?parma1=value",
-      port: 443,
-      url: "https://putfake.ts/?parma1=value",
-      protocol: "https:",
-      timeout: 120000,
     },
     expect.any(Function)
   );
@@ -100,4 +103,15 @@ it("accepts a file stream", async () => {
   expect(response).toEqual({ text: "It worked", status: true });
   expect(fakeWebSpy.used).toBe(true);
   expect(fakeWebSpy.body).toEqual(fs.readFileSync("./README.md", "utf8"));
+});
+
+it("should download a file", async () => {
+  fakeweb.registerUri({ uri: "https://putfake.ts/download", body: `{ "text": "It worked", "status": true }` });
+  const outFilePath = "/tmp/jsh-test-download.txt";
+  if (exists(outFilePath)) {
+    rm(outFilePath);
+  }
+  const response = await http.download("https://putfake.ts/download", outFilePath);
+  expect(response.statusCode).toEqual(200);  
+  expect(readFile(outFilePath)).toEqual(`{ "text": "It worked", "status": true }`);
 });
