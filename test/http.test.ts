@@ -66,7 +66,7 @@ it("should include correct default headers", async () => {
 
   expect(https.request).toHaveBeenNthCalledWith(
     1,
-    {     
+    {
       hostname: "putfake.ts",
       method: "PUT",
       path: "/?parma1=value",
@@ -85,7 +85,7 @@ it("should include correct default headers", async () => {
         "Content-Length": 15,
         Host: "putfake.ts:443",
         "User-Agent": "jsh",
-      }
+      },
     },
     expect.any(Function)
   );
@@ -107,8 +107,11 @@ it("accepts a file stream", async () => {
 
 it("should download a file", async () => {
   fakeweb.registerUri({ uri: "https://putfake.ts/download", body: `{ "text": "It worked", "status": true }` });
-  const outFilePath = "/tmp/jsh-test-download.txt";  
+  const outFilePath = "/tmp/jsh-test-download.txt";
+  if (exists(outFilePath)) {
+    rm(outFilePath);
+  }
   const response = await http.download("https://putfake.ts/download", outFilePath);
-  expect(response.statusCode).toEqual(200);
+  expect(response.statusCode).toEqual(200);  
   expect(readFile(outFilePath)).toEqual(`{ "text": "It worked", "status": true }`);
 });

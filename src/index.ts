@@ -530,9 +530,9 @@ const _http = <T>(
   const isHttps = parsedUrl.protocol.startsWith("https");
 
   const rawRequestOptions: IHttpRawRequestOptions = Object.assign(
-    {      
+    {
       timeout: 120000 /* 2 minutes */,
-      followRedirects: true
+      followRedirects: true,
     },
     options,
     {
@@ -631,14 +631,12 @@ const _http = <T>(
       if (options.saveResponseToFile) {
         // Download file
         const outFileStream = fs.createWriteStream(options.saveResponseToFile);
-        outFileStream.on("finish", () => {
-          outFileStream?.close();
-        });
-
         res.pipe(outFileStream);
 
         res.on("end", () => {
-          onResponseEnd(null);
+          outFileStream.close(() => {
+            onResponseEnd(null);
+          });
         });
       } else {
         let responseBody = "";
