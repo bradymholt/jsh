@@ -739,6 +739,28 @@ _http.delete = async <T>(url: string, data: HttpData, headers: { [name: string]:
   return response.data;
 };
 /**
+ * Makes a POST HTTP request and uploads a file.  Will throw an error if the response status code is not 2xx.
+ * @param url
+ * @param sourceFilePath
+ * @param contentType The media type of the file being uploaded (e.g. "image/png", "application/pdf", "text/plain", etc.)
+ * @param headers
+ * @returns
+ */
+_http.upload = async (
+  url: string,
+  sourceFilePath: string,
+  contentType: string,
+  headers: { [name: string]: string } = {}
+) => {
+  const data = fs.createReadStream(sourceFilePath);
+  const fileSize = fs.statSync(sourceFilePath).size;
+  return _http.post<any>(
+    url,
+    data,
+    Object.assign(headers, { "Content-Type": contentType, "Content-Length": fileSize })
+  );
+};
+/**
  * Makes a GET HTTP request and saves the response to a file.
  * Will throw an error if the response status code is not 2xx.
  * @param url
@@ -746,9 +768,8 @@ _http.delete = async <T>(url: string, data: HttpData, headers: { [name: string]:
  * @param headers
  * @returns
  */
-_http.download = async (url: string, filePath: string, headers: { [name: string]: string } = {}) => {
-  const response = await _http<any>("GET", url, null, { headers, saveResponseToFile: filePath });
-  return response;
+_http.download = async (url: string, destinationFilePath: string, headers: { [name: string]: string } = {}) => {
+  return _http<any>("GET", url, null, { headers, saveResponseToFile: destinationFilePath });
 };
 global.http = _http;
 
