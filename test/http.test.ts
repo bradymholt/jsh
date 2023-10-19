@@ -107,8 +107,7 @@ it("accepts a file stream", async () => {
 
 it("should download a file", async () => {
   fakeweb.registerUri({ uri: "https://putfake.ts/download", body: `{ "text": "It worked", "status": true }` });
-  const outFilePath = "/tmp/jsh-test-download.txt";
-  //const response2 = await http.download("https://github.com/bradymholt/jsh/releases/download/v0.44.0/index.cjs", "index.cjs");
+  const outFilePath = "/tmp/jsh-test-download.txt";  
   const response = await http.download("https://putfake.ts/download", outFilePath);
   expect(response.statusCode).toEqual(200);
   expect(readFile(outFilePath)).toEqual(`{ "text": "It worked", "status": true }`);
