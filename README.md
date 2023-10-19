@@ -103,6 +103,7 @@ All helpers listed below (except for the HTTP Requests helpers) are **synchronou
 | `await http.patch("https://www.myapi.com", { data: "1" })`  | Make a HTTP PATCH request and return the response body data                                              |
 | `await http.delete("https://www.myapi.com", { data: "1" })` | Make a HTTP DELETE request and return the response body data                                             |
 | `await http("POST", "https://www.myapi.com", { data: "1" }, { headers: { Accept: "application/json" } })`                | Make a HTTP request and return the response: (`{ data, headers, statusCode, statusMessage }`)            |
+| `await http.download("https://www.myapp.com/logo.jpg", "./logo.jpg")` | Download a file from a URL and save it to a local file path |
 
 ## Examples
 
@@ -317,7 +318,6 @@ If any of the following headers are not specified, these default values will be 
 | `Accept-Encoding`   | `gzip`                                                 |
 | `Connection`        | `close`                                                |
 | `User-Agent`        | `jsh`                                                  |
-| `Host`              | (extracted from `url` in format hostname:port)         |
 
 ### Error Handling
 
@@ -357,6 +357,7 @@ echo(response.statusMessage) // "Internal Server Error"
  
 - `headers: object` - The request headers to send with the request.  A set of [default headers](#default-headers) will be included with the request even if not specified.
 - `timeout: number` - The number of milliseconds of inactivity before a socket is presumed to have timed out (Default: `120000` (2 minutes))
+- `followRedirects: boolean` - Whether to follow 301 or 302 redirects automatically (Default: true)
 - `noThrow: boolean` - If set to true, will not throw if the response status code is not 2xx (Default: false)
 - `omitResponseBodyInErrorMessage: boolean` - If set to true, will not include the response body in a thrown error message (Default: false)
 
