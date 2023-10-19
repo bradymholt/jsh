@@ -304,7 +304,7 @@ const data = fs.createReadStream(filePath);
 const fileSize = fs.statSync(filePath).size;
 await http.post("https://fakeimageserver.com/uploads", data, {
   "Content-Type": "image/jpeg",
-  "Content-Length": fileSize,
+  "Content-Length": fileSize.toString(),
 });
 ```
 
