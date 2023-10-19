@@ -463,8 +463,8 @@ export type IHttpRequestOptions = Pick<Partial<IHttpRawRequestOptions>, "headers
   noThrow?: boolean;
   /** If set to true, will not include response body in error message */
   omitResponseBodyInErrorMessage?: boolean;
-  // Whether to automatically follow 301 and 302 redirects.  Defaults to false.
-  followRedirects?: boolean;
+  // Whether to not automatically follow 301 and 302 redirects.  Defaults to false.
+  noFollowRedirects?: boolean;
   saveResponseToFile?: string;
 };
 export interface IHttpResponse<T> {
@@ -597,7 +597,7 @@ const _http = <T>(
     };
 
     const clientRequest = request(rawRequestOptions, (res) => {
-      if (options.followRedirects && (res.statusCode == 301 || res.statusCode == 302) && !!res.headers.location) {
+      if (!options.noFollowRedirects && (res.statusCode == 301 || res.statusCode == 302) && !!res.headers.location) {
         return _http<T>(method, res.headers.location, data, options).then(resolve).catch(reject);
       }
 
