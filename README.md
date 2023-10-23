@@ -89,8 +89,8 @@ All helpers listed below (except for the HTTP Requests helpers) are **synchronou
 | `exists("./aFile.txt")` | Check if a file exists |
 | `rm("./myFile")` | Delete a file |
 | `dirName("./path/file.txt")` | Return the directory name for a path |
-| `__dirame` | Returns the absolute path (directory) containing the entry script (works inside of CommonJS or ES module) |
-| `__filename` | Returns the name of the entry script (works inside of CommonJS or ES module) |
+| `__dirname` | Returns the absolute path (directory) containing the **entry** script (works inside of CommonJS or ES module) |
+| `__filename` | Returns the name of the **entry** script (works inside of CommonJS or ES module) |
 
 **HTTP Requests** ([detailed docs below](#http-request-helpers))
 
