@@ -8,7 +8,7 @@ import { URL } from "node:url";
 import * as zlib from "zlib";
 import * as fs from "fs";
 import * as path from "path";
-import { IncomingHttpHeaders } from "node:http";
+import type { IncomingHttpHeaders } from "node:http";
 
 export function setEntryScriptPath(scriptPath: string) {
   let scriptAbsolutePath = null;
