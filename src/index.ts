@@ -32,6 +32,7 @@ const ECHO_RED_FORMAT = "\x1b[31m%s\x1b[0m";
 const ECHO_BLUE_FORMAT = "\x1b[34m%s\x1b[0m";
 
 global.dirname = path.dirname;
+global.dirName = path.dirname;
 
 /**
  * Echos error message to stdout and then exits with the specified exit code (defaults to 1)
@@ -755,11 +756,7 @@ _http.upload = async <T>(
 ) => {
   const data = fs.createReadStream(sourceFilePath);
   const fileSize = fs.statSync(sourceFilePath).size;
-  return _http.post<T>(
-    url,
-    data,
-    Object.assign(headers, { "Content-Type": contentType, "Content-Length": fileSize })
-  );
+  return _http.post<T>(url, data, Object.assign(headers, { "Content-Type": contentType, "Content-Length": fileSize }));
 };
 /**
  * Makes a GET HTTP request and saves the response to a file.
@@ -812,7 +809,7 @@ global.mkdir = _mkDir;
 /**
  * Removes a file or directory if it exists.
  * @param path
- * @param recursive
+ * @param recursive Defaults to true
  */
 const _rm = (path: string, recursive: boolean = true) => {
   if (fs.existsSync(path)) {
@@ -822,6 +819,27 @@ const _rm = (path: string, recursive: boolean = true) => {
 global.rm = _rm;
 global.rmDir = _rm;
 global.rmdir = _rm;
+
+/**
+ * Returns the list of files in a directory path
+ * @param path 
+ * @param recursive Defaults to true
+ * @returns 
+ */
+const _readdir = (path: string, recursive: boolean = true) => {
+  const files: Array<string> = [];
+  for (const file of fs.readdirSync(path)) {
+    const fullPath = path + "/" + file;
+    if (recursive && fs.lstatSync(fullPath).isDirectory()) {
+      _readdir(fullPath, recursive).forEach((x) => files.push(file + "/" + x));
+    } else {
+      files.push(file);
+    }
+  }
+  return files;
+};
+global.readDir = _readdir;
+global.readdir = _readdir;
 
 /**
  * Reads a file and returns its contents.
@@ -856,6 +874,7 @@ process.on("uncaughtException", handleUnhandledError);
 declare global {
   var __filename: string;
   var __dirname: string;
+  var dirName: typeof path.dirname;
   var dirname: typeof path.dirname;
   var exit: typeof _exit;
   var error: typeof _error;
@@ -875,6 +894,8 @@ declare global {
   var rm: typeof _rm;
   var rmDir: typeof _rm;
   var rmdir: typeof _rm;
+  var readDir: typeof _readdir;
+  var readdir: typeof _readdir;
   var readFile: typeof _readFile;
   var cat: typeof _readFile;
   var writeFile: typeof _writeFile;

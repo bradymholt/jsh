@@ -82,13 +82,14 @@ All helpers listed below (except for the HTTP Requests helpers) are **synchronou
 | `cd("/usr/bin")` | Change the current working directory |
 | `config=readFile("cnf.txt")` | Read text from file; also aliased as `cat()`. |
 | `writeFile("cnf.txt", "World")` | Write text to file |
+| `readDir("./myDir")` | Returns the files in a directory (recursive by default) |
 | `dirExists("./myDir")` | Check if directory exists |
-| `mkdir("./newDirName")` | Create a directory |
-| `rmdir("./newDirName")` | Delete a directory |
+| `mkDir("./newDirName")` | Create a directory |
+| `rmDir("./newDirName")` | Delete a directory (recursive by default) |
 | `exists("./aFile.txt")` | Check if a file exists |
 | `rm("./myFile")` | Delete a file |
-| `dirname("./path/file.txt")` | Return the directory name for a path |
-| `__dirname` | Returns the absolute path (directory) containing the entry script (works inside of CommonJS or ES module) |
+| `dirName("./path/file.txt")` | Return the directory name for a path |
+| `__dirame` | Returns the absolute path (directory) containing the entry script (works inside of CommonJS or ES module) |
 | `__filename` | Returns the name of the entry script (works inside of CommonJS or ES module) |
 
 **HTTP Requests** ([detailed docs below](#http-request-helpers))
