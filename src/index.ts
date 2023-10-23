@@ -470,8 +470,8 @@ export type IHttpRequestOptions = Pick<Partial<IHttpRawRequestOptions>, "headers
   saveResponseToFile?: string;
 };
 export interface IHttpResponse<T> {
-  data?: T;
-  body?: string | null;
+  data: T;
+  body: string | null;
   headers: IncomingHttpHeaders;
   statusCode: number | undefined;
   statusMessage: string | undefined;
@@ -710,6 +710,7 @@ _http.post = async <T>(url: string, data: HttpData, headers: { [name: string]: s
   const response = await _http<T>("POST", url, data, { headers });
   return response.data;
 };
+
 /**
  * Makes a PUT HTTP request and returns the response data.  Will throw an error if the response status code is not 2xx.
  * @param url
