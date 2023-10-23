@@ -797,10 +797,11 @@ global.dirExists = _dirExists;
 /**
  * Create a directory if it does not exist.
  * @param path
+ * @param recursive Whether parent directories should also be created. Defaults to true.
  */
-const _mkDir = (path: string) => {
+const _mkDir = (path: string, recursive:boolean = true) => {
   if (!fs.existsSync(path)) {
-    fs.mkdirSync(path);
+    fs.mkdirSync(path, { recursive });
   }
 };
 global.mkDir = _mkDir;
@@ -809,7 +810,7 @@ global.mkdir = _mkDir;
 /**
  * Removes a file or directory if it exists.
  * @param path
- * @param recursive Defaults to true
+ * @param recursive Whether child directories should also be removed. Defaults to true.
  */
 const _rm = (path: string, recursive: boolean = true) => {
   if (fs.existsSync(path)) {
@@ -823,7 +824,7 @@ global.rmdir = _rm;
 /**
  * Returns the list of files in a directory path
  * @param path 
- * @param recursive Defaults to true
+ * @param recursive Whether files from child directories should be included.  Defaults to true.
  * @returns 
  */
 const _readdir = (path: string, recursive: boolean = true) => {
