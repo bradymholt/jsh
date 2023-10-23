@@ -8,6 +8,7 @@ import { URL } from "node:url";
 import * as zlib from "zlib";
 import * as fs from "fs";
 import * as path from "path";
+import type { IncomingHttpHeaders } from "node:http";
 
 export function setEntryScriptPath(scriptPath: string) {
   let scriptAbsolutePath = null;
@@ -470,7 +471,7 @@ export type IHttpRequestOptions = Pick<Partial<IHttpRawRequestOptions>, "headers
 export interface IHttpResponse<T> {
   data?: T;
   body?: string | null;
-  headers: NodeJS.Dict<string | string[]>;
+  headers: IncomingHttpHeaders;
   statusCode: number | undefined;
   statusMessage: string | undefined;
   requestOptions: IHttpRawRequestOptions;
