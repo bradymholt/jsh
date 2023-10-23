@@ -84,7 +84,7 @@ All helpers listed below (except for the HTTP Requests helpers) are **synchronou
 | `writeFile("cnf.txt", "World")` | Write text to file |
 | `readDir("./myDir")` | Returns the files in a directory (recursive by default) |
 | `dirExists("./myDir")` | Check if directory exists |
-| `mkDir("./newDirName")` | Create a directory |
+| `mkDir("./newDirName")` | Create a directory (recursive by default) |
 | `rmDir("./newDirName")` | Delete a directory (recursive by default) |
 | `exists("./aFile.txt")` | Check if a file exists |
 | `rm("./myFile")` | Delete a file |
