@@ -7,20 +7,20 @@ import * as https from "https";
 import { URL } from "node:url";
 import * as zlib from "zlib";
 import * as fs from "fs";
-import * as path from "path";
+import * as fsPath from "path";
 import type { IncomingHttpHeaders } from "node:http";
 
 export function setEntryScriptPath(scriptPath: string) {
   let scriptAbsolutePath = null;
   if (!scriptPath.startsWith("/")) {
     // scriptPath is a relative path so join with cwd to get absolute path
-    scriptAbsolutePath = path.join(process.cwd(), scriptPath);
+    scriptAbsolutePath = fsPath.join(process.cwd(), scriptPath);
   } else {
     scriptAbsolutePath = scriptPath;
   }
 
   global.__filename = scriptAbsolutePath;
-  global.$0 = path.basename(scriptAbsolutePath); // Set $0 to the name of the current script
+  global.$0 = fsPath.basename(scriptAbsolutePath); // Set $0 to the name of the current script
   global.__dirname = nodePath.dirname(scriptAbsolutePath);
 }
 // By default, we will expect the entry script to be specified in second argument (`node myscript.js`).
@@ -31,8 +31,8 @@ const ECHO_GREEN_FORMAT = "\x1b[32m%s\x1b[0m";
 const ECHO_RED_FORMAT = "\x1b[31m%s\x1b[0m";
 const ECHO_BLUE_FORMAT = "\x1b[34m%s\x1b[0m";
 
-global.dirname = path.dirname;
-global.dirName = path.dirname;
+global.dirname = fsPath.dirname;
+global.dirName = fsPath.dirname;
 
 /**
  * Echos error message to stdout and then exits with the specified exit code (defaults to 1)
@@ -799,7 +799,7 @@ global.dirExists = _dirExists;
  * @param path
  * @param recursive Whether parent directories should also be created. Defaults to true.
  */
-const _mkDir = (path: string, recursive:boolean = true) => {
+const _mkDir = (path: string, recursive: boolean = true) => {
   if (!fs.existsSync(path)) {
     fs.mkdirSync(path, { recursive });
   }
@@ -823,18 +823,18 @@ global.rmdir = _rm;
 
 /**
  * Returns the list of files in a directory path
- * @param path 
+ * @param path
  * @param recursive Whether files from child directories should be included.  Defaults to true.
- * @returns 
+ * @returns
  */
 const _readdir = (path: string, recursive: boolean = true) => {
-  const files: Array<string> = [];
+  const files = [];
   for (const file of fs.readdirSync(path)) {
     const fullPath = path + "/" + file;
     if (recursive && fs.lstatSync(fullPath).isDirectory()) {
-      _readdir(fullPath, recursive).forEach((x) => files.push(file + "/" + x));
+      _readdir(fullPath, recursive).forEach((x) => files.push(x));
     } else {
-      files.push(file);
+      files.push(fullPath);
     }
   }
   return files;
@@ -875,8 +875,8 @@ process.on("uncaughtException", handleUnhandledError);
 declare global {
   var __filename: string;
   var __dirname: string;
-  var dirName: typeof path.dirname;
-  var dirname: typeof path.dirname;
+  var dirName: typeof fsPath.dirname;
+  var dirname: typeof fsPath.dirname;
   var exit: typeof _exit;
   var error: typeof _error;
   var echo: typeof _echo;
