@@ -328,14 +328,16 @@ global.prompt = _prompt;
 global.read = _prompt;
 
 /**
- * Sleeps synchronously for the specified number of milliseconds
+ * Sleeps synchronously for the specified number of milliseconds.  Will not block the event loop.
+ * Note: On Windows, sleep duration is only supported for seconds (1000ms) so the specified number of milliseconds will be rounded up to the nearest second.
  * @param ms
  */
 const _sleep = (ms: number) => {
-  const startPoint = new Date().getTime();
-  while (new Date().getTime() - startPoint <= ms) {
-    /* wait here */
-  }
+  const sleepSeconds = ms / 1000;
+  const sleepShellCommand =
+    os.platform() == "win32" ? `timeout /t ${Math.ceil(sleepSeconds)} /nobreak` : `sleep ${sleepSeconds}`;
+
+  exec(sleepShellCommand, { echoCommand: false });
 };
 global.sleep = _sleep;
 

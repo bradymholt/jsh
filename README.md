@@ -55,7 +55,7 @@ All helpers listed below (except for the HTTP Requests helpers) are **synchronou
 | `exit(1)` | Halt the script and return an exit code |
 | `error("An error", 1)` | Echo an error and halt the script with an exit code |
 | `const name = prompt("What is your name?");` | Prompt for user input and return after \<Enter\> pressed; also aliased as `read()`. |
-| `sleep(2000)` | Sleep for specified number of milliseconds |
+| `sleep(2000)` | Sleep for specified number of milliseconds (synchronous and will not block event loop) |
 
 **Command Execution** ([detailed docs below](#command-execution-helpers))
 |     | Description |
