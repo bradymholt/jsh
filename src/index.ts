@@ -832,7 +832,7 @@ global.rmdir = _rm;
  * @param recursive Whether files from child directories should be included.  Defaults to true.
  * @returns
  */
-const _readdir = (path: string, recursive: boolean = true, foo: boolean = true) => {
+const _readdir = (path: string, recursive: boolean = true) => {
   const files = [];
   for (const file of fs.readdirSync(path)) {
     const fullPath = path + "/" + file;
