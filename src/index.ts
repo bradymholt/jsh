@@ -34,6 +34,8 @@ const ECHO_BLUE_FORMAT = "\x1b[34m%s\x1b[0m";
 global.dirname = fsPath.dirname;
 global.dirName = fsPath.dirname;
 
+global.pwd = process.cwd();
+global.PWD = process.cwd();
 /**
  * Echos error message to stdout and then exits with the specified exit code (defaults to 1)
  * @param error The error message string or Error object to print
@@ -189,6 +191,8 @@ function envVarAssert(
 
   return envVarValues;
 }
+// Add PWD as an environment variable
+process.env["PWD"] =process.cwd();
 const _env: Environment = { ...process.env } as any;
 _env.assert = envVarAssert;
 global.env = _env;
@@ -830,7 +834,7 @@ global.rmdir = _rm;
  * @param recursive Whether files from child directories should be included.  Defaults to true.
  * @returns
  */
-const _readdir = (path: string, recursive: boolean = true) => {
+const _readdir = (path: string, recursive: boolean = true, foo: boolean = true) => {
   const files = [];
   for (const file of fs.readdirSync(path)) {
     const fullPath = path + "/" + file;
@@ -878,6 +882,8 @@ process.on("uncaughtException", handleUnhandledError);
 declare global {
   var __filename: string;
   var __dirname: string;
+  var pwd: string;
+  var PWD: string;
   var dirName: typeof fsPath.dirname;
   var dirname: typeof fsPath.dirname;
   var exit: typeof _exit;
