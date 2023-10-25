@@ -94,7 +94,7 @@ All helpers listed below (except for the HTTP Requests helpers) are **synchronou
 
 **HTTP Requests** ([detailed docs below](#http-request-helpers))
 
-**Note:** The HTTP helper function are **asynchronous** and return a Promise.
+**Note:** The HTTP helper functions are **asynchronous** and return a Promise.
 
 |     | Description |
 | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
