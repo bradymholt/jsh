@@ -34,8 +34,6 @@ const ECHO_BLUE_FORMAT = "\x1b[34m%s\x1b[0m";
 global.dirname = fsPath.dirname;
 global.dirName = fsPath.dirname;
 
-global.pwd = process.cwd();
-global.PWD = process.cwd();
 /**
  * Echos error message to stdout and then exits with the specified exit code (defaults to 1)
  * @param error The error message string or Error object to print
@@ -881,9 +879,7 @@ process.on("uncaughtException", handleUnhandledError);
 
 declare global {
   var __filename: string;
-  var __dirname: string;
-  var pwd: string;
-  var PWD: string;
+  var __dirname: string;  
   var dirName: typeof fsPath.dirname;
   var dirname: typeof fsPath.dirname;
   var exit: typeof _exit;
