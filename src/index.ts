@@ -586,7 +586,7 @@ const _http = <T>(
     // Add JSON headers if needed
     if (!!options.headers) {
       options.headers["Content-Type"] = options.headers["Content-Type"] || "application/json";
-      if (options.headers["Content-Length"] || method == "GET") {
+      if (options.headers["Content-Length"] || method != "GET") {
         options.headers["Content-Length"] =
           options.headers["Content-Length"] || Buffer.byteLength(requestBodyData, "utf8");
       }

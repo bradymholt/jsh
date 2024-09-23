@@ -81,7 +81,8 @@ it("should include correct default headers", async () => {
         Accept: "*/*",
         "Accept-Encoding": "gzip",
         Connection: "close",
-        "Content-Type": "application/json",    
+        "Content-Type": "application/json",
+        "Content-Length": 15,
         Host: "putfake.ts:443",
         "User-Agent": "jsh",
       },
@@ -111,6 +112,6 @@ it("should download a file", async () => {
     rm(outFilePath);
   }
   const response = await http.download("https://putfake.ts/download", outFilePath);
-  expect(response.statusCode).toEqual(200);  
+  expect(response.statusCode).toEqual(200);
   expect(readFile(outFilePath)).toEqual(`{ "text": "It worked", "status": true }`);
 });
