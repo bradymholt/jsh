@@ -81,7 +81,7 @@ All helpers listed below (except for the HTTP Requests helpers) are **synchronou
 |     | Description |
 | --- | --- |
 | `cd("/usr/bin")` | Change the current working directory |
-| `config=readFile("cnf.txt")` | Read text from file; also aliased as `cat()`. |
+| `const config=cat("cnf.txt")` | Read text from file; also aliased as `readFile()`. |
 | `writeFile("cnf.txt", "World")` | Write text to file |
 | `ls("./myDir")` | Return absolute paths for _files_ in a directory (recursive by default) |
 | `dirExists("./myDir")` | Check if directory exists |
