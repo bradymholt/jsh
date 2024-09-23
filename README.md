@@ -83,7 +83,7 @@ All helpers listed below (except for the HTTP Requests helpers) are **synchronou
 | `cd("/usr/bin")` | Change the current working directory |
 | `config=readFile("cnf.txt")` | Read text from file; also aliased as `cat()`. |
 | `writeFile("cnf.txt", "World")` | Write text to file |
-| `readDir("./myDir")` | Return absolute paths for files in a directory (recursive by default) |
+| `ls("./myDir")` | Return absolute paths for _files_ in a directory (recursive by default) |
 | `dirExists("./myDir")` | Check if directory exists |
 | `mkDir("./newDirName")` | Create a directory (recursive by default) |
 | `rmDir("./newDirName")` | Delete a directory (recursive by default) |

@@ -846,6 +846,7 @@ const _readdir = (path: string, recursive: boolean = true) => {
 };
 global.readDir = _readdir;
 global.readdir = _readdir;
+global.ls = _readdir;
 
 /**
  * Reads a file and returns its contents.
@@ -902,6 +903,7 @@ declare global {
   var rmdir: typeof _rm;
   var readDir: typeof _readdir;
   var readdir: typeof _readdir;
+  var ls: typeof _readdir;
   var readFile: typeof _readFile;
   var cat: typeof _readFile;
   var writeFile: typeof _writeFile;
