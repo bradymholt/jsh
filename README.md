@@ -71,7 +71,7 @@ All helpers listed below (except for the HTTP Requests helpers) are **synchronou
 | `args.source_file, args.v` | Access arguments prefixed with "--" or "-".<br/><br/>If argument is in format `--source_file=input.txt` the value of `args.source_file` would be `"input.txt"`.<br/><br/>If argument is in format `--source_file` or `-v` the argument name will be available on args as a `true` boolean (`args.source_file == true`, `args.v == true`)   |
 | `const [source_file, target_file] = args.assertCount(2)` | Return arg values as array or call `usage.printAndExit()` if less than number of arguments specified were supplied.  See [details below](#usage-helpers). |
 | `$HOME`,`env.HOME`, or `env["HOME"]`| Access an environment variable |
-| `$PWD`,`env.PWD``| The current working directory |
+| `$PWD`,`env.PWD`| The current working directory |
 | `const USER = env.assert("USER")`or<br/>`const [HOME, USER] = env.assert(["HOME", "USER"])` | Return environment variable value or call `usage.printAndExit()` if undefined.  You can also pass an array of environment variable names and an array of values will be returned.  See [details below](#usage-helpers).  |
 | `stdin()` | Read stdin as a string |
 | `usage("Usage: myscript.js [--verbose]")` | Define a usage message.  See [details below](#usage-helpers). |
