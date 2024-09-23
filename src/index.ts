@@ -190,7 +190,7 @@ function envVarAssert(
   return envVarValues;
 }
 // Add PWD as an environment variable
-process.env["PWD"] =process.cwd();
+process.env["PWD"] = process.cwd();
 const _env: Environment = { ...process.env } as any;
 _env.assert = envVarAssert;
 global.env = _env;
@@ -586,8 +586,10 @@ const _http = <T>(
     // Add JSON headers if needed
     if (!!options.headers) {
       options.headers["Content-Type"] = options.headers["Content-Type"] || "application/json";
-      options.headers["Content-Length"] =
-        options.headers["Content-Length"] || Buffer.byteLength(requestBodyData, "utf8");
+      if (options.headers["Content-Length"] || method == "GET") {
+        options.headers["Content-Length"] =
+          options.headers["Content-Length"] || Buffer.byteLength(requestBodyData, "utf8");
+      }
       options.headers["Accept"] = options.headers["Accept"] || "application/json";
     }
   }
@@ -880,7 +882,7 @@ process.on("uncaughtException", handleUnhandledError);
 
 declare global {
   var __filename: string;
-  var __dirname: string;  
+  var __dirname: string;
   var dirName: typeof fsPath.dirname;
   var dirname: typeof fsPath.dirname;
   var exit: typeof _exit;
