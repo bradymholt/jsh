@@ -33,6 +33,7 @@ const ECHO_BLUE_FORMAT = "\x1b[34m%s\x1b[0m";
 
 global.dirname = fsPath.dirname;
 global.dirName = fsPath.dirname;
+export const dirName = fsPath.dirname;
 
 /**
  * Echos error message to stdout and then exits with the specified exit code (defaults to 1)
@@ -44,6 +45,7 @@ const _error = (error: string | Error, exitCode: number = 1) => {
   _exit(exitCode);
 };
 global.error = _error;
+export const error = _error;
 
 // Usage
 let defaultUsageMessage: string = `Usage: ${$0}`;
@@ -76,6 +78,7 @@ const _usage = (message: string, printAndExitIfHelpArgumentSpecified = true) => 
  */
 _usage.printAndExit = _printUsageAndExit;
 global.usage = _usage;
+export const usage = _usage;
 
 // Arguments
 type Arguments = Array<string> & {
@@ -127,17 +130,19 @@ export function setupArguments(passedInArguments: Array<string>) {
   global.args = _args;
 
   // Alias arguments as $1, $2, etc.
-  for (let i = 1; i <= Math.max(10, args.length); i++) {
+  for (let i = 1; i <= Math.max(10, _args.length); i++) {
     // $1 through $10, at a minimum, will be declared and have argument value or be set to undefined if not specified
-    if (args.length >= i) {
-      (<any>global)[`$${i}`] = args[i - 1];
+    if (_args.length >= i) {
+      (<any>global)[`$${i}`] = _args[i - 1];
     } else {
       (<any>global)[`$${i}`] = undefined;
     }
   }
+
+  return _args;
 }
 // By default, we will expect the passed arguments to begin with process.argv[2] (`node myscript.js arg1 arg2`)
-setupArguments(process.argv.slice(2));
+export const args = setupArguments(process.argv.slice(2));
 
 // Environment variables
 type Environment = {
@@ -198,11 +203,13 @@ global.env = _env;
 for (let p of Object.getOwnPropertyNames(process.env)) {
   (<any>global)[`$${p}`] = process.env[p];
 }
+export const env = _env;
 
 const _stdin = () => {
   return fs.readFileSync(process.stdin.fd, "utf-8");
 };
 global.stdin = _stdin;
+export const stdin = _stdin;
 
 const _exit = (exitCode: number = 0) => {
   // Ensure all streams are drained before exiting (code pulled from https://github.com/cowboy/node-exit)
@@ -229,6 +236,7 @@ const _exit = (exitCode: number = 0) => {
   tryToExit();
 };
 global.exit = _exit;
+export const exit = _exit;
 
 // Echoing
 /**
@@ -299,6 +307,8 @@ const _printf = function (content: string) {
 
 global.echo = _echo;
 global.printf = _printf;
+export const echo = _echo;
+export const printf = _printf;
 
 /**
  * Prints a text prompt, waits for user input, and returns the input.
@@ -328,6 +338,7 @@ const _prompt = function (prompt: string | (() => void)): string {
 
 global.prompt = _prompt;
 global.read = _prompt;
+export const prompt = _prompt;
 
 /**
  * Sleeps synchronously for the specified number of milliseconds.  Will not block the event loop.
@@ -342,6 +353,7 @@ const _sleep = (ms: number) => {
   exec(sleepShellCommand, { echoCommand: false });
 };
 global.sleep = _sleep;
+export const sleep = _sleep;
 
 // Command execution
 
@@ -444,7 +456,9 @@ const _exec = (command: string, options: IExecCommandOptions = {}): void => {
 };
 
 global.$ = _$;
+export const $ = _$;
 global.exec = _exec;
+export const exec = _exec;
 
 // HTTP
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -776,10 +790,10 @@ _http.upload = async <T>(
 _http.download = async <T>(url: string, destinationFilePath: string, headers: { [name: string]: string } = {}) => {
   return _http<T>("GET", url, null, { headers, saveResponseToFile: destinationFilePath });
 };
-global.http = _http;
 
 // File system
 global.cd = process.chdir;
+export const cd = process.chdir;
 
 /**
  * Returns `true` if the path exists, `false` otherwise.
@@ -790,6 +804,7 @@ const _exists = (path: string) => {
   return fs.existsSync(path);
 };
 global.exists = _exists;
+export const exists = _exists;
 
 /**
  * Returns `true` if the path exists and it is a directory, `false` otherwise.
@@ -800,6 +815,7 @@ const _dirExists = (path: string) => {
   return exists(path) && fs.statSync(path).isDirectory();
 };
 global.dirExists = _dirExists;
+export const dirExists = _dirExists;
 
 /**
  * Create a directory if it does not exist.
@@ -813,6 +829,7 @@ const _mkDir = (path: string, recursive: boolean = true) => {
 };
 global.mkDir = _mkDir;
 global.mkdir = _mkDir;
+export const mkdir = _mkDir;
 
 /**
  * Removes a file or directory if it exists.
@@ -827,6 +844,7 @@ const _rm = (path: string, recursive: boolean = true) => {
 global.rm = _rm;
 global.rmDir = _rm;
 global.rmdir = _rm;
+export const rmdir = _rm;
 
 /**
  * Returns the list of files in a directory path
@@ -849,6 +867,7 @@ const _readdir = (path: string, recursive: boolean = true) => {
 global.readDir = _readdir;
 global.readdir = _readdir;
 global.ls = _readdir;
+export const ls = _readdir;
 
 /**
  * Reads a file and returns its contents.
@@ -861,6 +880,7 @@ const _readFile = (path: string, encoding: BufferEncoding = "utf-8") => {
 };
 global.readFile = _readFile;
 global.cat = _readFile;
+export const cat = _readFile;
 
 /**
  * Writes contents to a file, replacing the file if it exists.
@@ -872,6 +892,7 @@ const _writeFile = (path: string, contents: string, encoding: BufferEncoding = "
   fs.writeFileSync(path, contents, { encoding });
 };
 global.writeFile = _writeFile;
+export const writeFile = _writeFile;
 
 // Error handling
 const handleUnhandledError = (err: Error) => {
